@@ -139,6 +139,6 @@ describe.only('Thinking things payload parser', function() {
                 done();
             });
         });
-    })
+    });
 });
 

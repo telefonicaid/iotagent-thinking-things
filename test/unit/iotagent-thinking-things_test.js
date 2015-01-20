@@ -51,7 +51,8 @@ describe('Southbound measure reporting', function() {
             contextBrokerMock = nock('http://10.11.128.16:1026')
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
-                .post('/NGSI10/updateContext', utils.readExampleFile('./test/unit/contextRequests/updateContextHumidity.json'))
+                .post('/NGSI10/updateContext',
+                    utils.readExampleFile('./test/unit/contextRequests/updateContextHumidity.json'))
                 .reply(200, utils.readExampleFile('./test/unit/contextResponses/updateContextHumiditySuccess.json'));
 
             done();
