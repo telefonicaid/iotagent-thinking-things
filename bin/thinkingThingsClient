@@ -1,0 +1,165 @@
+#!/usr/bin/env node
+
+/*
+ * Copyright 2014 Telefonica Investigación y Desarrollo, S.A.U
+ *
+ * This file is part of iotagent-thinking-things
+ *
+ * iotagent-thinking-things is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * iotagent-thinking-things is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public
+ * License along with iotagent-thinking-things.
+ * If not, seehttp://www.gnu.org/licenses/.
+ *
+ * For those usages not covered by the GNU Affero General Public License
+ * please contact with::[iot_support@tid.es]
+ */
+'use strict';
+
+var clUtils = require('../lib/commandLineUtils'),
+    request = require('request'),
+    async = require('async'),
+    config = {
+        host: 'localhost',
+        port: 8000,
+        path: '/thinkingthings',
+        stackId: 'default'
+    },
+    sleepConfig = {
+        value: '2000',
+        condition: 'WakeUp'
+    },
+    separator = '\n\n\t';
+
+function sendRequest(payload) {
+    var options = {
+        url: 'http://' + config.host + ':' + config.port + config.path,
+        method: 'POST',
+        body: payload
+    }
+
+    request(options, function (error, response, body) {
+        if (error) {
+            console.error('Error sending the request: %s' + error);
+        } else if (response.statusCode === 200 && body) {
+            console.log('Answer: %s', body);
+        } else {
+            console.error('Unknown status code: %d', response.statusCode);
+        }
+
+        clUtils.prompt();
+    });
+}
+
+function humidity(commands) {
+    var payload = '#' + config.stackId + ',H1,' +
+        commands[0] + ',' +
+        commands[1] + ',' +
+        sleepConfig.value + '$' +
+        sleepConfig.condition + ',';
+
+    console.log("Sending the following humidity request [%s]", payload);
+
+    sendRequest(payload);
+}
+
+function gpsLocation(commands) {
+    var payload = '#' + config.stackId + ',GPS,'+
+        commands[0] + ',' +
+        commands[1] + ',' +
+        commands[2] + ',' +
+        commands[3] + ',' +
+        commands[4] + ',' +
+        sleepConfig.value + '$' +
+        sleepConfig.condition + ',';
+
+    console.log("Sending the following gps request [%s]", payload);
+    sendRequest(payload);
+}
+
+function temperature(commands) {
+    var payload = '#' + config.stackId + ',T1,'+
+        commands[0] + ',' +
+        sleepConfig.value + '$' +
+        sleepConfig.condition + ',';
+
+    console.log("Sending the following temperature request [%s]", payload);
+    sendRequest(payload);
+}
+
+function setConfig(commands) {
+    config.host = commands[0];
+    config.port = commands[1];
+    config.path = commands[2];
+    config.stackId = commands[3];
+    clUtils.prompt();
+}
+
+function getConfig(commands) {
+    console.log('Current config parameters:\n');
+    console.log('* host: %s', config.host);
+    console.log('* port: %s', config.port);
+    console.log('* stackId: %s\n', config.stackId);
+    clUtils.prompt();
+}
+
+function setSleep(commands) {
+    sleepConfig.value = commands[0];
+    sleepConfig.condition = commands[1];
+    clUtils.prompt();
+}
+
+function getSleep(commands) {
+    console.log('Default sleep parameters:\n');
+    console.log('* value: %s', sleepConfig.value);
+    console.log('* condition: %s\n', sleepConfig.condition);
+    clUtils.prompt();
+}
+
+var commands = {
+    'humidity': {
+        parameters: ['temperature', 'pressure'],
+        description: '\tSend a new humidity measure',
+        handler: humidity
+    },
+    'gps': {
+        parameters: ['latitude', 'longitude', 'speed', 'orientation', 'altitude'],
+        description: '\tSend a new gps measure',
+        handler: gpsLocation
+    },
+    'temperature': {
+        parameters: ['temperature'],
+        description: '\tSend a new temperature measure',
+        handler: temperature
+    },
+    'setConfig': {
+        parameters: ['host', 'port', 'path', 'stackId'],
+        description: '\tChange the configuration of the device.',
+        handler: setConfig
+    },
+    'getConfig': {
+        parameters: [],
+        description: '\tRead the current configuration.',
+        handler: getConfig
+    },
+    'setSleep': {
+        parameters: ['value', 'condition'],
+        description: '\tSet the default sleep parameters.',
+        handler: setSleep
+    },
+    'getSleep': {
+        parameters: [],
+        description: '\tGet the current default sleep parameters.',
+        handler: getSleep
+    }
+};
+
+clUtils.initialize(commands, 'IoT Agent tester> ');
