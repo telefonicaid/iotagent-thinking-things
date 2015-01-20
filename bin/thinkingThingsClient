@@ -37,7 +37,9 @@ var clUtils = require('../lib/commandLineUtils'),
         value: '2000',
         condition: 'WakeUp'
     },
-    separator = '\n\n\t';
+    separator = '\n\n\t',
+    stack = [],
+    stackMode = false;
 
 function sendRequest(payload) {
     var options = {
@@ -60,19 +62,25 @@ function sendRequest(payload) {
 }
 
 function humidity(commands) {
-    var payload = '#' + config.stackId + ',H1,' +
+    var module = '#' + commands[2] + ',H1,' +
         commands[0] + ',' +
         commands[1] + ',' +
         sleepConfig.value + '$' +
         sleepConfig.condition + ',';
 
-    console.log("Sending the following humidity request [%s]", payload);
+    if (stackMode) {
+        stack.push(module);
+    } else {
+        var payload = '#' + config.stackId + module;
 
-    sendRequest(payload);
+        console.log("Sending the following humidity request [%s]", payload);
+
+        sendRequest(payload);
+    }
 }
 
 function gpsLocation(commands) {
-    var payload = '#' + config.stackId + ',GPS,'+
+    var module = '#' + commands[5] + ',GPS,'+
         commands[0] + ',' +
         commands[1] + ',' +
         commands[2] + ',' +
@@ -81,18 +89,30 @@ function gpsLocation(commands) {
         sleepConfig.value + '$' +
         sleepConfig.condition + ',';
 
-    console.log("Sending the following gps request [%s]", payload);
-    sendRequest(payload);
+    if (stackMode) {
+        stack.push(module);
+    } else {
+        var payload = '#' + config.stackId + module;
+
+        console.log("Sending the following gps request [%s]", payload);
+        sendRequest(payload);
+    }
 }
 
 function temperature(commands) {
-    var payload = '#' + config.stackId + ',T1,'+
+    var module = '#' + commands[1] + ',T1,'+
         commands[0] + ',' +
         sleepConfig.value + '$' +
         sleepConfig.condition + ',';
 
-    console.log("Sending the following temperature request [%s]", payload);
-    sendRequest(payload);
+    if (stackMode) {
+        stack.push(module);
+    } else {
+        var payload = '#' + config.stackId + module;
+
+        console.log("Sending the following temperature request [%s]", payload);
+        sendRequest(payload);
+    }
 }
 
 function setConfig(commands) {
@@ -124,19 +144,39 @@ function getSleep(commands) {
     clUtils.prompt();
 }
 
+function startStack() {
+    stackMode = true;
+    console.log('Starting stack');
+    clUtils.prompt();
+}
+
+function sendStack() {
+    function concat(previous, current) {
+        return previous + current;
+    }
+
+    var payload = '#' + config.stackId + stack.reduce(concat);
+    stackMode = false;
+
+    console.log('Sending the following stacked payload: ' + payload);
+
+    sendRequest(payload);
+    clUtils.prompt();
+}
+
 var commands = {
     'humidity': {
-        parameters: ['temperature', 'pressure'],
+        parameters: ['temperature', 'pressure', 'moduleId'],
         description: '\tSend a new humidity measure',
         handler: humidity
     },
     'gps': {
-        parameters: ['latitude', 'longitude', 'speed', 'orientation', 'altitude'],
+        parameters: ['latitude', 'longitude', 'speed', 'orientation', 'altitude', 'moduleId'],
         description: '\tSend a new gps measure',
         handler: gpsLocation
     },
     'temperature': {
-        parameters: ['temperature'],
+        parameters: ['temperature', 'moduleId'],
         description: '\tSend a new temperature measure',
         handler: temperature
     },
@@ -159,6 +199,16 @@ var commands = {
         parameters: [],
         description: '\tGet the current default sleep parameters.',
         handler: getSleep
+    },
+    'startStack': {
+        parameters: [],
+        description: '\tStart stacking the payloads to send a multimodule payload (stackMode = off).',
+        handler: startStack
+    },
+    'sendStack': {
+        parameters: [],
+        description: '\tSend all the stacked module info (stackMode = on).',
+        handler: sendStack
     }
 };
 
