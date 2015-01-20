@@ -1,0 +1,22 @@
+{
+  "contextResponses": [
+    {
+      "contextElement": {
+        "attributes": [
+          {
+            "name": "humidity",
+            "type": "number",
+            "value": ""
+          }
+        ],
+        "id": "953E78F:ThinkingThing",
+        "isPattern": "false",
+        "type": "ThinkingThing"
+      },
+      "statusCode": {
+        "code": "200",
+        "reasonPhrase": "OK"
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "contextElements": [
+    {
+      "type": "ThinkingThing",
+      "isPattern": "false",
+      "id": "953E78F:ThinkingThing",
+      "attributes": [
+        {
+          "name": "humidity",
+          "type": "float",
+          "value": "0.330"
+        },
+        {
+          "name": "temperature",
+          "type": "float",
+          "value": "28"
+        }
+      ]
+    }
+  ],
+  "updateAction": "APPEND"
+}
