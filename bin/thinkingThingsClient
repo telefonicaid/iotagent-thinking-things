@@ -3,24 +3,24 @@
 /*
  * Copyright 2014 Telefonica Investigación y Desarrollo, S.A.U
  *
- * This file is part of fiware-iotagent-lib
+ * This file is part of iotagent-thinking-things
  *
- * fiware-iotagent-lib is free software: you can redistribute it and/or
+ * iotagent-thinking-things is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  *
- * fiware-iotagent-lib is distributed in the hope that it will be useful,
+ * iotagent-thinking-things is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public
- * License along with fiware-iotagent-lib.
+ * License along with iotagent-thinking-things.
  * If not, seehttp://www.gnu.org/licenses/.
  *
  * For those usages not covered by the GNU Affero General Public License
- * please contact with::[contacto@tid.es]
+ * please contact with::[iot_support@tid.es]
  */
 'use strict';
 
@@ -29,7 +29,8 @@ var clUtils = require('../lib/commandLineUtils'),
     async = require('async'),
     config = {
         host: 'localhost',
-        port: 8001,
+        port: 8000,
+        path: '/thinkingthings',
         stackId: 'default'
     },
     sleepConfig = {
@@ -38,15 +39,36 @@ var clUtils = require('../lib/commandLineUtils'),
     },
     separator = '\n\n\t';
 
+function sendRequest(payload) {
+    var options = {
+        url: 'http://' + config.host + ':' + config.port + config.path,
+        method: 'POST',
+        body: payload
+    }
+
+    request(options, function (error, response, body) {
+        if (error) {
+            console.error('Error sending the request: %s' + error);
+        } else if (response.statusCode === 200 && body) {
+            console.log('Answer: %s', body);
+        } else {
+            console.error('Unknown status code: %d', response.statusCode);
+        }
+
+        clUtils.prompt();
+    });
+}
+
 function humidity(commands) {
-    var payload = '#' + config.stackId + ',H1,'+
+    var payload = '#' + config.stackId + ',H1,' +
         commands[0] + ',' +
         commands[1] + ',' +
         sleepConfig.value + '$' +
         sleepConfig.condition + ',';
 
     console.log("Sending the following humidity request [%s]", payload);
-    clUtils.prompt();
+
+    sendRequest(payload);
 }
 
 function gpsLocation(commands) {
@@ -60,7 +82,7 @@ function gpsLocation(commands) {
         sleepConfig.condition + ',';
 
     console.log("Sending the following gps request [%s]", payload);
-    clUtils.prompt();
+    sendRequest(payload);
 }
 
 function temperature(commands) {
@@ -70,13 +92,14 @@ function temperature(commands) {
         sleepConfig.condition + ',';
 
     console.log("Sending the following temperature request [%s]", payload);
-    clUtils.prompt();
+    sendRequest(payload);
 }
 
 function setConfig(commands) {
     config.host = commands[0];
     config.port = commands[1];
-    config.stackId = commands[2];
+    config.path = commands[2];
+    config.stackId = commands[3];
     clUtils.prompt();
 }
 
@@ -118,7 +141,7 @@ var commands = {
         handler: temperature
     },
     'setConfig': {
-        parameters: ['host', 'port', 'stackId'],
+        parameters: ['host', 'port', 'path', 'stackId'],
         description: '\tChange the configuration of the device.',
         handler: setConfig
     },
