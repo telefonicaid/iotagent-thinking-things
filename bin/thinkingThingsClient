@@ -212,4 +212,4 @@ var commands = {
     }
 };
 
-clUtils.initialize(commands, 'IoT Agent tester> ');
+clUtils.initialize(commands, 'Thinking Things Test> ');
