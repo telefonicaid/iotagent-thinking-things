@@ -146,6 +146,7 @@ function getSleep(commands) {
 
 function startStack() {
     stackMode = true;
+    stack = [];
     console.log('Starting stack');
     clUtils.prompt();
 }
