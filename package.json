@@ -21,6 +21,15 @@
   "scripts": {
     "test": "grunt test"
   },
+  "dependencies": {
+    "logops": "*",
+    "fiware-iotagent-lib": "https://github.com/telefonicaid/iotagent-node-lib/tarball/develop",
+    "express": "*",
+    "body-parser": "*",
+    "logops": "*",
+    "request": "*",
+    "async": "*"
+  },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.6.4",
     "grunt-contrib-watch": "~0.5.3",
@@ -39,7 +48,9 @@
     "proxyquire": "0.5.1",
     "grunt-mkdir": "~0.1.1",
     "grunt-contrib-clean": "~0.5.0",
-    "grunt-githooks": "~0.3.1"
+    "grunt-githooks": "~0.3.1",
+    "nock": "*",
+    "should": "*"
   },
   "keywords": []
 }
