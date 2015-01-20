@@ -1,6 +1,79 @@
 # iotagent-thinking-things
+## Overview
+This *Internet of Things Agent* is a bridge can be used to bridge between Telefonica's Thinking Things Closed protocol and NGSI Context Brokers (like [Orion](https://github.com/telefonicaid/fiware-orion)). The Thinking Things protocol is a simplified protocol aimed to provide a simple platform to experiment with the Internet of Things.
 
-IoT Agent for Telefonica Thinking Things Closed protocol
+## Usage
+In order to install the TT Agent, just clone the project and install the dependencies:
+```
+git clone https://github.com/dmoranj/iotagent-thinking-things.git
+npm install
+```
+In order to start the IoT Agent, from the root folder of the project, type:
+```
+bin/thinkingThingsAgent.js
+```
+## Configuration
+All the configuration of the IoT Agent can be customized with the `config.js`.
+
+## Client
+In order to test the IoT Agent, a ThinkingThings client is provided that can emulate some calls from TT devices. The client can be started from the root folder of the project with the following command:
+```
+bin/thinkingThingsClient
+```
+The client provides a prompt with several commands that let you send information like different modules, configure the remote server or prepare module stacks to send multiple measures at once. In order to show all the available commands, from the client prompt, type:
+```
+help
+```
+### Stacks
+In standard mode, each module command send an HTTP request to the remote server with the module information (and the prefixed stack id). In order to send a stack of modules, a stack must be made. 
+
+A stack can be started with the followign command:
+```
+startStack
+```
+All the subsequent calls to measure modules will not send the module information, but will stack it instead. In order to clean the stack and send all the stacked information to the remote server type:
+```
+sendStack
+```
+
+### Commands
+```
+humidity <temperature> <pressure> <moduleId>  
+
+	Send a new humidity measure
+
+gps <latitude> <longitude> <speed> <orientation> <altitude> <moduleId>  
+
+	Send a new gps measure
+
+temperature <temperature> <moduleId>  
+
+	Send a new temperature measure
+
+setConfig <host> <port> <path> <stackId>  
+
+	Change the configuration of the device.
+
+getConfig  
+
+	Read the current configuration.
+
+setSleep <value> <condition>  
+
+	Set the default sleep parameters.
+
+getSleep  
+
+	Get the current default sleep parameters.
+
+startStack  
+
+	Start stacking the payloads to send a multimodule payload (stackMode = off).
+
+sendStack  
+
+	Send all the stacked module info (stackMode = on).
+```
 
 ## Development documentation
 ### Project build
