@@ -6,8 +6,8 @@
       "id": "5143:ThinkingThing",
       "attributes": [
         {
-          "name": "location",
-          "type": "float",
+          "name": "position",
+          "type": "coords",
           "value": "21.1,-9.4"
         },
         {

@@ -4,8 +4,8 @@
       "contextElement": {
         "attributes": [
           {
-            "name": "location",
-            "type": "float",
+            "name": "position",
+            "type": "coords",
             "value": ""
           },
           {

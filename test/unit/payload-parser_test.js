@@ -112,9 +112,9 @@ describe('Thinking things payload parser', function() {
                 should.exist(result);
                 should.exist(result.attributes);
                 should.exist(result.attributes[0]);
-                result.attributes[0].name.should.equal('location');
+                result.attributes[0].name.should.equal('position');
                 result.attributes[0].value.should.equal('21.1,-9.4');
-                result.attributes[0].type.should.equal('float');
+                result.attributes[0].type.should.equal('coords');
                 result.attributes[1].name.should.equal('speed');
                 result.attributes[1].value.should.equal('12.3');
                 result.attributes[1].type.should.equal('float');
