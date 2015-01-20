@@ -109,4 +109,21 @@ describe('Southbound measure reporting', function() {
         it('should return a 200OK with the apropriate response: ',
             checkResponse(options, '#673495,T1,2500$theCondition,'));
     });
+    describe('When a GPS measure arrives to the IoT Agent: #5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,', function() {
+        var options = {
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
+            method: 'POST',
+            body: '#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,'
+        };
+
+        beforeEach(prepareMocks(
+            './test/unit/contextRequests/updateContextGPS.json',
+            './test/unit/contextResponses/updateContextGPSSuccess.json'));
+
+        it('should update the device entity in the Context Broker with the humidity attribute',
+            checkContextBroker(options));
+
+        it('should return a 200OK with the apropriate response: ',
+            checkResponse(options, '#5143,GPS,12$cond1,'));
+    });
 });

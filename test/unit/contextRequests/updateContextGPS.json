@@ -1,0 +1,32 @@
+{
+  "contextElements": [
+    {
+      "type": "ThinkingThing",
+      "isPattern": "false",
+      "id": "5143:ThinkingThing",
+      "attributes": [
+        {
+          "name": "location",
+          "type": "float",
+          "value": "21.1,-9.4"
+        },
+        {
+          "name": "speed",
+          "type": "float",
+          "value": "12.3"
+        },
+        {
+          "name": "orientation",
+          "type": "float",
+          "value": "0.64"
+        },
+        {
+          "name": "altitude",
+          "type": "float",
+          "value": "127"
+        }
+      ]
+    }
+  ],
+  "updateAction": "APPEND"
+}
