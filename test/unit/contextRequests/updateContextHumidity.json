@@ -3,17 +3,35 @@
     {
       "type": "ThinkingThing",
       "isPattern": "false",
-      "id": "953E78F:ThinkingThing",
+      "id": "STACK1:ThinkingThing",
       "attributes": [
         {
-          "name": "humidity",
-          "type": "float",
-          "value": "0.330"
-        },
-        {
-          "name": "temperature",
-          "type": "float",
-          "value": "28"
+          "name": "953E78F",
+          "type": "compound",
+          "value": [
+            {
+              "name": "humidity",
+              "value": "0.330",
+              "type": "float"
+            },
+            {
+              "name": "temperature",
+              "value": "28",
+              "type": "float"
+            }
+          ],
+          "metadatas": [
+            {
+              "name": "sleepcondition",
+              "type": "string",
+              "value": "condition"
+            },
+            {
+              "name": "sleeptime",
+              "type": "string",
+              "value": "20"
+            }
+          ]
         }
       ]
     }

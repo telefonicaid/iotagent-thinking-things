@@ -4,12 +4,12 @@
       "contextElement": {
         "attributes": [
           {
-            "name": "humidity",
-            "type": "number",
+            "name": "953E78F",
+            "type": "compound",
             "value": ""
           }
         ],
-        "id": "953E78F:ThinkingThing",
+        "id": "STACK1:ThinkingThing",
         "isPattern": "false",
         "type": "ThinkingThing"
       },
