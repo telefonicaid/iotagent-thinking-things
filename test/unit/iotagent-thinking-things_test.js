@@ -38,7 +38,7 @@ describe('Southbound measure reporting', function() {
     afterEach(function(done) {
         ttAgent.stop(done);
     });
-    describe.only('When a new Humidity measure arrives to the IoT Agent', function() {
+    describe('When a humidity measure arrives to the IoT Agent: #953E78F,H1,28,0.330,20$condition,', function() {
         var options = {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
             method: 'POST',
@@ -62,6 +62,14 @@ describe('Southbound measure reporting', function() {
             request(options, function(error, response, body) {
                 should.not.exist(error);
                 contextBrokerMock.done();
+                done();
+            });
+        });
+        it('should return a 200OK with the apropriate response: ', function(done) {
+            request(options, function(error, response, body) {
+                should.not.exist(error);
+                response.statusCode.should.equal(200);
+                body.should.equal('#953E78F,H1,20$condition,');
                 done();
             });
         });

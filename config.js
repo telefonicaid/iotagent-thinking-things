@@ -6,7 +6,7 @@ config.thinkingThings = {
 };
 
 config.ngsi = {
-    logLevel: 'DEBUG',
+    logLevel: 'FATAL',
     defaultType: 'ThinkingThing',
     contextBroker: {
         host: '10.11.128.16',
