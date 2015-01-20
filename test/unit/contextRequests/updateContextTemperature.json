@@ -3,12 +3,30 @@
     {
       "type": "ThinkingThing",
       "isPattern": "false",
-      "id": "673495:ThinkingThing",
+      "id": "STACK1:ThinkingThing",
       "attributes": [
         {
-          "name": "temperature",
-          "type": "float",
-          "value": "17"
+          "name": "673495",
+          "type": "compound",
+          "value": [
+            {
+              "name": "temperature",
+              "type": "float",
+              "value": "17"
+            }
+          ],
+          "metadatas": [
+            {
+              "name": "sleepcondition",
+              "type": "string",
+              "value": "theCondition"
+            },
+            {
+              "name": "sleeptime",
+              "type": "string",
+              "value": "2500"
+            }
+          ]
         }
       ]
     }

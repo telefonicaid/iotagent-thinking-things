@@ -3,34 +3,52 @@
     {
       "type": "ThinkingThing",
       "isPattern": "false",
-      "id": "5143:ThinkingThing",
+      "id": "STACK1:ThinkingThing",
       "attributes": [
         {
-          "name": "position",
-          "type": "coords",
-          "value": "21.1,-9.4",
+          "name": "5143",
+          "type": "compound",
+          "value": [
+            {
+              "name": "position",
+              "type": "coords",
+              "value": "21.1,-9.4",
+              "metadatas": [
+                {
+                  "name": "location",
+                  "type": "string",
+                  "value": "WGS84"
+                }
+              ]
+            },
+            {
+              "name": "speed",
+              "type": "float",
+              "value": "12.3"
+            },
+            {
+              "name": "orientation",
+              "type": "float",
+              "value": "0.64"
+            },
+            {
+              "name": "altitude",
+              "type": "float",
+              "value": "127"
+            }
+          ],
           "metadatas": [
             {
-              "name": "location",
+              "name": "sleepcondition",
               "type": "string",
-              "value": "WGS84"
+              "value": "cond1"
+            },
+            {
+              "name": "sleeptime",
+              "type": "string",
+              "value": "12"
             }
           ]
-        },
-        {
-          "name": "speed",
-          "type": "float",
-          "value": "12.3"
-        },
-        {
-          "name": "orientation",
-          "type": "float",
-          "value": "0.64"
-        },
-        {
-          "name": "altitude",
-          "type": "float",
-          "value": "127"
         }
       ]
     }

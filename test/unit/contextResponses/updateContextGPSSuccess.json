@@ -4,27 +4,12 @@
       "contextElement": {
         "attributes": [
           {
-            "name": "position",
-            "type": "coords",
-            "value": ""
-          },
-          {
-            "name": "speed",
-            "type": "float",
-            "value": ""
-          },
-          {
-            "name": "orientation",
-            "type": "float",
-            "value": ""
-          },
-          {
-            "name": "altitude",
-            "type": "float",
+            "name": "5143",
+            "type": "compount",
             "value": ""
           }
         ],
-        "id": "5143:ThinkingThing",
+        "id": "STACK1:ThinkingThing",
         "isPattern": "false",
         "type": "ThinkingThing"
       },

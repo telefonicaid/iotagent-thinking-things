@@ -4,12 +4,12 @@
       "contextElement": {
         "attributes": [
           {
-            "name": "temperature",
-            "type": "number",
+            "name": "673495",
+            "type": "compound",
             "value": ""
           }
         ],
-        "id": "673495:ThinkingThing",
+        "id": "STACK1:ThinkingThing",
         "isPattern": "false",
         "type": "ThinkingThing"
       },

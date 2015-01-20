@@ -74,11 +74,11 @@ describe('Southbound measure reporting', function() {
     afterEach(function(done) {
         ttAgent.stop(done);
     });
-    describe('When a humidity measure arrives to the IoT Agent: #953E78F,H1,28,0.330,20$condition,', function() {
+    describe('When a humidity measure arrives to the IoT Agent: #STACK1#953E78F,H1,28,0.330,20$condition,', function() {
         var options = {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
             method: 'POST',
-            body: '#953E78F,H1,28,0.330,20$condition,'
+            body: '#STACK1#953E78F,H1,28,0.330,20$condition,'
         };
 
         beforeEach(prepareMocks(
@@ -89,14 +89,14 @@ describe('Southbound measure reporting', function() {
             checkContextBroker(options));
 
         it('should return a 200OK with the apropriate response: ',
-            checkResponse(options, '#953E78F,H1,20$condition,'));
+            checkResponse(options, '#STACK1#953E78F,H1,20$condition,'));
     });
 
-    describe('When a temperature measure arrives to the IoT Agent: #673495,T1,17,2500$theCondition,', function() {
+    describe('When a temperature measure arrives to the IoT Agent: #STACK1#673495,T1,17,2500$theCondition,', function() {
         var options = {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
             method: 'POST',
-            body: '#673495,T1,17,2500$theCondition,'
+            body: '#STACK1#673495,T1,17,2500$theCondition,'
         };
 
         beforeEach(prepareMocks(
@@ -107,13 +107,13 @@ describe('Southbound measure reporting', function() {
             checkContextBroker(options));
 
         it('should return a 200OK with the apropriate response: ',
-            checkResponse(options, '#673495,T1,2500$theCondition,'));
+            checkResponse(options, '#STACK1#673495,T1,2500$theCondition,'));
     });
-    describe('When a GPS measure arrives to the IoT Agent: #5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,', function() {
+    describe('When a GPS measure arrives to the IoT Agent: #STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,', function() {
         var options = {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
             method: 'POST',
-            body: '#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,'
+            body: '#STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,'
         };
 
         beforeEach(prepareMocks(
@@ -124,6 +124,6 @@ describe('Southbound measure reporting', function() {
             checkContextBroker(options));
 
         it('should return a 200OK with the apropriate response: ',
-            checkResponse(options, '#5143,GPS,12$cond1,'));
+            checkResponse(options, '#STACK1#5143,GPS,12$cond1,'));
     });
 });
