@@ -48,7 +48,7 @@ function checkSleep(value, condition, callback) {
     };
 }
 
-describe.only('Thinking things payload parser', function() {
+describe('Thinking things payload parser', function() {
     describe('When a Humidity payload arrives: "#953E78F,H1,28,0.330,20$condition,"', function() {
         it('should fill the Device ID', function(done) {
             thinkingParser.parse('#953E78F,H1,28,0.330,20$condition,', checkId('953E78F', done));
@@ -112,9 +112,15 @@ describe.only('Thinking things payload parser', function() {
                 should.exist(result);
                 should.exist(result.attributes);
                 should.exist(result.attributes[0]);
-                result.attributes[0].name.should.equal('location');
+                result.attributes[0].name.should.equal('position');
                 result.attributes[0].value.should.equal('21.1,-9.4');
-                result.attributes[0].type.should.equal('float');
+                result.attributes[0].type.should.equal('coords');
+                should.exist(result.attributes[0].metadatas);
+                should.exist(result.attributes[0].metadatas[0]);
+                result.attributes[0].metadatas[0].name.should.equal('location');
+                result.attributes[0].metadatas[0].type.should.equal('string');
+                result.attributes[0].metadatas[0].value.should.equal('WGS84');
+
                 result.attributes[1].name.should.equal('speed');
                 result.attributes[1].value.should.equal('12.3');
                 result.attributes[1].type.should.equal('float');

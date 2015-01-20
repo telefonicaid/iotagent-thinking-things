@@ -1,0 +1,39 @@
+{
+  "contextElements": [
+    {
+      "type": "ThinkingThing",
+      "isPattern": "false",
+      "id": "5143:ThinkingThing",
+      "attributes": [
+        {
+          "name": "position",
+          "type": "coords",
+          "value": "21.1,-9.4",
+          "metadatas": [
+            {
+              "name": "location",
+              "type": "string",
+              "value": "WGS84"
+            }
+          ]
+        },
+        {
+          "name": "speed",
+          "type": "float",
+          "value": "12.3"
+        },
+        {
+          "name": "orientation",
+          "type": "float",
+          "value": "0.64"
+        },
+        {
+          "name": "altitude",
+          "type": "float",
+          "value": "127"
+        }
+      ]
+    }
+  ],
+  "updateAction": "APPEND"
+}

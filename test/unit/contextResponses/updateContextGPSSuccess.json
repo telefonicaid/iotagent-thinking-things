@@ -1,0 +1,37 @@
+{
+  "contextResponses": [
+    {
+      "contextElement": {
+        "attributes": [
+          {
+            "name": "position",
+            "type": "coords",
+            "value": ""
+          },
+          {
+            "name": "speed",
+            "type": "float",
+            "value": ""
+          },
+          {
+            "name": "orientation",
+            "type": "float",
+            "value": ""
+          },
+          {
+            "name": "altitude",
+            "type": "float",
+            "value": ""
+          }
+        ],
+        "id": "5143:ThinkingThing",
+        "isPattern": "false",
+        "type": "ThinkingThing"
+      },
+      "statusCode": {
+        "code": "200",
+        "reasonPhrase": "OK"
+      }
+    }
+  ]
+}
