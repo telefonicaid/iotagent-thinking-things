@@ -1,0 +1,17 @@
+{
+  "contextElements": [
+    {
+      "type": "ThinkingThing",
+      "isPattern": "false",
+      "id": "673495:ThinkingThing",
+      "attributes": [
+        {
+          "name": "temperature",
+          "type": "float",
+          "value": "17"
+        }
+      ]
+    }
+  ],
+  "updateAction": "APPEND"
+}
