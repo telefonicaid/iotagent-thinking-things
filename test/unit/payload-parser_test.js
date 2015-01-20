@@ -109,7 +109,8 @@ describe('Thinking things payload parser', function() {
     });
     describe('When a GPS location payload arrives: #STACK01#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,', function() {
         it('should fill the Device ID', function(done) {
-            thinkingParser.parse('#STACK01#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,', checkId('STACK01', '5143', done));
+            thinkingParser.parse('#STACK01#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,',
+                checkId('STACK01', '5143', done));
         });
         it('should parse all the location fields into the attributes object', function(done) {
             thinkingParser.parse('#STACK01#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,', function(error, result) {

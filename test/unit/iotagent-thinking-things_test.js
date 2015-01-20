@@ -56,7 +56,7 @@ function prepareMocks(request, response) {
     return function(done) {
         nock.cleanAll();
 
-        contextBrokerMock = nock('http://10.11.128.16:1026')
+        contextBrokerMock = nock('http://' + config.ngsi.contextBroker.host  + ':1026')
             .matchHeader('fiware-service', 'smartGondor')
             .matchHeader('fiware-servicepath', '/gardens')
             .post('/NGSI10/updateContext',
@@ -74,7 +74,8 @@ describe('Southbound measure reporting', function() {
     afterEach(function(done) {
         ttAgent.stop(done);
     });
-    describe('When a humidity measure arrives to the IoT Agent: #STACK1#953E78F,H1,28,0.330,20$condition,', function() {
+    describe('When a humidity measure arrives to the IoT Agent: #STACK1#953E78F,H1,28,0.330,20$condition,',
+        function() {
         var options = {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
             method: 'POST',
@@ -92,7 +93,8 @@ describe('Southbound measure reporting', function() {
             checkResponse(options, '#STACK1#953E78F,H1,20$condition,'));
     });
 
-    describe('When a temperature measure arrives to the IoT Agent: #STACK1#673495,T1,17,2500$theCondition,', function() {
+    describe('When a temperature measure arrives to the IoT Agent: #STACK1#673495,T1,17,2500$theCondition,',
+        function() {
         var options = {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
             method: 'POST',
@@ -109,7 +111,8 @@ describe('Southbound measure reporting', function() {
         it('should return a 200OK with the appropriate response: ',
             checkResponse(options, '#STACK1#673495,T1,2500$theCondition,'));
     });
-    describe('When a GPS measure arrives to the IoT Agent: #STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,', function() {
+    describe('When a GPS measure arrives to the IoT Agent: #STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,',
+        function() {
         var options = {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
             method: 'POST',
@@ -140,6 +143,6 @@ describe('Southbound measure reporting', function() {
         it('should update the device entity in the Context Broker with both attributes',
             checkContextBroker(options));
         it('should return a 200OK with the appropriate response',
-            checkResponse(options, '#STACK1#5143,GPS,12$cond1,#673495,T1,2500$theCondition,'))
+            checkResponse(options, '#STACK1#5143,GPS,12$cond1,#673495,T1,2500$theCondition,'));
     });
 });
