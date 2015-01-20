@@ -88,7 +88,7 @@ describe('Southbound measure reporting', function() {
         it('should update the device entity in the Context Broker with the humidity attribute',
             checkContextBroker(options));
 
-        it('should return a 200OK with the apropriate response: ',
+        it('should return a 200OK with the appropriate response: ',
             checkResponse(options, '#STACK1#953E78F,H1,20$condition,'));
     });
 
@@ -106,7 +106,7 @@ describe('Southbound measure reporting', function() {
         it('should update the device entity in the Context Broker with the humidity attribute',
             checkContextBroker(options));
 
-        it('should return a 200OK with the apropriate response: ',
+        it('should return a 200OK with the appropriate response: ',
             checkResponse(options, '#STACK1#673495,T1,2500$theCondition,'));
     });
     describe('When a GPS measure arrives to the IoT Agent: #STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,', function() {
@@ -123,7 +123,23 @@ describe('Southbound measure reporting', function() {
         it('should update the device entity in the Context Broker with the humidity attribute',
             checkContextBroker(options));
 
-        it('should return a 200OK with the apropriate response: ',
+        it('should return a 200OK with the appropriate response: ',
             checkResponse(options, '#STACK1#5143,GPS,12$cond1,'));
+    });
+    describe('When a request arrives to the IoT Agent having two modules', function() {
+        var options = {
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
+            method: 'POST',
+            body: '#STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,#673495,T1,17,2500$theCondition,'
+        };
+
+        beforeEach(prepareMocks(
+            './test/unit/contextRequests/updateContextMultipleModules.json',
+            './test/unit/contextResponses/updateContextMultipleModulesSuccess.json'));
+
+        it('should update the device entity in the Context Broker with both attributes',
+            checkContextBroker(options));
+        it('should return a 200OK with the appropriate response',
+            checkResponse(options, '#STACK1#5143,GPS,12$cond1,#673495,T1,2500$theCondition,'))
     });
 });
