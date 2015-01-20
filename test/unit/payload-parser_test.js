@@ -115,6 +115,12 @@ describe('Thinking things payload parser', function() {
                 result.attributes[0].name.should.equal('position');
                 result.attributes[0].value.should.equal('21.1,-9.4');
                 result.attributes[0].type.should.equal('coords');
+                should.exist(result.attributes[0].metadatas);
+                should.exist(result.attributes[0].metadatas[0]);
+                result.attributes[0].metadatas[0].name.should.equal('location');
+                result.attributes[0].metadatas[0].type.should.equal('string');
+                result.attributes[0].metadatas[0].value.should.equal('WGS84');
+
                 result.attributes[1].name.should.equal('speed');
                 result.attributes[1].value.should.equal('12.3');
                 result.attributes[1].type.should.equal('float');

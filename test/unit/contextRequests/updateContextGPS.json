@@ -8,7 +8,14 @@
         {
           "name": "position",
           "type": "coords",
-          "value": "21.1,-9.4"
+          "value": "21.1,-9.4",
+          "metadatas": [
+            {
+              "name": "location",
+              "type": "string",
+              "value": "WGS84"
+            }
+          ]
         },
         {
           "name": "speed",
