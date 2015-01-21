@@ -56,7 +56,7 @@ function prepareMocks(request, response) {
     return function(done) {
         nock.cleanAll();
 
-        contextBrokerMock = nock('http://' + config.ngsi.contextBroker.host  + ':1026')
+        contextBrokerMock = nock('http://' + config.ngsi.contextBroker.host + ':1026')
             .matchHeader('fiware-service', 'smartGondor')
             .matchHeader('fiware-servicepath', '/gardens')
             .post('/NGSI10/updateContext',
