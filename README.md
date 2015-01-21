@@ -1,6 +1,6 @@
 # iotagent-thinking-things
 ## Overview
-This *Internet of Things Agent* is a bridge can be used to bridge between Telefonica's Thinking Things Closed protocol and NGSI Context Brokers (like [Orion](https://github.com/telefonicaid/fiware-orion)). The Thinking Things protocol is a simplified protocol aimed to provide a simple platform to experiment with the Internet of Things.
+This *Internet of Things Agent* is a bridge can be used to bridge between Telefonica's Thinking Things Closed protocol (TT from now on) and NGSI Context Brokers (like [Orion](https://github.com/telefonicaid/fiware-orion)). The Thinking Things protocol is a simplified protocol aimed to provide a simple platform to experiment with the Internet of Things.
 
 ## Usage
 In order to install the TT Agent, just clone the project and install the dependencies:
@@ -13,7 +13,78 @@ In order to start the IoT Agent, from the root folder of the project, type:
 bin/thinkingThingsAgent.js
 ```
 ## Configuration
-All the configuration of the IoT Agent can be customized with the `config.js`.
+All the configuration of the IoT Agent can be customized with the `config.js`. The configuration is divided into to sections: `ngsi` (for all the data concerning the northbound of the Agent) and `thinkingThings` (for all the data concerning the southbound of the Agent).
+
+### Thinking Things configuration
+The following parameters can be configured:
+* `logLevel`: determines the log level for the incoming TT requests.
+* `port`: port where the South Bound will be listening for connections.
+* `root`: base path for the South Bound.
+
+### NGSI
+* `logLevel`: determines the log level for the connection with the NGSI Broker.
+* `defaultType`: this is the entity type that will be assigned to the devices whenever there is no other way of determining the appropriate type.
+* `contextBroker.host`: host where the NGSI Context Broker is listening.
+* `contextBroker.port`: port where the NGSI Context Broker is listening.
+* `server.port`: port where the Noth Bound listens for NGSI queries and updates (currently not in used, will be used for commands). 
+* `deviceRegistry.type`: the Agent can keep a registry of the connected devices for preconfiguration (e.g.: when the devices come from multiple origins). The possible values are: `mongodb` and `memory`. The memory registry is transient.
+* `deviceRegistry.host`: host where the remote database for the device registry is located. This option is not used by memory registries.
+* `types`: see Device Configuration below.
+* `providerUrl`: public URL and where the IoT Agent is listening for NGSI connections. This URL only makes sense for its use with commands and passive attributes (read and write).
+* `deviceRegistrationDuration`: lifetime of the registration of the IoT Agent as a Context Provider for active attributes of the device entities.
+
+### Device configuration
+There are two ways for a device to be used with the IoT Agent. 
+
+#### One IoT Agent per Group: no preregistration needed
+The first and most simple way is to use one IoT Agent per group of devices, configuring the service and subservice information (and security information when appliable) in the default type. In this mode, the `types` attribute of the NGSI configuration have to contain all the service information. Whenever a new request arrives to the Agent coming from the South Bound, the default type will be assigned to the device, and the configured information of that type applied to the device registry (and used in further communications).
+
+#### One Global IoT Agent: preregistration of the devices needed
+If there is a single global agent, all the devices must be preregistered using the provisioning API (that is listening in the `server.port` port in the `/iot/devices` path). The device information can be sent to this API, and written to the device registry, thus configuring the service information in a per device basis.
+
+To configure a type, a new attribute with the type name should be added to the `ngsi.types` object with the name of the new type in the `config.js` file:
+```
+config.ngsi = {
+
+	[...]
+
+    types: {
+        'ThinkingThing': {
+            service: 'smartGondor',
+            subservice: '/gardens',
+            commands: [],
+            lazy: [],
+            active: [
+                {
+                    name: 'humidity',
+                    type: 'Number'
+                }
+            ]
+        }
+    },
+
+	[...]
+
+};
+```
+
+The format for new device registrations is as follows:
+```
+{
+    "name": "Light1",
+    "service" : "smartGondor",
+    "service_path": "/gardens",
+    "entity_name": "TheFirstLight",
+    "entity_type": "TheLightType",
+    "attributes": [],
+    "commands": [
+        {
+            "name": "luminance",
+            "type": "lumens"
+        }
+    ]
+}
+```
 
 ## Client
 In order to test the IoT Agent, a ThinkingThings client is provided that can emulate some calls from TT devices. The client can be started from the root folder of the project with the following command:
