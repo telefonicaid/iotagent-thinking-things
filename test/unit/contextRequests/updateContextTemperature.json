@@ -6,30 +6,25 @@
       "id": "STACK1:ThinkingThing",
       "attributes": [
         {
-          "name": "953E78F",
+          "name": "673495",
           "type": "compound",
           "value": [
             {
-              "name": "humidity",
-              "value": "0.330",
-              "type": "float"
-            },
-            {
               "name": "temperature",
-              "value": "28",
-              "type": "float"
+              "type": "float",
+              "value": "17"
             }
           ],
           "metadatas": [
             {
               "name": "sleepcondition",
               "type": "string",
-              "value": "condition"
+              "value": "theCondition"
             },
             {
               "name": "sleeptime",
               "type": "string",
-              "value": "20"
+              "value": "2500"
             }
           ]
         }

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /*
  * Copyright 2014 Telefonica Investigación y Desarrollo, S.A.U
  *
@@ -20,16 +22,22 @@
  * For those usages not covered by the GNU Affero General Public License
  * please contact with::[iot_support@tid.es]
  */
-
 'use strict';
 
-module.exports = {
-    BadPayload: function(payload) {
-        this.name = 'BAD_PAYLOAD';
-        this.message = 'The request payload [' + payload + '] could not be parsed';
+var iotAgent = require('../lib/iotagent-thinking-things'),
+    context = {
+        op: 'ThinkingT.Executable'
     },
-    UnsupportedModule: function(payload) {
-        this.name = 'UNSUPPORTED_MODULE';
-        this.message = 'The module in request [' + payload + '] is not supported';
-    }
-};
+    logger = require('logops');
+
+function start() {
+    iotAgent.start(function (error) {
+        if (error) {
+            logger.error(context, 'Error starting Thinking Things Agent: [%s] Exiting process', error);
+        } else {
+            logger.info(context, 'Thinking Things Agent IoT Agent started');
+        }
+    });
+}
+
+start();
