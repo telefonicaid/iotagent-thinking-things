@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "logops": "*",
-    "fiware-iotagent-lib": "https://github.com/telefonicaid/iotagent-node-lib/tarball/develop",
+    "fiware-iotagent-lib": "https://github.com/telefonicaid/iotagent-node-lib/tarball/master",
     "express": "*",
     "body-parser": "*",
     "logops": "*",
