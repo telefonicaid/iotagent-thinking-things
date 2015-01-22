@@ -24,7 +24,7 @@
 'use strict';
 
 var request = require('request'),
-    config = require('../../config'),
+    config = require('./config-test'),
     ttAgent = require('../../lib/iotagent-thinking-things'),
     utils = require('../tools/utils'),
     should = require('should'),
@@ -59,7 +59,7 @@ function prepareMocks(request, response) {
         contextBrokerMock = nock('http://' + config.ngsi.contextBroker.host + ':1026')
             .matchHeader('fiware-service', 'smartGondor')
             .matchHeader('fiware-servicepath', '/gardens')
-            .post('/NGSI10/updateContext',
+            .post('/v1/updateContext',
                 utils.readExampleFile(request))
             .reply(200, utils.readExampleFile(response));
 
