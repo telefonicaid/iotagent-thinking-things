@@ -51,7 +51,7 @@ function checkSleep(value, condition, callback) {
     };
 }
 
-describe.only('Thinking things payload parser', function() {
+describe('Thinking things payload parser', function() {
     describe('When a Humidity payload arrives: "#STACK01#953E78F,H1,28,0.330,20$condition,"', function() {
         it('should fill the Device ID', function(done) {
             thinkingParser.parse('#STACK01#953E78F,H1,28,0.330,20$condition,', checkId('STACK01', '953E78F', done));
