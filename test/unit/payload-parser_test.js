@@ -145,6 +145,36 @@ describe('Thinking things payload parser', function() {
             thinkingParser.parse('#STACK01#5143,GPS,21.1,-9.4,12.3,N,127,12$cond1,', checkSleep('12', 'cond1', done));
         });
     });
+    describe('When a Core module arrives: #STACK01#9,K1,​300$None,', function() {
+        it('should fill the Device ID', function(done) {
+            thinkingParser.parse('#STACK01#9,K1,​300$None,',
+                checkId('STACK01', '9', done));
+        });
+        it('should extract the sleeping time and condition', function(done) {
+            thinkingParser.parse('#STACK01#9,K1,300$None,', checkSleep('300', 'None', done));
+        });
+    });
+    describe('When a Luminance module arrives: #STACK01#7,LU,12,600$,', function() {
+        it('should fill the Device ID', function(done) {
+            thinkingParser.parse('#STACK01#7,LU,12,600$,',
+                checkId('STACK01', '7', done));
+        });
+        it('should parse all the location fields into the attributes object', function(done) {
+            thinkingParser.parse('#STACK01#7,LU,12,600$,', function(error, result) {
+                should.not.exist(error);
+                should.exist(result);
+                should.exist(result.modules[0].attributes);
+                should.exist(result.modules[0].attributes[0]);
+                result.modules[0].attributes[0].name.should.equal('luminance');
+                result.modules[0].attributes[0].value.should.equal('12');
+                result.modules[0].attributes[0].type.should.equal('float');
+                done();
+            });
+        });
+        it('should extract the sleeping time and condition', function(done) {
+            thinkingParser.parse('#STACK01#7,LU,12,600$,', checkSleep('600', '', done));
+        });
+    });
     describe('When an unknown module payload arrives: #STACK01#673495,QW9,93,510$theCondition,', function() {
         it('should return an UNSUPPORTED_MODULE error', function(done) {
             thinkingParser.parse('#STACK01#673495,QW9,93,510$theCondition,', function(error, result) {

@@ -3,7 +3,8 @@ var config = {};
 config.thinkingThings = {
     logLevel: 'ERROR',
     port: 8000,
-    root: '/thinkingthings'
+    root: '/thinkingthings',
+    sleepTime: 300
 };
 
 config.ngsi = {
