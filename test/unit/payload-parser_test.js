@@ -80,7 +80,7 @@ describe('Thinking things payload parser', function() {
     });
     describe('When a humidity payload with not enough params arrive', function() {
         it('should return a BAD_REQUEST error', function(done) {
-            thinkingParser.parse('#STACK01#953E78F,H1,28,20$condition,', function(error, result) {
+            thinkingParser.parse('#STACK01#953E78F,H1,28,20$condition', function(error, result) {
                 should.exist(error);
                 error.name.should.equal('BAD_PAYLOAD');
                 done();
@@ -205,7 +205,7 @@ describe('Thinking things payload parser', function() {
             });
         });
     });
-    describe.only('When a Battery module arrives: #STACK07#3,B,4.70,1,1,1,1,0,-1$', function() {
+    describe('When a Battery module arrives: #STACK07#3,B,4.70,1,1,1,1,0,-1$', function() {
         it('should fill the Device ID', function(done) {
             thinkingParser.parse('#STACK07#3,B,4.70,1,1,1,1,0,-1$',
                 checkId('STACK07', '3', done));

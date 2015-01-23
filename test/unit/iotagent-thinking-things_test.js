@@ -171,7 +171,7 @@ describe('Southbound measure reporting', function() {
         it('should return a 200OK with the configured sleep time in the core module',
             checkResponse(options, '#STACK1#5143,GPS,-1$cond1,#673495,K1,300$theCondition,'));
     });
-    describe.skip('When a real example of the device request arrives', function() {
+    describe('When a real example of the device request arrives', function() {
             var options = {
                 url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
                 method: 'POST',
@@ -187,13 +187,13 @@ describe('Southbound measure reporting', function() {
             };
 
             beforeEach(prepareMocks(
-                './test/unit/contextRequests/updateContextHumidity.json',
-                './test/unit/contextResponses/updateContextHumiditySuccess.json'));
+                './test/unit/contextRequests/updateContextRealExample.json',
+                './test/unit/contextResponses/updateContextRealExampleSuccess.json'));
 
             it('should update the device entity in the Context Broker with the humidity attribute',
                 checkContextBroker(options));
 
             it('should return a 200OK with the appropriate response: ',
-                checkResponse(options, options.form.cadena));
+                checkResponse(options, '#ITgAY,#0,P1,-1$,#0,K1,300$,#3,B,1,1,0,-1$,#4,T1,-1$,#4,H1,-1$,#4,LU,-1$,'));
         });
 });
