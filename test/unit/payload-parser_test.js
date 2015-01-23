@@ -51,7 +51,7 @@ function checkSleep(value, condition, callback) {
     };
 }
 
-describe('Thinking things payload parser', function() {
+describe.only('Thinking things payload parser', function() {
     describe('When a Humidity payload arrives: "#STACK01#953E78F,H1,28,0.330,20$condition,"', function() {
         it('should fill the Device ID', function(done) {
             thinkingParser.parse('#STACK01#953E78F,H1,28,0.330,20$condition,', checkId('STACK01', '953E78F', done));
@@ -175,6 +175,37 @@ describe('Thinking things payload parser', function() {
             thinkingParser.parse('#STACK01#7,LU,12,600$,', checkSleep('600', '', done));
         });
     });
+    describe('When a GSM module arrives: #STACK07#4,P1,2345,7894,3434,364,6349,', function() {
+        it('should fill the Device ID', function(done) {
+            thinkingParser.parse('#STACK07#4,P1,2345,7894,3434,364,6349,',
+                checkId('STACK07', '4', done));
+        });
+        it('should parse all the location fields into the attributes object', function(done) {
+            thinkingParser.parse('#STACK07#4,P1,2345,7894,3434,364,6349,', function(error, result) {
+                should.not.exist(error);
+                should.exist(result);
+                should.exist(result.modules[0].attributes);
+                result.modules[0].attributes.length.should.equal(5);
+                result.modules[0].attributes[0].name.should.equal('mcc');
+                result.modules[0].attributes[0].value.should.equal('2345');
+                result.modules[0].attributes[0].type.should.equal('integer');
+                result.modules[0].attributes[1].name.should.equal('mnc');
+                result.modules[0].attributes[1].value.should.equal('7894');
+                result.modules[0].attributes[1].type.should.equal('integer');
+                result.modules[0].attributes[2].name.should.equal('lac');
+                result.modules[0].attributes[2].value.should.equal('3434');
+                result.modules[0].attributes[2].type.should.equal('integer');
+                result.modules[0].attributes[3].name.should.equal('cellid');
+                result.modules[0].attributes[3].value.should.equal('364');
+                result.modules[0].attributes[3].type.should.equal('string');
+                result.modules[0].attributes[4].name.should.equal('dbm');
+                result.modules[0].attributes[4].value.should.equal('6349');
+                result.modules[0].attributes[4].type.should.equal('integer');
+                done();
+            });
+        });
+    });
+
     describe('When an unknown module payload arrives: #STACK01#673495,QW9,93,510$theCondition,', function() {
         it('should return an UNSUPPORTED_MODULE error', function(done) {
             thinkingParser.parse('#STACK01#673495,QW9,93,510$theCondition,', function(error, result) {
