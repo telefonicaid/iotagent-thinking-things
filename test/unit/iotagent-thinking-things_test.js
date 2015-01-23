@@ -79,7 +79,9 @@ describe('Southbound measure reporting', function() {
         var options = {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
             method: 'POST',
-            body: '#STACK1#953E78F,H1,28,0.330,20$condition,'
+            form: {
+                cadena: '#STACK1#953E78F,H1,28,0.330,20$condition,'
+            }
         };
 
         beforeEach(prepareMocks(
@@ -98,7 +100,9 @@ describe('Southbound measure reporting', function() {
         var options = {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
             method: 'POST',
-            body: '#STACK1#673495,T1,17,2500$theCondition,'
+            form: {
+                cadena: '#STACK1#673495,T1,17,2500$theCondition,'
+            }
         };
 
         beforeEach(prepareMocks(
@@ -116,7 +120,9 @@ describe('Southbound measure reporting', function() {
         var options = {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
             method: 'POST',
-            body: '#STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,'
+            form: {
+                cadena: '#STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,'
+            }
         };
 
         beforeEach(prepareMocks(
@@ -133,7 +139,9 @@ describe('Southbound measure reporting', function() {
         var options = {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
             method: 'POST',
-            body: '#STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,#673495,T1,17,2500$theCondition,'
+            form: {
+                cadena: '#STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,#673495,T1,17,2500$theCondition,'
+            }
         };
 
         beforeEach(prepareMocks(
@@ -149,7 +157,9 @@ describe('Southbound measure reporting', function() {
         var options = {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
             method: 'POST',
-            body: '#STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,#673495,K1,2500$theCondition,'
+            form: {
+                cadena: '#STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,#673495,K1,2500$theCondition,'
+            }
         };
 
         beforeEach(prepareMocks(

@@ -45,7 +45,10 @@ function sendRequest(payload) {
     var options = {
         url: 'http://' + config.host + ':' + config.port + config.path,
         method: 'POST',
-        body: payload
+        body: payload,
+        headers: {
+            'Content-type': 'text/plain'
+        }
     }
 
     request(options, function (error, response, body) {
