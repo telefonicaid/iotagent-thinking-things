@@ -171,7 +171,7 @@ describe('Southbound measure reporting', function() {
         it('should return a 200OK with the configured sleep time in the core module',
             checkResponse(options, '#STACK1#5143,GPS,-1$cond1,#673495,K1,300$theCondition,'));
     });
-    describe('When a real example of the device request arrives', function() {
+    describe.skip('When a real example of the device request arrives', function() {
             var options = {
                 url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
                 method: 'POST',

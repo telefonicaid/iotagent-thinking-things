@@ -51,7 +51,7 @@ function checkSleep(value, condition, callback) {
     };
 }
 
-describe.only('Thinking things payload parser', function() {
+describe('Thinking things payload parser', function() {
     describe('When a Humidity payload arrives: "#STACK01#953E78F,H1,28,0.330,20$condition,"', function() {
         it('should fill the Device ID', function(done) {
             thinkingParser.parse('#STACK01#953E78F,H1,28,0.330,20$condition,', checkId('STACK01', '953E78F', done));
@@ -205,7 +205,42 @@ describe.only('Thinking things payload parser', function() {
             });
         });
     });
-
+    describe.only('When a Battery module arrives: #STACK07#3,B,4.70,1,1,1,1,0,-1$', function() {
+        it('should fill the Device ID', function(done) {
+            thinkingParser.parse('#STACK07#3,B,4.70,1,1,1,1,0,-1$',
+                checkId('STACK07', '3', done));
+        });
+        it('should parse all the location fields into the attributes object', function(done) {
+            thinkingParser.parse('#STACK07#3,B,4.70,1,2,4,5,0,-1$', function(error, result) {
+                should.not.exist(error);
+                should.exist(result);
+                should.exist(result.modules[0].attributes);
+                result.modules[0].attributes.length.should.equal(6);
+                result.modules[0].attributes[0].name.should.equal('voltage');
+                result.modules[0].attributes[0].value.should.equal('4.70');
+                result.modules[0].attributes[0].type.should.equal('float');
+                result.modules[0].attributes[1].name.should.equal('state');
+                result.modules[0].attributes[1].value.should.equal('1');
+                result.modules[0].attributes[1].type.should.equal('integer');
+                result.modules[0].attributes[2].name.should.equal('charger');
+                result.modules[0].attributes[2].value.should.equal('2');
+                result.modules[0].attributes[2].type.should.equal('integer');
+                result.modules[0].attributes[3].name.should.equal('charging');
+                result.modules[0].attributes[3].value.should.equal('4');
+                result.modules[0].attributes[3].type.should.equal('integer');
+                result.modules[0].attributes[4].name.should.equal('mode');
+                result.modules[0].attributes[4].value.should.equal('5');
+                result.modules[0].attributes[4].type.should.equal('integer');
+                result.modules[0].attributes[5].name.should.equal('desconnection');
+                result.modules[0].attributes[5].value.should.equal('0');
+                result.modules[0].attributes[5].type.should.equal('integer');
+                done();
+            });
+        });
+        it('should extract the sleeping time and condition', function(done) {
+            thinkingParser.parse('#STACK07#3,B,4.70,1,2,4,5,0,-1$', checkSleep('-1', '', done));
+        });
+    });
     describe('When an unknown module payload arrives: #STACK01#673495,QW9,93,510$theCondition,', function() {
         it('should return an UNSUPPORTED_MODULE error', function(done) {
             thinkingParser.parse('#STACK01#673495,QW9,93,510$theCondition,', function(error, result) {
