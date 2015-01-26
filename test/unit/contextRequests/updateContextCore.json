@@ -49,23 +49,6 @@
               "value": "12"
             }
           ]
-        },
-        {
-          "name": "673495",
-          "type": "compound",
-          "value": [],
-          "metadatas": [
-            {
-              "name": "sleepcondition",
-              "type": "string",
-              "value": "theCondition"
-            },
-            {
-              "name": "sleeptime",
-              "type": "string",
-              "value": "2500"
-            }
-          ]
         }
       ]
     }
