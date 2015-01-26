@@ -194,6 +194,6 @@ describe('Southbound measure reporting', function() {
                 checkContextBroker(options));
 
             it('should return a 200OK with the appropriate response: ',
-                checkResponse(options, '#ITgAY,#0,P1,-1$,#0,K1,300$,#3,B,1,1,0,-1$,#4,T1,-1$,#4,H1,-1$,#4,LU,-1$,'));
+                checkResponse(options, '#ITgAY#0,P1,-1$,#0,K1,300$,#3,B,1,1,0,-1$,#4,T1,-1$,#4,H1,-1$,#4,LU,-1$,'));
         });
 });
