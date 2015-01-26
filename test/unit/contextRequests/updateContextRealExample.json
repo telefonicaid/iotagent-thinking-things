@@ -38,11 +38,13 @@
           "metadatas": [
             {
               "name": "sleepcondition",
-              "type": "string"
+              "type": "string",
+              "value": ""
             },
             {
               "name": "sleeptime",
-              "type": "string"
+              "type": "string",
+              "value": "-1"
             }
           ]
         },
