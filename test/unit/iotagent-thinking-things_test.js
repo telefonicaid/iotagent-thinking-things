@@ -25,6 +25,8 @@
 
 var request = require('request'),
     config = require('./config-test'),
+    globalConfig = require('../../config'), //TODO: change this. Global configuration should be
+                                            //loaded as a parameter to the start() function.
     ttAgent = require('../../lib/iotagent-thinking-things'),
     utils = require('../tools/utils'),
     should = require('should'),
@@ -172,28 +174,60 @@ describe('Southbound measure reporting', function() {
             checkResponse(options, '#STACK1#5143,GPS,-1$cond1,#673495,K1,300$theCondition,'));
     });
     describe('When a real example of the device request arrives', function() {
-            var options = {
-                url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
-                method: 'POST',
-                form: {
-                    'cadena': '#ITgAY,' +
-                        '#0,P1,214,07,b00,444,-47,' +
-                        '#0,K1,300$,' +
-                        '#3,B,4.70,1,1,1,1,0,-1$' +
-                        '#4,T1,31.48,0$' +
-                        '#4,H1,31.48,1890512.00,0$' +
-                        '#4,LU,142.86,0$'
-                }
-            };
+        var options = {
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
+            method: 'POST',
+            form: {
+                'cadena': '#ITgAY,' +
+                    '#0,P1,214,07,b00,444,-47,' +
+                    '#0,K1,300$,' +
+                    '#3,B,4.70,1,1,1,1,0,-1$' +
+                    '#4,T1,31.48,0$' +
+                    '#4,H1,31.48,1890512.00,0$' +
+                    '#4,LU,142.86,0$'
+            }
+        };
 
-            beforeEach(prepareMocks(
-                './test/unit/contextRequests/updateContextRealExample.json',
-                './test/unit/contextResponses/updateContextRealExampleSuccess.json'));
+        beforeEach(prepareMocks(
+            './test/unit/contextRequests/updateContextRealExample.json',
+            './test/unit/contextResponses/updateContextRealExampleSuccess.json'));
 
-            it('should update the device entity in the Context Broker with the humidity attribute',
-                checkContextBroker(options));
+        it('should update the device entity in the Context Broker with the humidity attribute',
+            checkContextBroker(options));
 
-            it('should return a 200OK with the appropriate response: ',
-                checkResponse(options, '#ITgAY#0,P1,-1$,#0,K1,300$,#3,B,1,1,0,-1$,#4,T1,-1$,#4,H1,-1$,#4,LU,-1$,'));
+        it('should return a 200OK with the appropriate response: ',
+            checkResponse(options, '#ITgAY#0,P1,-1$,#0,K1,300$,#3,B,1,1,0,-1$,#4,T1,-1$,#4,H1,-1$,#4,LU,-1$,'));
+    });
+    describe('When the plainFormat configuration flag is set', function() {
+        var options = {
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
+            method: 'POST',
+            form: {
+                'cadena': '#ITgAY,' +
+                '#0,P1,214,07,b00,444,-47,' +
+                '#0,K1,300$,' +
+                '#3,B,4.70,1,1,1,1,0,-1$' +
+                '#4,T1,31.48,0$' +
+                '#4,H1,31.48,1890512.00,0$' +
+                '#4,LU,142.86,0$'
+            }
+        };
+
+        beforeEach(function(done) {
+            globalConfig.ngsi.plainFormat = true;
+            prepareMocks(
+                './test/unit/contextRequests/updateContextPlainExample.json',
+                './test/unit/contextResponses/updateContextPlainExampleSuccess.json')(done);
         });
+
+        afterEach(function() {
+            globalConfig.ngsi.plainFormat = false;
+        });
+
+        it('should update the device entity in the Context Broker with the humidity attribute',
+            checkContextBroker(options));
+
+        it('should return a 200OK with the appropriate response: ',
+            checkResponse(options, '#ITgAY#0,P1,-1$,#0,K1,300$,#3,B,1,1,0,-1$,#4,T1,-1$,#4,H1,-1$,#4,LU,-1$,'));
+    });
 });
