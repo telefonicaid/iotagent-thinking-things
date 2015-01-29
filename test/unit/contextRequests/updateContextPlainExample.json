@@ -78,7 +78,7 @@
         {
           "name": "sleepcondition",
           "type": "string",
-          "value": ""
+          "value": "Wake"
         },
         {
           "name": "sleeptime",
