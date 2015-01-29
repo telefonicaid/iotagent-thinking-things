@@ -79,7 +79,7 @@ describe('Southbound measure reporting', function() {
     describe('When a humidity measure arrives to the IoT Agent: #STACK1#953E78F,H1,28,0.330,20$condition,',
         function() {
         var options = {
-            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
             method: 'POST',
             form: {
                 cadena: '#STACK1#953E78F,H1,28,0.330,20$condition,'
@@ -100,7 +100,7 @@ describe('Southbound measure reporting', function() {
     describe('When a temperature measure arrives to the IoT Agent: #STACK1#673495,T1,17,2500$theCondition,',
         function() {
         var options = {
-            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
             method: 'POST',
             form: {
                 cadena: '#STACK1#673495,T1,17,2500$theCondition,'
@@ -120,7 +120,7 @@ describe('Southbound measure reporting', function() {
     describe('When a GPS measure arrives to the IoT Agent: #STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,',
         function() {
         var options = {
-            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
             method: 'POST',
             form: {
                 cadena: '#STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,'
@@ -139,7 +139,7 @@ describe('Southbound measure reporting', function() {
     });
     describe('When a request arrives to the IoT Agent having two modules', function() {
         var options = {
-            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
             method: 'POST',
             form: {
                 cadena: '#STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,#673495,T1,17,2500$theCondition,'
@@ -157,7 +157,7 @@ describe('Southbound measure reporting', function() {
     });
     describe('When a request arrives to the IoT Agent having the Core Module', function() {
         var options = {
-            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
             method: 'POST',
             form: {
                 cadena: '#STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,#673495,K1,2500$theCondition,'
@@ -175,7 +175,7 @@ describe('Southbound measure reporting', function() {
     });
     describe('When a real example of the device request arrives', function() {
         var options = {
-            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
             method: 'POST',
             form: {
                 'cadena': '#ITgAY,' +
@@ -200,7 +200,7 @@ describe('Southbound measure reporting', function() {
     });
     describe('When the plainFormat configuration flag is set', function() {
         var options = {
-            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
             method: 'POST',
             form: {
                 'cadena': '#ITgAY,' +
