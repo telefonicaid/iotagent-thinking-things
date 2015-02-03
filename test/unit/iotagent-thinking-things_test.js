@@ -28,6 +28,7 @@ var request = require('request'),
     globalConfig = require('../../config'), //TODO: change this. Global configuration should be
                                             //loaded as a parameter to the start() function.
     ttAgent = require('../../lib/iotagent-thinking-things'),
+    async = require('async'),
     utils = require('../tools/utils'),
     should = require('should'),
     nock = require('nock'),
@@ -229,5 +230,41 @@ describe('Southbound measure reporting', function() {
 
         it('should return a 200OK with the appropriate response: ',
             checkResponse(options, '#ITgAY#0,P1,-1$,#0,K1,300$,#3,B,1,1,0,-1$,#4,T1,-1$,#4,H1,-1$,#4,LU,-1$,'));
+    });
+    describe('When there is an idMapping file available in the configuration', function() {
+        var options = {
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+            method: 'POST',
+            form: {
+                'cadena': '#y1oBb,' +
+                '#0,P1,214,07,b00,444,-47,' +
+                '#0,K1,300$,' +
+                '#3,B,4.70,1,1,1,1,0,-1$' +
+                '#4,T1,31.48,0$' +
+                '#4,H1,31.48,1890512.00,0$' +
+                '#4,LU,142.86,0$'
+            }
+        };
+
+        beforeEach(function(done) {
+            globalConfig.ngsi.plainFormat = true;
+            globalConfig.thinkingThings.mappingFile = 'thinkingThingsMapping.json';
+
+            async.series([
+                ttAgent.stop,
+                ttAgent.start
+            ], function() {
+                prepareMocks(
+                    './test/unit/contextRequests/updateContextPlainMappedExample.json',
+                    './test/unit/contextResponses/updateContextPlainMappedExampleSuccess.json')(done);
+            });
+        });
+
+        afterEach(function() {
+            globalConfig.ngsi.plainFormat = false;
+            globalConfig.thinkingThings.mappingFile = null;
+        });
+
+        it('should map the internal id to the external one in the Context Broker', checkContextBroker(options));
     });
 });
