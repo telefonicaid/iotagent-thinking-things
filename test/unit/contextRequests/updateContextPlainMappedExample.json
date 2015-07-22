@@ -1,0 +1,92 @@
+{
+  "contextElements": [
+    {
+      "type": "ThinkingThing",
+      "isPattern": "false",
+      "id": "91DMSK:ThinkingThing",
+      "attributes": [
+        {
+          "name": "mcc",
+          "value": "214",
+          "type": "integer"
+        },
+        {
+          "name": "mnc",
+          "value": "07",
+          "type": "integer"
+        },
+        {
+          "name": "lac",
+          "value": "b00",
+          "type": "integer"
+        },
+        {
+          "name": "cellid",
+          "value": "444",
+          "type": "string"
+        },
+        {
+          "name": "dbm",
+          "value": "-47",
+          "type": "integer"
+        },
+        {
+          "name": "voltage",
+          "value": "4.70",
+          "type": "float"
+        },
+        {
+          "name": "state",
+          "value": "1",
+          "type": "integer"
+        },
+        {
+          "name": "charger",
+          "value": "1",
+          "type": "integer"
+        },
+        {
+          "name": "charging",
+          "value": "1",
+          "type": "integer"
+        },
+        {
+          "name": "mode",
+          "value": "1",
+          "type": "integer"
+        },
+        {
+          "name": "desconnection",
+          "value": "0",
+          "type": "integer"
+        },
+        {
+          "name": "temperature",
+          "value": "31.48",
+          "type": "float"
+        },
+        {
+          "name": "humidity",
+          "value": "1890512.00",
+          "type": "float"
+        },
+        {
+          "name": "luminance",
+          "value": "142.86",
+          "type": "float"
+        },
+        {
+          "name": "sleepcondition",
+          "type": "string",
+          "value": "Wake"
+        },
+        {
+          "name": "sleeptime",
+          "type": "string",
+          "value": "300"
+        }
+      ]
+    }
+  ],
+  "updateAction": "APPEND"
+}

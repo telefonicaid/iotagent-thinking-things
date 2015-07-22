@@ -1,0 +1,57 @@
+{
+  "contextElements": [
+    {
+      "type": "ThinkingThing",
+      "isPattern": "false",
+      "id": "STACK1:ThinkingThing",
+      "attributes": [
+        {
+          "name": "5143",
+          "type": "compound",
+          "value": [
+            {
+              "name": "position",
+              "value": "21.1,-9.4",
+              "type": "coords",
+              "metadatas": [
+                {
+                  "name": "location",
+                  "type": "string",
+                  "value": "WGS84"
+                }
+              ]
+            },
+            {
+              "name": "speed",
+              "value": "12.3",
+              "type": "float"
+            },
+            {
+              "name": "orientation",
+              "value": "0.64",
+              "type": "float"
+            },
+            {
+              "name": "altitude",
+              "value": "127",
+              "type": "float"
+            }
+          ],
+          "metadatas": [
+            {
+              "name": "sleepcondition",
+              "type": "string",
+              "value": "cond1"
+            },
+            {
+              "name": "sleeptime",
+              "type": "string",
+              "value": "12"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "updateAction": "APPEND"
+}

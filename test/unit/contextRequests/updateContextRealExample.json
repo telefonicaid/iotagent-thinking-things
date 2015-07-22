@@ -1,0 +1,177 @@
+{
+  "contextElements": [
+    {
+      "type": "ThinkingThing",
+      "isPattern": "false",
+      "id": "ITgAY:ThinkingThing",
+      "attributes": [
+        {
+          "name": "0",
+          "type": "compound",
+          "value": [
+            {
+              "name": "mcc",
+              "value": "214",
+              "type": "integer"
+            },
+            {
+              "name": "mnc",
+              "value": "07",
+              "type": "integer"
+            },
+            {
+              "name": "lac",
+              "value": "b00",
+              "type": "integer"
+            },
+            {
+              "name": "cellid",
+              "value": "444",
+              "type": "string"
+            },
+            {
+              "name": "dbm",
+              "value": "-47",
+              "type": "integer"
+            }
+          ],
+          "metadatas": [
+            {
+              "name": "sleepcondition",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "name": "sleeptime",
+              "type": "string",
+              "value": "-1"
+            }
+          ]
+        },
+        {
+          "name": "3",
+          "type": "compound",
+          "value": [
+            {
+              "name": "voltage",
+              "value": "4.70",
+              "type": "float"
+            },
+            {
+              "name": "state",
+              "value": "1",
+              "type": "integer"
+            },
+            {
+              "name": "charger",
+              "value": "1",
+              "type": "integer"
+            },
+            {
+              "name": "charging",
+              "value": "1",
+              "type": "integer"
+            },
+            {
+              "name": "mode",
+              "value": "1",
+              "type": "integer"
+            },
+            {
+              "name": "desconnection",
+              "value": "0",
+              "type": "integer"
+            }
+          ],
+          "metadatas": [
+            {
+              "name": "sleepcondition",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "name": "sleeptime",
+              "type": "string",
+              "value": "-1"
+            }
+          ]
+        },
+        {
+          "name": "4",
+          "type": "compound",
+          "value": [
+            {
+              "name": "temperature",
+              "value": "31.48",
+              "type": "float"
+            }
+          ],
+          "metadatas": [
+            {
+              "name": "sleepcondition",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "name": "sleeptime",
+              "type": "string",
+              "value": "0"
+            }
+          ]
+        },
+        {
+          "name": "4",
+          "type": "compound",
+          "value": [
+            {
+              "name": "humidity",
+              "value": "1890512.00",
+              "type": "float"
+            },
+            {
+              "name": "temperature",
+              "value": "31.48",
+              "type": "float"
+            }
+          ],
+          "metadatas": [
+            {
+              "name": "sleepcondition",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "name": "sleeptime",
+              "type": "string",
+              "value": "0"
+            }
+          ]
+        },
+        {
+          "name": "4",
+          "type": "compound",
+          "value": [
+            {
+              "name": "luminance",
+              "value": "142.86",
+              "type": "float"
+            }
+          ],
+          "metadatas": [
+            {
+              "name": "sleepcondition",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "name": "sleeptime",
+              "type": "string",
+              "value": "0"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "updateAction": "APPEND"
+}
