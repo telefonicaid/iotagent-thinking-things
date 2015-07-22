@@ -25,7 +25,10 @@
 
 var request = require('request'),
     config = require('./config-test'),
+    globalConfig = require('../../config'), //TODO: change this. Global configuration should be
+                                            //loaded as a parameter to the start() function.
     ttAgent = require('../../lib/iotagent-thinking-things'),
+    async = require('async'),
     utils = require('../tools/utils'),
     should = require('should'),
     nock = require('nock'),
@@ -77,9 +80,11 @@ describe('Southbound measure reporting', function() {
     describe('When a humidity measure arrives to the IoT Agent: #STACK1#953E78F,H1,28,0.330,20$condition,',
         function() {
         var options = {
-            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
             method: 'POST',
-            body: '#STACK1#953E78F,H1,28,0.330,20$condition,'
+            form: {
+                cadena: '#STACK1#953E78F,H1,28,0.330,20$condition,'
+            }
         };
 
         beforeEach(prepareMocks(
@@ -90,15 +95,17 @@ describe('Southbound measure reporting', function() {
             checkContextBroker(options));
 
         it('should return a 200OK with the appropriate response: ',
-            checkResponse(options, '#STACK1#953E78F,H1,20$condition,'));
+            checkResponse(options, '#STACK1#953E78F,H1,-1$condition,'));
     });
 
     describe('When a temperature measure arrives to the IoT Agent: #STACK1#673495,T1,17,2500$theCondition,',
         function() {
         var options = {
-            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
             method: 'POST',
-            body: '#STACK1#673495,T1,17,2500$theCondition,'
+            form: {
+                cadena: '#STACK1#673495,T1,17,2500$theCondition,'
+            }
         };
 
         beforeEach(prepareMocks(
@@ -109,14 +116,16 @@ describe('Southbound measure reporting', function() {
             checkContextBroker(options));
 
         it('should return a 200OK with the appropriate response: ',
-            checkResponse(options, '#STACK1#673495,T1,2500$theCondition,'));
+            checkResponse(options, '#STACK1#673495,T1,-1$theCondition,'));
     });
     describe('When a GPS measure arrives to the IoT Agent: #STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,',
         function() {
         var options = {
-            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
             method: 'POST',
-            body: '#STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,'
+            form: {
+                cadena: '#STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,'
+            }
         };
 
         beforeEach(prepareMocks(
@@ -127,13 +136,15 @@ describe('Southbound measure reporting', function() {
             checkContextBroker(options));
 
         it('should return a 200OK with the appropriate response: ',
-            checkResponse(options, '#STACK1#5143,GPS,12$cond1,'));
+            checkResponse(options, '#STACK1#5143,GPS,-1$cond1,'));
     });
     describe('When a request arrives to the IoT Agent having two modules', function() {
         var options = {
-            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root,
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
             method: 'POST',
-            body: '#STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,#673495,T1,17,2500$theCondition,'
+            form: {
+                cadena: '#STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,#673495,T1,17,2500$theCondition,'
+            }
         };
 
         beforeEach(prepareMocks(
@@ -143,6 +154,117 @@ describe('Southbound measure reporting', function() {
         it('should update the device entity in the Context Broker with both attributes',
             checkContextBroker(options));
         it('should return a 200OK with the appropriate response',
-            checkResponse(options, '#STACK1#5143,GPS,12$cond1,#673495,T1,2500$theCondition,'));
+            checkResponse(options, '#STACK1#5143,GPS,-1$cond1,#673495,T1,-1$theCondition,'));
+    });
+    describe('When a request arrives to the IoT Agent having the Core Module', function() {
+        var options = {
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+            method: 'POST',
+            form: {
+                cadena: '#STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,#673495,K1,2500$theCondition,'
+            }
+        };
+
+        beforeEach(prepareMocks(
+            './test/unit/contextRequests/updateContextCore.json',
+            './test/unit/contextResponses/updateContextCoreSuccess.json'));
+
+        it('should update the device entity in the Context Broker with both attributes',
+            checkContextBroker(options));
+        it('should return a 200OK with the configured sleep time in the core module',
+            checkResponse(options, '#STACK1#5143,GPS,-1$cond1,#673495,K1,300$theCondition,'));
+    });
+    describe('When a real example of the device request arrives', function() {
+        var options = {
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+            method: 'POST',
+            form: {
+                'cadena': '#ITgAY,' +
+                    '#0,P1,214,07,b00,444,-47,' +
+                    '#0,K1,300$,' +
+                    '#3,B,4.70,1,1,1,1,0,-1$' +
+                    '#4,T1,31.48,0$' +
+                    '#4,H1,31.48,1890512.00,0$' +
+                    '#4,LU,142.86,0$'
+            }
+        };
+
+        beforeEach(prepareMocks(
+            './test/unit/contextRequests/updateContextRealExample.json',
+            './test/unit/contextResponses/updateContextRealExampleSuccess.json'));
+
+        it('should update the device entity in the Context Broker with the humidity attribute',
+            checkContextBroker(options));
+
+        it('should return a 200OK with the appropriate response: ',
+            checkResponse(options, '#ITgAY#0,P1,-1$,#0,K1,300$,#3,B,1,1,0,-1$,#4,T1,-1$,#4,H1,-1$,#4,LU,-1$,'));
+    });
+    describe('When the plainFormat configuration flag is set', function() {
+        var options = {
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+            method: 'POST',
+            form: {
+                'cadena': '#ITgAY,' +
+                '#0,P1,214,07,b00,444,-47,' +
+                '#0,K1,300$,' +
+                '#3,B,4.70,1,1,1,1,0,-1$' +
+                '#4,T1,31.48,0$' +
+                '#4,H1,31.48,1890512.00,0$' +
+                '#4,LU,142.86,0$'
+            }
+        };
+
+        beforeEach(function(done) {
+            globalConfig.ngsi.plainFormat = true;
+            prepareMocks(
+                './test/unit/contextRequests/updateContextPlainExample.json',
+                './test/unit/contextResponses/updateContextPlainExampleSuccess.json')(done);
+        });
+
+        afterEach(function() {
+            globalConfig.ngsi.plainFormat = false;
+        });
+
+        it('should update the device entity in the Context Broker with the humidity attribute',
+            checkContextBroker(options));
+
+        it('should return a 200OK with the appropriate response: ',
+            checkResponse(options, '#ITgAY#0,P1,-1$,#0,K1,300$,#3,B,1,1,0,-1$,#4,T1,-1$,#4,H1,-1$,#4,LU,-1$,'));
+    });
+    describe('When there is an idMapping file available in the configuration', function() {
+        var options = {
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+            method: 'POST',
+            form: {
+                'cadena': '#y1oBb,' +
+                '#0,P1,214,07,b00,444,-47,' +
+                '#0,K1,300$,' +
+                '#3,B,4.70,1,1,1,1,0,-1$' +
+                '#4,T1,31.48,0$' +
+                '#4,H1,31.48,1890512.00,0$' +
+                '#4,LU,142.86,0$'
+            }
+        };
+
+        beforeEach(function(done) {
+            globalConfig.ngsi.plainFormat = true;
+            globalConfig.thinkingThings.mappingFile = 'thinkingThingsMapping.json';
+
+            async.series([
+                ttAgent.stop,
+                ttAgent.start
+            ], function() {
+                prepareMocks(
+                    './test/unit/contextRequests/updateContextPlainMappedExample.json',
+                    './test/unit/contextResponses/updateContextPlainMappedExampleSuccess.json')(done);
+            });
+        });
+
+        afterEach(function() {
+            globalConfig.ngsi.plainFormat = false;
+            globalConfig.thinkingThings.mappingFile = null;
+        });
+
+        it('should map the internal id to the external one in the Context Broker', checkContextBroker(options));
     });
 });

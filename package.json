@@ -1,20 +1,24 @@
 {
   "name": "iotagent-thinking-things",
   "description": "IoT Agent for Telefonica Thinking Things Closed protocol",
-  "version": "0.1.0",
-  "homepage": "https://github.com/dmj/iotagent-thinking-things",
+  "version": "0.3.0",
+  "homepage": "https://github.com/dmoranj/iotagent-thinking-things",
   "author": {
     "name": "Daniel Moran",
-    "email": "dmj@tid.es"
+    "email": "daniel.moranjimenez@telefonica.com"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/dmj/iotagent-thinking-things.git"
+    "url": "git://github.com/dmoranj/iotagent-thinking-things.git"
   },
   "bugs": {
-    "url": "https://github.com/dmj/iotagent-thinking-things/issues"
+    "url": "https://github.com/dmoranj/iotagent-thinking-things/issues"
   },
   "main": "lib/iotagent-thinking-things",
+  "bin": {
+    "thinkingThingsAgent": "bin/thinkingThingsAgent.js",
+    "thinkingThingsClient": "bin/thinkingThingsClient"
+  },
   "engines": {
     "node": ">=0.10.8"
   },
@@ -23,7 +27,7 @@
   },
   "dependencies": {
     "fiware-node-logger": "https://github.com/telefonicaid/fiware-node-logger/tarball/81fdcb213db99eb61acecfd293c45d3fa144cf36",
-    "fiware-iotagent-lib": "https://github.com/telefonicaid/iotagent-node-lib/tarball/develop",
+    "iotagent-node-lib": "*",
     "express": "*",
     "body-parser": "*",
     "logops": "*",
@@ -52,5 +56,10 @@
     "nock": "*",
     "should": "*"
   },
-  "keywords": []
+  "keywords": [
+    "fiware",
+    "iotagent",
+    "ngsi",
+    "thinking things"
+  ]
 }

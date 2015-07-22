@@ -39,13 +39,17 @@ var clUtils = require('../lib/commandLineUtils'),
     },
     separator = '\n\n\t',
     stack = [],
-    stackMode = false;
+    stackMode = false,
+    coreModule = '#0,K1,30$,';
 
 function sendRequest(payload) {
     var options = {
-        url: 'http://' + config.host + ':' + config.port + config.path,
+        url: 'http://' + config.host + ':' + config.port + config.path + '/Receive',
         method: 'POST',
-        body: payload
+        body: 'cadena=' + payload,
+        headers: {
+            'Content-type': 'application/x-www-form-urlencoded'
+        }
     }
 
     request(options, function (error, response, body) {
@@ -71,7 +75,7 @@ function humidity(commands) {
     if (stackMode) {
         stack.push(module);
     } else {
-        var payload = '#' + config.stackId + module;
+        var payload = '#' + config.stackId + "," + coreModule +  module;
 
         console.log("Sending the following humidity request [%s]", payload);
 
@@ -92,7 +96,7 @@ function gpsLocation(commands) {
     if (stackMode) {
         stack.push(module);
     } else {
-        var payload = '#' + config.stackId + module;
+        var payload = '#' + config.stackId + "," + coreModule + module;
 
         console.log("Sending the following gps request [%s]", payload);
         sendRequest(payload);
@@ -108,7 +112,7 @@ function temperature(commands) {
     if (stackMode) {
         stack.push(module);
     } else {
-        var payload = '#' + config.stackId + module;
+        var payload = '#' + config.stackId + "," + coreModule + module;
 
         console.log("Sending the following temperature request [%s]", payload);
         sendRequest(payload);
@@ -156,7 +160,7 @@ function sendStack() {
         return previous + current;
     }
 
-    var payload = '#' + config.stackId + stack.reduce(concat);
+    var payload = '#' + config.stackId + "," + coreModule + stack.reduce(concat);
     stackMode = false;
 
     console.log('Sending the following stacked payload: ' + payload);
