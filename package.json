@@ -23,12 +23,16 @@
   },
   "dependencies": {
     "fiware-node-logger": "https://github.com/telefonicaid/fiware-node-logger/tarball/81fdcb213db99eb61acecfd293c45d3fa144cf36",
-    "iotagent-node-lib": "https://github.com/telefonicaid/iotagent-node-lib/tarball/develop",
+    "iotagent-node-lib": "*",
     "express": "*",
     "body-parser": "*",
     "logops": "*",
     "request": "*",
     "async": "*"
+  },
+  "bin": {
+    "thinkingThingsAgent": "bin/thinkingThingsAgent.js",
+    "thinkingThingsClient": "bin/thinkingThingsClient"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.6.4",
