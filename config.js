@@ -18,13 +18,13 @@ config.ngsi = {
         port: 4041
     },
     deviceRegistry: {
-        type: 'mongodb',
-        host: 'localhost'
+        type: 'memory'
     },
     types: {
         'ThinkingThing': {
             service: 'smartGondor',
             subservice: '/gardens',
+            type: 'ThinkingThing',
             commands: [],
             lazy: [],
             active: [
