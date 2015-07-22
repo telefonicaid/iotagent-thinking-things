@@ -1,2 +1,3 @@
 - FIX Update IOTA to the last version of the library.
 - ADD bin section to the package.json to publish commands.
+- ADD Configuration selection in executable.
