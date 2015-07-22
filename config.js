@@ -11,7 +11,7 @@ config.ngsi = {
     logLevel: 'ERROR',
     defaultType: 'ThinkingThing',
     contextBroker: {
-        host: '192.168.56.101',
+        host: '127.0.0.1',
         port: '1026'
     },
     server: {
@@ -37,7 +37,7 @@ config.ngsi = {
     },
     service: 'smartGondor',
     subservice: '/gardens',
-    providerUrl: 'http://192.168.56.1:4041',
+    providerUrl: 'http://127.0.0.1:4041',
     deviceRegistrationDuration: 'P1M'
 };
 
