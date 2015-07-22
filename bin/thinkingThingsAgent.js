@@ -31,7 +31,15 @@ var iotAgent = require('../lib/iotagent-thinking-things'),
     logger = require('logops');
 
 function start() {
-    iotAgent.start(function (error) {
+    var config;
+
+    if (process.argv.length === 3) {
+        config = require('../' + process.argv[2]);
+    } else {
+        config = require('../config');
+    }
+
+    iotAgent.start(config, function (error) {
         if (error) {
             logger.error(context, 'Error starting Thinking Things Agent: [%s] Exiting process', error);
         } else {
