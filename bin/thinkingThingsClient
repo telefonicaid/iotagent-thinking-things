@@ -44,7 +44,7 @@ var clUtils = require('../lib/commandLineUtils'),
 
 function sendRequest(payload) {
     var options = {
-        url: 'http://' + config.host + ':' + config.port + config.path,
+        url: 'http://' + config.host + ':' + config.port + config.path + '/Receive',
         method: 'POST',
         body: 'cadena=' + payload,
         headers: {
