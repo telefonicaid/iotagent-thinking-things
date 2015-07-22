@@ -34,7 +34,7 @@ function start() {
     var config;
 
     if (process.argv.length === 3) {
-        config = require('../' + process.argv[2]);
+        config = require(process.argv[2]);
     } else {
         config = require('../config');
     }
