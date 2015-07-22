@@ -25,10 +25,9 @@
 
 var request = require('request'),
     config = require('./config-test'),
-    globalConfig = require('../../config'), //TODO: change this. Global configuration should be
-                                            //loaded as a parameter to the start() function.
     ttAgent = require('../../lib/iotagent-thinking-things'),
     async = require('async'),
+    apply = async.apply,
     utils = require('../tools/utils'),
     should = require('should'),
     nock = require('nock'),
@@ -72,7 +71,7 @@ function prepareMocks(request, response) {
 
 describe('Southbound measure reporting', function() {
     beforeEach(function(done) {
-        ttAgent.start(done);
+        ttAgent.start(config, done);
     });
     afterEach(function(done) {
         ttAgent.stop(done);
@@ -215,14 +214,14 @@ describe('Southbound measure reporting', function() {
         };
 
         beforeEach(function(done) {
-            globalConfig.ngsi.plainFormat = true;
+            config.ngsi.plainFormat = true;
             prepareMocks(
                 './test/unit/contextRequests/updateContextPlainExample.json',
                 './test/unit/contextResponses/updateContextPlainExampleSuccess.json')(done);
         });
 
         afterEach(function() {
-            globalConfig.ngsi.plainFormat = false;
+            config.ngsi.plainFormat = false;
         });
 
         it('should update the device entity in the Context Broker with the humidity attribute',
@@ -247,12 +246,12 @@ describe('Southbound measure reporting', function() {
         };
 
         beforeEach(function(done) {
-            globalConfig.ngsi.plainFormat = true;
-            globalConfig.thinkingThings.mappingFile = 'thinkingThingsMapping.json';
+            config.ngsi.plainFormat = true;
+            config.thinkingThings.mappingFile = 'thinkingThingsMapping.json';
 
             async.series([
                 ttAgent.stop,
-                ttAgent.start
+                apply(ttAgent.start, config)
             ], function() {
                 prepareMocks(
                     './test/unit/contextRequests/updateContextPlainMappedExample.json',
@@ -261,8 +260,8 @@ describe('Southbound measure reporting', function() {
         });
 
         afterEach(function() {
-            globalConfig.ngsi.plainFormat = false;
-            globalConfig.thinkingThings.mappingFile = null;
+            config.ngsi.plainFormat = false;
+            config.thinkingThings.mappingFile = null;
         });
 
         it('should map the internal id to the external one in the Context Broker', checkContextBroker(options));

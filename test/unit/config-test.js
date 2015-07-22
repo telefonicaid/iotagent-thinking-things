@@ -25,6 +25,7 @@ config.ngsi = {
         'ThinkingThing': {
             service: 'smartGondor',
             subservice: '/gardens',
+            type: 'ThinkingThing',
             commands: [],
             lazy: [],
             active: [
