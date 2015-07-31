@@ -241,7 +241,7 @@ describe('Thinking things payload parser', function() {
             thinkingParser.parse('#STACK07#3,B,4.70,1,2,4,5,0,-1$', checkSleep('-1', '', done));
         });
     });
-    describe.only('When a Generic module arrives: #STACK01#19,GM,attrName,32,600$,', function() {
+    describe('When a Generic module arrives: #STACK01#19,GM,attrName,32,600$,', function() {
         it('should fill the Module ID', function(done) {
             thinkingParser.parse('#STACK01#19,GM,attrName,32,600$,',
                 checkId('STACK01', '19', done));
