@@ -2,3 +2,4 @@
 - ADD bin section to the package.json to publish commands.
 - ADD Configuration selection in executable.
 - ADD Special configuration for tests.
+- ADD Generic configuration module (#22).
