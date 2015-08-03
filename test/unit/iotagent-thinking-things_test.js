@@ -31,7 +31,7 @@ var request = require('request'),
     utils = require('../tools/utils'),
     should = require('should'),
     nock = require('nock'),
-    contextBrokerMock;
+    contextBrokerMock = [];
 
 function checkResponse(options, answer) {
     return function(done) {
@@ -48,22 +48,34 @@ function checkContextBroker(options) {
     return function(done) {
         request(options, function(error, response, body) {
             should.not.exist(error);
-            contextBrokerMock.done();
+
+            for (var i = 0; i < contextBrokerMock.length; i++) {
+                contextBrokerMock[i].done();
+            }
+
             done();
         });
     };
 }
 
-function prepareMocks(request, response) {
+function prepareMocks(request, response, path) {
     return function(done) {
-        nock.cleanAll();
+        var realPath;
 
-        contextBrokerMock = nock('http://' + config.ngsi.contextBroker.host + ':1026')
+        if (path) {
+            realPath = path;
+        } else {
+            nock.cleanAll();
+            contextBrokerMock = [];
+            realPath = '/v1/updateContext';
+        }
+
+        contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
             .matchHeader('fiware-service', 'smartGondor')
             .matchHeader('fiware-servicepath', '/gardens')
-            .post('/v1/updateContext',
+            .post(realPath,
                 utils.readExampleFile(request))
-            .reply(200, utils.readExampleFile(response));
+            .reply(200, utils.readExampleFile(response)));
 
         done();
     };
@@ -173,6 +185,40 @@ describe('Southbound measure reporting', function() {
         it('should return a 200OK with the configured sleep time in the core module',
             checkResponse(options, '#STACK1#5143,GPS,-1$cond1,#673495,K1,300$theCondition,'));
     });
+
+
+
+    describe('When a request arrives to the IoT Agent having Generic Configuration modules', function() {
+        var options = {
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+            method: 'POST',
+            form: {
+                cadena: '#STACK1#0,GC,conf,33,600$,#1,GC,conf2,123,600$,#673495,K1,2500$theCondition,'
+            }
+        };
+
+        beforeEach(function() {
+            contextBrokerMock = [];
+
+            async.series([
+                prepareMocks(
+                    './test/unit/contextRequests/queryContextGenericConfiguration.json',
+                    './test/unit/contextResponses/queryContextGenericConfigurationSuccess.json',
+                    '/v1/queryContext'),
+                prepareMocks(
+                    './test/unit/contextRequests/updateContextGenericConfiguration.json',
+                    './test/unit/contextResponses/updateContextGenericConfigurationSuccess.json',
+                    '/v1/updateContext')
+            ]);
+        });
+
+        it('should update the device entity in the Context Broker with both attributes', checkContextBroker(options));
+        it('should return a 200OK with the current value of the configuration parameter read from the CB',
+            checkResponse(options, '#STACK1#0,GC,conf,44,-1$,#1,GC,conf2,456,-1$,#673495,K1,300$theCondition,'));
+    });
+
+
+
     describe('When a real example of the device request arrives', function() {
         var options = {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
