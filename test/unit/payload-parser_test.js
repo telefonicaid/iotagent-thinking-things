@@ -241,9 +241,32 @@ describe('Thinking things payload parser', function() {
             thinkingParser.parse('#STACK07#3,B,4.70,1,2,4,5,0,-1$', checkSleep('-1', '', done));
         });
     });
+
+    describe('When a Generic Configuration module arrives: #STACK01#0,GC,conf,33,600$,', function() {
+        it('should fill the Device ID', function(done) {
+            thinkingParser.parse('#STACK01#0,GC,conf,33,600$,',
+                checkId('STACK01', '0', done));
+        });
+        it('should parse all the location fields into the attributes object', function(done) {
+            thinkingParser.parse('#STACK01#0,GC,conf,33,600$,', function(error, result) {
+                should.not.exist(error);
+                should.exist(result);
+                should.exist(result.modules[0].attributes);
+                should.exist(result.modules[0].attributes[0]);
+                result.modules[0].attributes[0].name.should.equal('_TTcurrent_conf');
+                result.modules[0].attributes[0].value.should.equal('33');
+                result.modules[0].attributes[0].type.should.equal('string');
+                done();
+            });
+        });
+        it('should extract the sleeping time and condition', function(done) {
+            thinkingParser.parse('#STACK01#0,GC,conf,33,600$,', checkSleep('600', '', done));
+        });
+    });
+
     describe('When a Generic module arrives: #STACK01#19,GM,attrName,32,600$,', function() {
         var payload = '#STACK01#19,GM,attrName,32,600$,';
-        
+
         it('should fill the Module ID', function(done) {
             thinkingParser.parse(payload, checkId('STACK01', '19', done));
         });
@@ -263,6 +286,7 @@ describe('Thinking things payload parser', function() {
             thinkingParser.parse(payload, checkSleep('600', '', done));
         });
     });
+
     describe('When an unknown module payload arrives: #STACK01#673495,QW9,93,510$theCondition,', function() {
         it('should return an UNSUPPORTED_MODULE error', function(done) {
             thinkingParser.parse('#STACK01#673495,QW9,93,510$theCondition,', function(error, result) {
