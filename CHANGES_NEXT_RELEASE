@@ -1,4 +1,1 @@
-- FIX Update IOTA to the last version of the library.
-- ADD bin section to the package.json to publish commands.
-- ADD Configuration selection in executable.
-- ADD Special configuration for tests.
+- Add generic module in the parser (#21).

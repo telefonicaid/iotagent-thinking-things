@@ -1,7 +1,7 @@
 {
   "name": "iotagent-thinking-things",
   "description": "IoT Agent for Telefonica Thinking Things Closed protocol",
-  "version": "0.3.0",
+  "version": "0.3.0-next",
   "homepage": "https://github.com/dmoranj/iotagent-thinking-things",
   "author": {
     "name": "Daniel Moran",
@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "fiware-node-logger": "https://github.com/telefonicaid/fiware-node-logger/tarball/81fdcb213db99eb61acecfd293c45d3fa144cf36",
-    "iotagent-node-lib": "*",
+    "iotagent-node-lib": "0.5.3",
     "express": "*",
     "body-parser": "*",
     "logops": "*",
