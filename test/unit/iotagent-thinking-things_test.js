@@ -186,8 +186,6 @@ describe('Southbound measure reporting', function() {
             checkResponse(options, '#STACK1#5143,GPS,-1$cond1,#673495,K1,300$theCondition,'));
     });
 
-
-
     describe('When a request arrives to the IoT Agent having Generic Configuration modules', function() {
         var options = {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
@@ -216,8 +214,6 @@ describe('Southbound measure reporting', function() {
         it('should return a 200OK with the current value of the configuration parameter read from the CB',
             checkResponse(options, '#STACK1#0,GC,conf,44,-1$,#1,GC,conf2,456,-1$,#673495,K1,300$theCondition,'));
     });
-
-
 
     describe('When a real example of the device request arrives', function() {
         var options = {

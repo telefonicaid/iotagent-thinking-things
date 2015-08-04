@@ -85,6 +85,127 @@ The format for new device registrations is as follows:
     ]
 }
 ```
+## Thinking Things Protocol
+### Overview
+The thinking things protocol offer a lightweight HTTP-based protocol aimed to constrained devices who whishes to communicate
+with backends, sending simple sensor data and receiving simple configuration parameters and commands. This protocol was designed
+as a part of [Telefonica Thinking Things](http://www.thinkingthings.telefonica.com/) project.
+
+### Protocol basics
+All protocol interactions are started from the client device. The device sends an HTTP POST request to the server with Content-Type
+`application/x-www-form-urlencoded`, containing a single field named `cadena`, with a payload that looks like the following example:
+
+```
+#ITgAY,#0,P1,214,07,b00,444,-47,#0,K1,300$,#3,B,4.70,1,1,1,1,0,-1$#4,T1,31.48,0$#4,H1,31.48,1890512.00,0$#4,LU,142.86,0$
+```
+The first value, corresponding to the value between the first two '#' characters is the Stack ID, i.e.: the ID of the device
+itself.
+
+This payload can be divided in modules, each one of them responsible for a single measure. Modules are separated by the 
+'#' character, and all of them consists of a series of parameters sepparated by commas. The first parameter is always 
+interpreted as the ID of the module. The second parameter identifies the kind of module (that will decide the interpretation
+of the rest of the parameters), and the rest of the values will be interpreted based on the module type.
+
+Let's look at an example more closely, extracting it from the payload above: the module `#4,H1,31.48,1890512.00,0$`. This
+module has:
+- An id: 4
+- A module type: H1. This means the module is a Humidity sensor.
+- Two values. Knowing that the module is a Humidity sensor, we know that this values can be interpreted as the temperature
+and the humidity values (that can be used to calculate real humidity).
+- An optional sleep value all the TT modules should implement (not used in this case, thus the value 0$).
+
+The following subsection shows all the available modules.
+
+### Modules
+#### GM Generic Module
+This module can be used to send arbitrary attribute information to the server. Each GM can be used to send a single 
+attribute with the attribute name specified in the module parameters.
+
+| Position | Meaning                      | Example             |
+|:--------:|:---------------------------- |:------------------- |
+| 1        | Attribute name               | pressure            |
+| 2        | Attribute value              | 790                 |
+| 3        | Sleeping value (unused)      | 0$                  |
+
+#### GC Generic Configuration
+This module represents a generic configuration parameter, that will be stored by the server. Each time the device sends
+a GC module to the server, the server will reply with the last available value to the client.
+
+| Position | Meaning                      | Example             |
+|:--------:|:---------------------------- |:------------------- |
+| 1        | Parameter name               | timeout             |
+| 2        | Parameter value              | 2000                |
+| 3        | Sleeping value (unused)      | 0$                  |
+
+
+#### K1 Core Module
+This module is mandatory for all the payloads sent to the server. This module represents the Core communication module, 
+and can be used to configure the sleeping time of the device.
+
+#### H1
+Sends information about the temperature and humidity. The values given by the sensor are usually raw vales (in the 
+Thinking Things Closed devices at least), so some processing may be needed before using the values.
+
+Parameters:
+
+| Position | Meaning                      | Example             |
+|:--------:|:---------------------------- |:------------------- |
+| 1        | Temperature                  | 26.29               |
+| 2        | Humidity                     | 1890512.00          |
+| 3        | Sleeping value (unused)      | 0$                  |
+ 
+#### LU Luminance
+Sends information about luminance.
+
+| Position | Meaning                      | Example             |
+|:--------:|:---------------------------- |:------------------- |
+| 1        | Luminance                    | 142.86              |
+| 2        | Sleeping value (unused)      | 0$                  |
+
+#### GPS Coordinates
+Sends the GPS coordinates to the server.
+
+| Position | Meaning                      | Example             |
+|:--------:|:---------------------------- |:------------------- |
+| 1        | Latitude                     | 21.1                |
+| 2        | Longitude                    | -9.4                |
+| 3        | Speed                        | 12.3                |
+| 4        | Orientation                  | 0.64                |
+| 5        | Altitude                     | 127                 |
+| 6        | Sleeping value (unused)      | 0$                  |
+
+#### P1
+Sends information about the GSM connection to the server.
+
+| Position | Meaning                      | Example             |
+|:--------:|:---------------------------- |:------------------- |
+| 1        | mcc                          | 384                 |
+| 2        | mnc                          | 09                  |
+| 3        | lac                          | a01                 |
+| 4        | cellid                       | 434                 |
+| 5        | dbm                          | -57                 |
+| 6        | Sleeping value (unused)      | 0$                  |
+
+#### T1
+Sends temperature information to the server.
+
+| Position | Meaning                      | Example             |
+|:--------:|:---------------------------- |:------------------- |
+| 1        | Temperature                  | 22.86               |
+| 2        | Sleeping value (unused)      | 0$                  |
+
+#### B
+Sends battery information to the server.
+
+| Position | Meaning                      | Example             |
+|:--------:|:---------------------------- |:------------------- |
+| 1        | Voltage                      | 4.70                |
+| 2        | State                        | 1                   |
+| 3        | Charger                      | 1                   |
+| 4        | Charging                     | 1                   |
+| 5        | Mode                         | 1                   |
+| 6        | Desconnection                | 0                   |
+| 2        | Sleeping value (unused)      | 0$                  |
 
 ## Client
 In order to test the IoT Agent, a ThinkingThings client is provided that can emulate some calls from TT devices. The client can be started from the root folder of the project with the following command:
