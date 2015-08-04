@@ -119,6 +119,40 @@ function temperature(commands) {
     }
 }
 
+function genMeasure(commands) {
+    var module = '#' + commands[2] + ',GM,'+
+        commands[0] + ',' +
+        commands[1] + ',' +
+        sleepConfig.value + '$' +
+        sleepConfig.condition + ',';
+
+    if (stackMode) {
+        stack.push(module);
+    } else {
+        var payload = '#' + config.stackId + "," + coreModule + module;
+
+        console.log("Sending the following generic module request [%s]", payload);
+        sendRequest(payload);
+    }
+}
+
+function genConfiguration(commands) {
+    var module = '#' + commands[2] + ',GC,'+
+        commands[0] + ',' +
+        commands[1] + ',' +
+        sleepConfig.value + '$' +
+        sleepConfig.condition + ',';
+
+    if (stackMode) {
+        stack.push(module);
+    } else {
+        var payload = '#' + config.stackId + "," + coreModule + module;
+
+        console.log("Sending the following generic configuration attribute request [%s]", payload);
+        sendRequest(payload);
+    }
+}
+
 function setConfig(commands) {
     config.host = commands[0];
     config.port = commands[1];
@@ -184,6 +218,16 @@ var commands = {
         parameters: ['temperature', 'moduleId'],
         description: '\tSend a new temperature measure',
         handler: temperature
+    },
+    'genMeasure': {
+        parameters: ['attribute', 'value', 'moduleId'],
+        description: '\tSend a new generic measure',
+        handler: genMeasure
+    },
+    'genConfig': {
+        parameters: ['attribute', 'value', 'moduleId'],
+        description: '\tSend a new generic configuration attribute',
+        handler: genConfiguration
     },
     'setConfig': {
         parameters: ['host', 'port', 'path', 'stackId'],
