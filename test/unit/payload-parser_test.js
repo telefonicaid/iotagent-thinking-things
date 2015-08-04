@@ -242,12 +242,13 @@ describe('Thinking things payload parser', function() {
         });
     });
     describe('When a Generic module arrives: #STACK01#19,GM,attrName,32,600$,', function() {
+        var payload = '#STACK01#19,GM,attrName,32,600$,';
+        
         it('should fill the Module ID', function(done) {
-            thinkingParser.parse('#STACK01#19,GM,attrName,32,600$,',
-                checkId('STACK01', '19', done));
+            thinkingParser.parse(payload, checkId('STACK01', '19', done));
         });
         it('should parse all the location fields into the attributes object', function(done) {
-            thinkingParser.parse('#STACK01#19,GM,attrName,32,600$,', function(error, result) {
+            thinkingParser.parse(payload, function(error, result) {
                 should.not.exist(error);
                 should.exist(result);
                 should.exist(result.modules[0].attributes);
@@ -259,7 +260,7 @@ describe('Thinking things payload parser', function() {
             });
         });
         it('should extract the sleeping time and condition', function(done) {
-            thinkingParser.parse('#STACK01#19,GM,attrName,32,600$,', checkSleep('600', '', done));
+            thinkingParser.parse(payload, checkSleep('600', '', done));
         });
     });
     describe('When an unknown module payload arrives: #STACK01#673495,QW9,93,510$theCondition,', function() {
