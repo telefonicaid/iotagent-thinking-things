@@ -1,3 +1,4 @@
 - ADD Generic configuration module (#22).
 - ADD Generic module in the parser (#21).
 - ADD Documentation for the protocol (#30).
+- ADD Timestamp in attributes (#26).
