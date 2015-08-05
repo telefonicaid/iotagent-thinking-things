@@ -23,6 +23,8 @@ The following parameters can be configured:
 
 ### NGSI
 * `logLevel`: determines the log level for the connection with the NGSI Broker.
+* `plain`: if this flag is true, all the information of every module will be published as a plain attribute in the entity. If the flag is false, an attribute will be created for each module with a compound type, containing an array of all its values (in attribute format).
+* `timestamp`: when this flag is true, every attribute will come with a metadata showing the timestamp of its reception in the platform.
 * `defaultType`: this is the entity type that will be assigned to the devices whenever there is no other way of determining the appropriate type.
 * `contextBroker.host`: host where the NGSI Context Broker is listening.
 * `contextBroker.port`: port where the NGSI Context Broker is listening.
