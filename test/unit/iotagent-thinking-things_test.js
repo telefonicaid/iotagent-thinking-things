@@ -309,9 +309,37 @@ describe('Southbound measure reporting', function() {
 
         it('should update the device entity in the Context Broker with the humidity attribute',
             checkContextBroker(options));
+    });
 
-        it('should return a 200OK with the appropriate response: ',
-            checkResponse(options, '#ITgAY#0,P1,-1$,#0,K1,300$,#3,B,1,1,0,-1$,#4,T1,-1$,#4,H1,-1$,#4,LU,-1$,'));
+    describe('When the format is compound and the timestamp flag is on', function() {
+        var options = {
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+            method: 'POST',
+            form: {
+                'cadena': '#STACK1#673495,T1,17,2500$theCondition,'
+            }
+        };
+
+        beforeEach(function(done) {
+            var time = new Date(1438760101468);
+
+            config.ngsi.plainFormat = false;
+            config.ngsi.timestamp = true;
+
+            timekeeper.freeze(time);
+
+            prepareMocks(
+                './test/unit/contextRequests/updateContextTemperatureTimestamp.json',
+                './test/unit/contextResponses/updateContextTemperatureTimestampSuccess.json')(done);
+        });
+
+        afterEach(function() {
+            config.ngsi.plainFormat = false;
+            config.ngsi.timestamp = false;
+        });
+
+        it('should update the device entity in the Context Broker with the humidity attribute',
+            checkContextBroker(options));
     });
 
     describe('When there is an idMapping file available in the configuration', function() {
