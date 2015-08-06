@@ -2,3 +2,4 @@
 - ADD Generic module in the parser (#21).
 - ADD Documentation for the protocol (#30).
 - ADD Timestamp in attributes (#26).
+- ADD Dockerfile to instantiate the IOTAgent (#32).
