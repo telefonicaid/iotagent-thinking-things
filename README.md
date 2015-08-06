@@ -8,7 +8,7 @@ If you are using Docker, you can download the latest Thinking Things module from
 
 The Docker module has the prerequisite of having a Orion Context Broker that must be linked on start for the module to work. There is currently just one simple configuration offered for the IOTA, with in-memory transient storage (in the future, more configurations will be available).
 
-If there is a docker image running with the Context Broker and name `orion`, the following command will start a Thinking Things IoT Agent:
+If there is a docker container running with the Context Broker and name `orion`, the following command will start a Thinking Things IoT Agent:
 ```
 docker run -t -i --link orion:orion -p 4041:4041 -p 8000:8000 fiwareiotplatform/iotagent-thinking-things
 ```
