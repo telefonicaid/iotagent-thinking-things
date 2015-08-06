@@ -2,7 +2,22 @@
 ## Overview
 This *Internet of Things Agent* is a bridge can be used to bridge between Telefonica's Thinking Things Closed protocol (TT from now on) and NGSI Context Brokers (like [Orion](https://github.com/telefonicaid/fiware-orion)). The Thinking Things protocol is a simplified protocol aimed to provide a simple platform to experiment with the Internet of Things.
 
-## Usage
+## Installation and usage
+### Using Docker
+If you are using Docker, you can download the latest Thinking Things module from Docker Hub, in order to try it. Do not use this installation mode for production purposes. 
+
+The Docker module has the prerequisite of having a Orion Context Broker that must be linked on start for the module to work. There is currently just one simple configuration offered for the IOTA, with in-memory transient storage (in the future, more configurations will be available).
+
+If there is a docker image running with the Context Broker and name `orion`, the following command will start a Thinking Things IoT Agent:
+```
+docker run -t -i --link orion:orion -p 4041:4041 -p 8000:8000 fiwareiotplatform/iotagent-thinking-things
+```
+This command will start the process in the foreground, exporting the 8000 and 4041 ports in the host. In order to execute it as a daemon, use:
+```
+docker run -d --link orion:orion -p 4041:4041 -p 8000:8000 fiwareiotplatform/iotagent-thinking-things
+```
+
+### Standard procedure
 In order to install the TT Agent, just clone the project and install the dependencies:
 ```
 git clone https://github.com/dmoranj/iotagent-thinking-things.git
