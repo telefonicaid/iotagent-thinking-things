@@ -263,7 +263,7 @@ var commands = {
     },
     'gsm': {
         parameters: ['mcc', 'mnc', 'cell-id', 'lac', 'dbm'],
-        description: '\tSend a new gps measure',
+        description: '\tSend new GSM positioning data/measure',
         handler: gsmLocation
     },
     'temperature': {
