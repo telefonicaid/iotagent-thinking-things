@@ -10,11 +10,11 @@ The Docker module has the prerequisite of having a Orion Context Broker that mus
 
 If there is a docker container running with the Context Broker and name `orion`, the following command will start a Thinking Things IoT Agent:
 ```
-docker run -t -i --link orion:orion -p 4041:4041 -p 8000:8000 fiwareiotplatform/iotagent-thinking-things
+docker run -t -i --link orion:orion -p 4041:4041 -p 8000:8000 telefonicaiot/iotagent-thinking-things
 ```
 This command will start the process in the foreground, exporting the 8000 and 4041 ports in the host. In order to execute it as a daemon, use:
 ```
-docker run -d --link orion:orion -p 4041:4041 -p 8000:8000 fiwareiotplatform/iotagent-thinking-things
+docker run -d --link orion:orion -p 4041:4041 -p 8000:8000 telefonicaiot/iotagent-thinking-things
 ```
 
 ### Standard procedure
