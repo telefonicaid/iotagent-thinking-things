@@ -8,4 +8,4 @@ COPY . /opt/iota-thinkingthings
 WORKDIR /opt/iota-thinkingthings
 RUN npm install
 
-ENTRYPOINT bin/thinkingThingsAgent.js config-docker.js
+ENTRYPOINT bin/thinkingThingsAgent.js docker-config.js
