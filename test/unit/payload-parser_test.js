@@ -338,8 +338,8 @@ describe('Thinking things payload parser', function() {
                 should.exist(result.modules[0].queries[0]);
                 result.modules[0].id.should.equal('5');
                 result.modules[0].module.should.equal('BT');
-                result.modules[0].queries[0].should.equal('51236');
-
+                result.modules[0].queries[0].should.equal('op_status');
+                result.modules[0].queries[1].should.equal('op_result');
                 done();
             });
         });

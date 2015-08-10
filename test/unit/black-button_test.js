@@ -27,6 +27,7 @@ var config = require('./config-test'),
     request = require('request'),
     ttAgent = require('../../lib/iotagent-thinking-things'),
     should = require('should'),
+    async = require('async'),
     idGenerator = require('../../lib/services/idGenerator'),
     utils = require('../tools/utils');
 
@@ -68,8 +69,7 @@ describe('Black button testing', function() {
             idGenerator.generateInternalId = originalGenerateInternalId;
         });
 
-        it('should update all the device data in the Context Broker entity',
-            utils.checkContextBroker(options));
+        it('should update all the device data in the Context Broker entity', utils.checkContextBroker(options));
 
         it('should return the request id to the device:', function(done) {
             request(options, function(error, result, body) {
@@ -86,8 +86,47 @@ describe('Black button testing', function() {
     });
 
     describe('When a polling operation arrives from the device: ', function() {
-        it('should return the current state');
-        it('should return the extra data if available');
+        var options = {
+                url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+                method: 'POST',
+                form: {
+                    cadena: '#STACK1#5,BT,P,AAAEE1111,0$'
+                }
+            },
+            originalGenerateInternalId;
+
+        beforeEach(function(done) {
+            config.ngsi.plainFormat = true;
+
+            originalGenerateInternalId = idGenerator.generateInternalId;
+            idGenerator.generateInternalId = mockedGenerateInternalId;
+
+            async.series([
+                utils.prepareMocks(
+                    './test/unit/contextRequests/blackButtonPollingRequestQuery.json',
+                    './test/unit/contextResponses/blackButtonPollingRequestQuerySuccess.json',
+                    '/v1/queryContext'),
+                utils.prepareMocks(
+                    './test/unit/contextRequests/blackButtonPollingRequestUpdate.json',
+                    './test/unit/contextResponses/blackButtonPollingRequestUpdateSuccess.json',
+                    '/v1/updateContext')
+            ], done);
+        });
+
+        afterEach(function() {
+            config.ngsi.plainFormat = false;
+            idGenerator.generateInternalId = originalGenerateInternalId;
+        });
+
+        it('should query the Context Broker for the current state', utils.checkContextBroker(options));
+        it('should return the extra data and state if available', function(done) {
+            request(options, function(error, result, body) {
+                should.not.exist(error);
+                result.statusCode.should.equal(200);
+                body.should.equal('#STACK1#5,BT,P,AAAEE1111:C.S:999999,0$');
+                done();
+            });
+        });
     });
     describe('When a polling operation arrives from the device and the request was failed: ', function() {
         it('should return the appropriate error code');

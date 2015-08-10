@@ -1,0 +1,13 @@
+{
+  "entities": [
+    {
+      "type": "ThinkingThing",
+      "isPattern": "false",
+      "id": "STACK1:ThinkingThing"
+    }
+  ],
+  "attributes" : [
+    "op_status",
+    "op_result"
+  ]
+}
