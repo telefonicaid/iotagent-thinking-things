@@ -345,6 +345,30 @@ describe('Thinking things payload parser', function() {
         });
     });
 
+    describe('When a Black Button module arrives with a close request operation: #STACK01#1,BT,X,869,0$', function() {
+        var payload = '#STACK01#1,BT,X,869,0$';
+
+        it('should fill the Module ID', function(done) {
+            thinkingParser.parse(payload, checkId('STACK01', '1', done));
+        });
+        it('should parse all the location fields into the attributes object', function(done) {
+            thinkingParser.parse(payload, function(error, result) {
+                should.not.exist(error);
+
+                should.exist(result);
+                should.exist(result.modules[0].attributes);
+                should.exist(result.modules[0].attributes[0]);
+                result.modules[0].id.should.equal('1');
+                result.modules[0].module.should.equal('BT');
+                result.modules[0].attributes[0].name.should.equal('op_status');
+                result.modules[0].attributes[0].type.should.equal('string');
+                result.modules[0].attributes[0].value.should.equal('CLOSED');
+
+                done();
+            });
+        });
+    });
+
     describe('When an unknown module payload arrives: #STACK01#673495,QW9,93,510$theCondition,', function() {
         it('should return an UNSUPPORTED_MODULE error', function(done) {
             thinkingParser.parse('#STACK01#673495,QW9,93,510$theCondition,', function(error, result) {
