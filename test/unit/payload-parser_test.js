@@ -287,6 +287,43 @@ describe('Thinking things payload parser', function() {
         });
     });
 
+    describe.only('When a Black Button module arrives with a creation operation: #STACK01#0,BT,C,1,1234,0$', function() {
+        var payload = '#STACK01#0,BT,C,1,1234,0$';
+
+        it('should fill the Module ID', function(done) {
+            thinkingParser.parse(payload, checkId('STACK01', '0', done));
+        });
+        it('should parse all the location fields into the attributes object', function(done) {
+            thinkingParser.parse(payload, function(error, result) {
+                should.not.exist(error);
+                should.exist(result);
+                should.exist(result.modules[0].attributes);
+                should.exist(result.modules[0].attributes[0]);
+                result.modules[0].id.should.equal('0');
+                result.modules[0].module.should.equal('BT');
+                result.modules[0].attributes[0].name.should.equal('internalId');
+                result.modules[0].attributes[0].type.should.equal('string');
+                result.modules[0].attributes[0].value.should.equal('STACK01');
+                result.modules[0].attributes[1].name.should.equal('req_internal_id');
+                result.modules[0].attributes[1].type.should.equal('string');
+                result.modules[0].attributes[2].name.should.equal('op_status');
+                result.modules[0].attributes[2].type.should.equal('string');
+                result.modules[0].attributes[2].value.should.equal('PENDING');
+                result.modules[0].attributes[3].name.should.equal('last_operation');
+                result.modules[0].attributes[3].type.should.equal('string');
+                result.modules[0].attributes[3].value.should.equal('C');
+                result.modules[0].attributes[4].name.should.equal('op_action');
+                result.modules[0].attributes[4].type.should.equal('string');
+                result.modules[0].attributes[4].value.should.equal('1');
+                result.modules[0].attributes[5].name.should.equal('op_extra');
+                result.modules[0].attributes[5].type.should.equal('string');
+                result.modules[0].attributes[5].value.should.equal('1234');
+
+                done();
+            });
+        });
+    });
+
     describe('When an unknown module payload arrives: #STACK01#673495,QW9,93,510$theCondition,', function() {
         it('should return an UNSUPPORTED_MODULE error', function(done) {
             thinkingParser.parse('#STACK01#673495,QW9,93,510$theCondition,', function(error, result) {

@@ -32,7 +32,8 @@
     "body-parser": "*",
     "logops": "*",
     "request": "*",
-    "async": "*"
+    "async": "*",
+    "node-uuid": "*"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.6.4",

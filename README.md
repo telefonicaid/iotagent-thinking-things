@@ -224,6 +224,24 @@ Sends battery information to the server.
 | 6        | Desconnection                | 0                   |
 | 2        | Sleeping value (unused)      | 0$                  |
 
+#### BT
+The BT module is meant to be used in the Generic Button interactions of the Thinking Things IOT Agent. It works slightly different as the typical TT Module, as it will be described along this section. The available attributes are the following:
+
+| Position | Meaning                      | Possible values     |
+|:--------:|:---------------------------- |:------------------- |
+| 1        | Operation                    | S, C, P, X          |
+| 2        | Action                       | 1                   |
+| 3        | Extra or request ID          | 16234               |
+
+The Generic button can work on two different modes, making use of different operations in each one. In **synchronous mode**, all the information sent by the button is immediatly sent to the Third Party systems through the Context Broker, and the IOTA waits for its return, to informa the device about the success or error of the request. This synchronous interaction is performed using the **S** operation, and it beguins and end with its execution. 
+
+In **asynchronous mode**, three operations are used:
+1. The interaction begins with the device sending a **C** operation to the IOTAgent, meaning that a new request to the third party systems is required. When the IOTAgent receives this kind of operation, it creates a new request ID, updates the entity in the Context Broker and returns it immediatly to the Button, with the response. 
+2. The device can then start to make polling requests using the **P** operation. This operation do not update any information in the Context Broker, but instead it retrieves the information about the device and query its status, returning it to the button.
+3. When the device is in a state that can be considered final, it can close the request by sending a **X** operation to the agent. 
+
+Only one operation by device can be carried away at each moment in time. Creating a new request will effectively cancel the previous ones.
+
 ## Client
 In order to test the IoT Agent, a ThinkingThings client is provided that can emulate some calls from TT devices. The client can be started from the root folder of the project with the following command:
 ```
