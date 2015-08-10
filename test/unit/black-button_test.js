@@ -28,10 +28,7 @@ var config = require('./config-test'),
     ttAgent = require('../../lib/iotagent-thinking-things'),
     should = require('should'),
     idGenerator = require('../../lib/services/idGenerator'),
-    async = require('async'),
-    apply = async.apply,
-    utils = require('../tools/utils'),
-    timekeeper = require('timekeeper');
+    utils = require('../tools/utils');
 
 function mockedGenerateInternalId() {
     return 'AAAEE1111';
@@ -55,7 +52,7 @@ describe('Black button testing', function() {
             },
             originalGenerateInternalId;
 
-        beforeEach(function (done) {
+        beforeEach(function(done) {
             config.ngsi.plainFormat = true;
 
             originalGenerateInternalId = idGenerator.generateInternalId;
@@ -66,7 +63,7 @@ describe('Black button testing', function() {
                 './test/unit/contextResponses/blackButtonCreationRequestSuccess.json')(done);
         });
 
-        afterEach(function () {
+        afterEach(function() {
             config.ngsi.plainFormat = false;
             idGenerator.generateInternalId = originalGenerateInternalId;
         });
@@ -98,6 +95,6 @@ describe('Black button testing', function() {
     });
     describe('When a request close operation arrives from the device: ', function() {
         it('should update the status in the Context Broker');
-        it('should return the appropriate success message')
+        it('should return the appropriate success message');
     });
 });
