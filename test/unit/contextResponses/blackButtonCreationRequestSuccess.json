@@ -1,0 +1,47 @@
+{
+  "contextResponses": [
+    {
+      "contextElement": {
+        "attributes": [
+          {
+            "name": "internalId",
+            "value": "",
+            "type": "string"
+          },
+          {
+            "name": "req_internal_id",
+            "value": "",
+            "type": "string"
+          },
+          {
+            "name": "op_status",
+            "value": "",
+            "type": "string"
+          },
+          {
+            "name": "last_operation",
+            "value": "",
+            "type": "string"
+          },
+          {
+            "name": "op_action",
+            "value": "",
+            "type": "string"
+          },
+          {
+            "name": "op_extra",
+            "value": "",
+            "type": "string"
+          }
+        ],
+        "id": "STACK1:ThinkingThing",
+        "isPattern": "false",
+        "type": "ThinkingThing"
+      },
+      "statusCode": {
+        "code": "200",
+        "reasonPhrase": "OK"
+      }
+    }
+  ]
+}

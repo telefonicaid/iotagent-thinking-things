@@ -60,23 +60,23 @@ describe('Southbound measure reporting', function() {
 
     describe('When a temperature measure arrives to the IoT Agent: #STACK1#673495,T1,17,2500$theCondition,',
         function() {
-        var options = {
-            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
-            method: 'POST',
-            form: {
-                cadena: '#STACK1#673495,T1,17,2500$theCondition,'
-            }
-        };
+            var options = {
+                url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+                method: 'POST',
+                form: {
+                    cadena: '#STACK1#673495,T1,17,2500$theCondition,'
+                }
+            };
 
-        beforeEach(utils.prepareMocks(
-            './test/unit/contextRequests/updateContextTemperature.json',
-            './test/unit/contextResponses/updateContextTemperatureSuccess.json'));
+            beforeEach(utils.prepareMocks(
+                './test/unit/contextRequests/updateContextTemperature.json',
+                './test/unit/contextResponses/updateContextTemperatureSuccess.json'));
 
-        it('should update the device entity in the Context Broker with the humidity attribute',
-            utils.checkContextBroker(options));
+            it('should update the device entity in the Context Broker with the humidity attribute',
+                utils.checkContextBroker(options));
 
-        it('should return a 200OK with the appropriate response: ',
-            utils.checkResponse(options, '#STACK1#673495,T1,-1$theCondition,'));
+            it('should return a 200OK with the appropriate response: ',
+                utils.checkResponse(options, '#STACK1#673495,T1,-1$theCondition,'));
     });
     describe('When a GPS measure arrives to the IoT Agent: #STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,',
         function() {
