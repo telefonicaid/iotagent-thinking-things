@@ -287,7 +287,7 @@ describe('Thinking things payload parser', function() {
         });
     });
 
-    describe.only('When a Black Button module arrives with a creation operation: #STACK01#0,BT,C,1,1234,0$', function() {
+    describe('When a Black Button module arrives with a creation operation: #STACK01#0,BT,C,1,1234,0$', function() {
         var payload = '#STACK01#0,BT,C,1,1234,0$';
 
         it('should fill the Module ID', function(done) {
@@ -318,6 +318,27 @@ describe('Thinking things payload parser', function() {
                 result.modules[0].attributes[5].name.should.equal('op_extra');
                 result.modules[0].attributes[5].type.should.equal('string');
                 result.modules[0].attributes[5].value.should.equal('1234');
+
+                done();
+            });
+        });
+    });
+
+    describe('When a Black Button module arrives with a polling operation: #STACK01#5,BT,P,51236,0$', function() {
+        var payload = '#STACK01#5,BT,P,51236,0$';
+
+        it('should fill the Module ID', function(done) {
+            thinkingParser.parse(payload, checkId('STACK01', '5', done));
+        });
+        it('should parse all the location fields into the attributes object', function(done) {
+            thinkingParser.parse(payload, function(error, result) {
+                should.not.exist(error);
+                should.exist(result);
+                should.exist(result.modules[0].queries);
+                should.exist(result.modules[0].queries[0]);
+                result.modules[0].id.should.equal('5');
+                result.modules[0].module.should.equal('BT');
+                result.modules[0].queries[0].should.equal('51236');
 
                 done();
             });
