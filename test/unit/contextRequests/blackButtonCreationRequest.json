@@ -1,0 +1,42 @@
+{
+  "contextElements": [
+    {
+      "type": "ThinkingThing",
+      "isPattern": "false",
+      "id": "STACK1:ThinkingThing",
+      "attributes": [
+        {
+          "name": "internalId",
+          "value": "STACK1",
+          "type": "string"
+        },
+        {
+          "name": "req_internal_id",
+          "value": "AAAEE1111",
+          "type": "string"
+        },
+        {
+          "name": "op_status",
+          "value": "PENDING",
+          "type": "string"
+        },
+        {
+          "name": "last_operation",
+          "value": "C",
+          "type": "string"
+        },
+        {
+          "name": "op_action",
+          "value": "1",
+          "type": "string"
+        },
+        {
+          "name": "op_extra",
+          "value": "1234",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "updateAction": "APPEND"
+}
