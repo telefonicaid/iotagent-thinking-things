@@ -39,6 +39,7 @@ describe('Black button testing', function() {
     beforeEach(function(done) {
         ttAgent.start(config, done);
     });
+
     afterEach(function(done) {
         ttAgent.stop(done);
     });
@@ -128,10 +129,12 @@ describe('Black button testing', function() {
             });
         });
     });
+
     describe('When a polling operation arrives from the device and the request was failed: ', function() {
         it('should return the appropriate error code');
         it('should return the extra information if available');
     });
+
     describe('When a request close operation arrives from the device: #STACK1#1,BT,X,86,0$', function() {
         var options = {
                 url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
