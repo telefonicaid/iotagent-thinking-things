@@ -45,13 +45,13 @@ var clUtils = require('../lib/commandLineUtils'),
 
 function sendRequest(payload) {
     var options = {
-        url: 'http://' + config.host + ':' + config.port + config.path,
-        method: 'POST',
-        body: 'cadena=' + payload,
-        headers: {
-            'Content-type': 'application/x-www-form-urlencoded'
-        }
-    }
+            url: 'http://' + config.host + ':' + config.port + config.path,
+            method: 'POST',
+            body: 'cadena=' + payload,
+            headers: {
+                'Content-type': 'application/x-www-form-urlencoded'
+            }
+        };
 
     request(options, function (error, response, body) {
         if (error) {
@@ -67,13 +67,9 @@ function sendRequest(payload) {
     });
 }
 
-function humidity(commands) {
-    var module = '#' + commands[2] + ',H1,' +
-        commands[0] + ',' +
-        commands[1] + ',';
-
+function genericRequest(name, module) {
     if (config.sleepTime) {
-        module = module
+        module = module +
             sleepConfig.value + '$' +
             sleepConfig.condition + ',';
     }
@@ -81,12 +77,38 @@ function humidity(commands) {
     if (stackMode) {
         stack.push(module);
     } else {
-        var payload = '#' + config.stackId + "," +  module + coreModule;
+        var payload = '#' + config.stackId + "," + module + coreModule;
 
-        console.log("Sending the following humidity request [%s]", payload);
-
+        console.log('Sending the following ' + name + ' request [%s]', payload);
         sendRequest(payload);
     }
+}
+
+function humidity(commands) {
+    var module = '#' + commands[2] + ',H1,' +
+        commands[0] + ',' +
+        commands[1] + ',';
+
+    genericRequest('humidity', module);
+}
+
+function luminance(commands) {
+    var module = '#' + commands[1] + ',LU,' +
+        commands[0] + ',';
+
+    genericRequest('luminance', module);
+}
+
+function battery(commands) {
+    var module = '#' + commands[6] + ',B,' +
+        commands[0] + ',' +
+        commands[1] + ',' +
+        commands[2] + ',' +
+        commands[3] + ',' +
+        commands[4] + ',' +
+        commands[5] + ',';
+
+    genericRequest('battery', module);
 }
 
 function gpsLocation(commands) {
@@ -97,20 +119,7 @@ function gpsLocation(commands) {
         commands[3] + ',' +
         commands[4] + ',';
 
-    if (config.sleepTime) {
-        module = module
-            sleepConfig.value + '$' +
-            sleepConfig.condition + ',';
-    }
-
-    if (stackMode) {
-        stack.push(module);
-    } else {
-        var payload = '#' + config.stackId + "," + module + coreModule;
-
-        console.log("Sending the following gps request [%s]", payload);
-        sendRequest(payload);
-    }
+    genericRequest('gps', module);
 }
 
 function gsmLocation(commands) {
@@ -120,40 +129,14 @@ function gsmLocation(commands) {
         commands[2] + ',' +
         commands[3] + ',';
 
-    if (config.sleepTime) {
-        module = module
-        sleepConfig.value + '$' +
-        sleepConfig.condition + ',';
-    }
-
-    if (stackMode) {
-        stack.push(module);
-    } else {
-        var payload = '#' + config.stackId + "," + module + coreModule;
-
-        console.log("Sending the following gsm position request [%s]", payload);
-        sendRequest(payload);
-    }
+    genericRequest('gsm position', module);
 }
 
 function temperature(commands) {
     var module = '#' + commands[1] + ',T1,'+
         commands[0] + ',';
 
-    if (config.sleepTime) {
-        module = module
-            sleepConfig.value + '$' +
-            sleepConfig.condition + ',';
-    }
-
-    if (stackMode) {
-        stack.push(module);
-    } else {
-        var payload = '#' + config.stackId + "," + module + coreModule;
-
-        console.log("Sending the following temperature request [%s]", payload);
-        sendRequest(payload);
-    }
+    genericRequest('temperature', module);
 }
 
 function genMeasure(commands) {
@@ -161,20 +144,7 @@ function genMeasure(commands) {
         commands[0] + ',' +
         commands[1] + ',';
 
-    if (config.sleepTime) {
-        module = module
-            sleepConfig.value + '$' +
-            sleepConfig.condition + ',';
-    }
-
-    if (stackMode) {
-        stack.push(module);
-    } else {
-        var payload = '#' + config.stackId + "," + module + coreModule;
-
-        console.log("Sending the following generic module request [%s]", payload);
-        sendRequest(payload);
-    }
+    genericRequest('generic module', module);
 }
 
 function genConfiguration(commands) {
@@ -182,20 +152,29 @@ function genConfiguration(commands) {
         commands[0] + ',' +
         commands[1] + ',';
 
-    if (config.sleepTime) {
-        module = module
-            sleepConfig.value + '$' +
-            sleepConfig.condition + ',';
-    }
+    genericRequest('generic configuration attribute', module);
+}
 
-    if (stackMode) {
-        stack.push(module);
-    } else {
-        var payload = '#' + config.stackId + "," + module + coreModule;
+function blackButonCreate(commands) {
+    var module = '#' + commands[2] + ',BT,C,'+
+        commands[0] + ',' +
+        commands[1] + ',';
 
-        console.log("Sending the following generic configuration attribute request [%s]", payload);
-        sendRequest(payload);
-    }
+    genericRequest('Black Button create', module);
+}
+
+function blackButonPolling(commands) {
+    var module = '#' + commands[1] + ',BT,P,'+
+        commands[0] + ',';
+
+    genericRequest('Black Button polling', module);
+}
+
+function blackButonClose(commands) {
+    var module = '#' + commands[1] + ',BT,X,'+
+        commands[0] + ',';
+
+    genericRequest('Black Button polling', module);
 }
 
 function setConfig(commands) {
@@ -271,6 +250,16 @@ var commands = {
         description: '\tSend a new temperature measure',
         handler: temperature
     },
+    'luminance': {
+        parameters: ['luminance', 'moduleId'],
+        description: '\tSend a new luminance measure',
+        handler: luminance
+    },
+    'battery': {
+        parameters: ['voltage', 'state', 'charger', 'charging', 'mode', 'disconnection', 'moduleId'],
+        description: '\tSend a new battery measure',
+        handler: battery
+    },
     'genMeasure': {
         parameters: ['attribute', 'value', 'moduleId'],
         description: '\tSend a new generic measure',
@@ -301,6 +290,21 @@ var commands = {
         parameters: [],
         description: '\tGet the current default sleep parameters.',
         handler: getSleep
+    },
+    'btCreate': {
+        parameters: ['action', 'extra', 'moduleId'],
+        description: '\tCreate a new Black Button request.',
+        handler: blackButonCreate
+    },
+    'btPolling': {
+        parameters: ['requestId', 'moduleId'],
+        description: '\tCreate a new Black Button polling request.',
+        handler: blackButonPolling
+    },
+    'btClose': {
+        parameters: ['requestId', 'moduleId'],
+        description: '\tCreate a new Black Button close request.',
+        handler: blackButonClose
     },
     'startStack': {
         parameters: [],

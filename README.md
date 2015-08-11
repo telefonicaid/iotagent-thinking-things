@@ -273,13 +273,33 @@ gps <latitude> <longitude> <speed> <orientation> <altitude> <moduleId>
 
 	Send a new gps measure
 
+gsm <mcc> <mnc> <cell-id> <lac> <dbm>  
+
+	Send new GSM positioning data/measure
+
 temperature <temperature> <moduleId>  
 
 	Send a new temperature measure
 
-setConfig <host> <port> <path> <stackId>  
+luminance <luminance> <moduleId>  
 
-	Change the configuration of the device.
+	Send a new luminance measure
+
+battery <voltage> <state> <charger> <charging> <mode> <disconnection> <moduleId>  
+
+	Send a new battery measure
+
+genMeasure <attribute> <value> <moduleId>  
+
+	Send a new generic measure
+
+genConfig <attribute> <value> <moduleId>  
+
+	Send a new generic configuration attribute
+
+setConfig <host> <port> <path> <stackId> <sleepTime>  
+
+	Change the configuration of the device. The sleepTime parameter is a boolean flag thatcan be used to remove the -1$ parameters in all the modules, but the Core one.
 
 getConfig  
 
@@ -293,6 +313,18 @@ getSleep
 
 	Get the current default sleep parameters.
 
+btCreate <action> <extra> <moduleId>  
+
+	Create a new Black Button request.
+
+btPolling <requestId> <moduleId>  
+
+	Create a new Black Button polling request.
+
+btClose <requestId> <moduleId>  
+
+	Create a new Black Button close request.
+
 startStack  
 
 	Start stacking the payloads to send a multimodule payload (stackMode = off).
@@ -300,6 +332,8 @@ startStack
 sendStack  
 
 	Send all the stacked module info (stackMode = on).
+
+
 ```
 
 ## Development documentation

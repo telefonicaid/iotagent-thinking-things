@@ -9,6 +9,7 @@ config.thinkingThings = {
 
 config.ngsi = {
     logLevel: 'ERROR',
+    plainFormat: true,
     defaultType: 'ThinkingThing',
     contextBroker: {
         host: '127.0.0.1',
