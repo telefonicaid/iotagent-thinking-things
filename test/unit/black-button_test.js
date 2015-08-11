@@ -132,8 +132,40 @@ describe('Black button testing', function() {
         it('should return the appropriate error code');
         it('should return the extra information if available');
     });
-    describe('When a request close operation arrives from the device: ', function() {
-        it('should update the status in the Context Broker');
-        it('should return the appropriate success message');
+    describe('When a request close operation arrives from the device: #STACK1#1,BT,X,86,0$', function() {
+        var options = {
+                url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+                method: 'POST',
+                form: {
+                    cadena: '#STACK1#1,BT,X,86,0$'
+                }
+            },
+            originalGenerateInternalId;
+
+        beforeEach(function(done) {
+            config.ngsi.plainFormat = true;
+
+            originalGenerateInternalId = idGenerator.generateInternalId;
+            idGenerator.generateInternalId = mockedGenerateInternalId;
+
+            utils.prepareMocks(
+                './test/unit/contextRequests/blackButtonCloseRequest.json',
+                './test/unit/contextResponses/blackButtonCloseRequestSuccess.json')(done);
+        });
+
+        afterEach(function() {
+            config.ngsi.plainFormat = false;
+            idGenerator.generateInternalId = originalGenerateInternalId;
+        });
+
+        it('should update the status in the Context Broker', utils.checkContextBroker(options));
+        it('should return the appropriate success message', function(done) {
+            request(options, function(error, result, body) {
+                should.not.exist(error);
+                result.statusCode.should.equal(200);
+                body.should.equal('#STACK1#1,BT,X,86,,0$');
+                done();
+            });
+        });
     });
 });
