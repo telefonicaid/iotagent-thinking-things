@@ -92,6 +92,25 @@ function humidity(commands) {
     genericRequest('humidity', module);
 }
 
+function luminance(commands) {
+    var module = '#' + commands[1] + ',LU,' +
+        commands[0] + ',';
+
+    genericRequest('luminance', module);
+}
+
+function battery(commands) {
+    var module = '#' + commands[6] + ',B,' +
+        commands[0] + ',' +
+        commands[1] + ',' +
+        commands[2] + ',' +
+        commands[3] + ',' +
+        commands[4] + ',' +
+        commands[5] + ',';
+
+    genericRequest('battery', module);
+}
+
 function gpsLocation(commands) {
     var module = '#' + commands[5] + ',GPS,'+
         commands[0] + ',' +
@@ -230,6 +249,16 @@ var commands = {
         parameters: ['temperature', 'moduleId'],
         description: '\tSend a new temperature measure',
         handler: temperature
+    },
+    'luminance': {
+        parameters: ['luminance', 'moduleId'],
+        description: '\tSend a new luminance measure',
+        handler: luminance
+    },
+    'battery': {
+        parameters: ['voltage', 'state', 'charger', 'charging', 'mode', 'disconnection', 'moduleId'],
+        description: '\tSend a new battery measure',
+        handler: battery
     },
     'genMeasure': {
         parameters: ['attribute', 'value', 'moduleId'],
