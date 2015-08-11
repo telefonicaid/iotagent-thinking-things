@@ -1,17 +1,18 @@
 var config = {};
 
 config.thinkingThings = {
-    logLevel: 'ERROR',
+    logLevel: 'DEBUG',
     port: 8000,
     root: '/thinkingthings',
     sleepTime: 300
 };
 
 config.ngsi = {
-    logLevel: 'ERROR',
+    logLevel: 'DEBUG',
+    plainFormat: true,
     defaultType: 'ThinkingThing',
     contextBroker: {
-        host: '127.0.0.1',
+        host: '192.168.56.101',
         port: '1026'
     },
     server: {
