@@ -162,9 +162,8 @@ function genMeasure(commands) {
         commands[1] + ',';
 
     if (config.sleepTime) {
-        module = module
-            sleepConfig.value + '$' +
-            sleepConfig.condition + ',';
+        sleepConfig.value + '$' +
+        sleepConfig.condition + ',';
     }
 
     if (stackMode) {
@@ -183,9 +182,8 @@ function genConfiguration(commands) {
         commands[1] + ',';
 
     if (config.sleepTime) {
-        module = module
-            sleepConfig.value + '$' +
-            sleepConfig.condition + ',';
+        sleepConfig.value + '$' +
+        sleepConfig.condition + ',';
     }
 
     if (stackMode) {
@@ -197,6 +195,45 @@ function genConfiguration(commands) {
         sendRequest(payload);
     }
 }
+
+function blackButtonRequest(name, module) {
+    if (config.sleepTime) {
+        sleepConfig.value + '$' +
+        sleepConfig.condition + ',';
+    }
+
+    if (stackMode) {
+        stack.push(module);
+    } else {
+        var payload = '#' + config.stackId + "," + module + coreModule;
+
+        console.log('Sending the following Black Button ' + name + ' request [%s]', payload);
+        sendRequest(payload);
+    }
+}
+
+function blackButonCreate(commands) {
+    var module = '#' + commands[2] + ',BT,C,'+
+        commands[0] + ',' +
+        commands[1] + ',';
+
+    blackButtonRequest('create', module);
+}
+
+function blackButonPolling(commands) {
+    var module = '#' + commands[1] + ',BT,P,'+
+        commands[0] + ',';
+
+    blackButtonRequest('polling', module);
+}
+
+function blackButonClose(commands) {
+    var module = '#' + commands[1] + ',BT,X,'+
+        commands[0] + ',';
+
+    blackButtonRequest('polling', module);
+}
+
 
 function setConfig(commands) {
     config.host = commands[0];
@@ -301,6 +338,21 @@ var commands = {
         parameters: [],
         description: '\tGet the current default sleep parameters.',
         handler: getSleep
+    },
+    'btCreate': {
+        parameters: ['action', 'extra', 'moduleId'],
+        description: '\tCreate a new Black Button request.',
+        handler: blackButonCreate
+    },
+    'btPolling': {
+        parameters: ['requestId', 'moduleId'],
+        description: '\tCreate a new Black Button polling request.',
+        handler: blackButonPolling
+    },
+    'btClose': {
+        parameters: ['requestId', 'moduleId'],
+        description: '\tCreate a new Black Button close request.',
+        handler: blackButonClose
     },
     'startStack': {
         parameters: [],
