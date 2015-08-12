@@ -18,8 +18,7 @@ config.ngsi = {
         port: 4041
     },
     deviceRegistry: {
-        type: 'mongodb',
-        host: 'localhost'
+        type: 'memory'
     },
     types: {
         'ThinkingThing': {

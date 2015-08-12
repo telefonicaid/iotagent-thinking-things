@@ -1,0 +1,17 @@
+{
+  "contextElements": [
+    {
+      "type": "ThinkingThing",
+      "isPattern": "false",
+      "id": "STACK1:ThinkingThing",
+      "attributes": [
+        {
+          "name": "op_result",
+          "value": "ThisIsTheResult",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "updateAction": "APPEND"
+}
