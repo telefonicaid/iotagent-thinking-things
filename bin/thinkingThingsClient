@@ -155,6 +155,14 @@ function genConfiguration(commands) {
     genericRequest('generic configuration attribute', module);
 }
 
+function blackButonSync(commands) {
+    var module = '#' + commands[2] + ',BT,S,'+
+        commands[0] + ',' +
+        commands[1] + ',';
+
+    genericRequest('Black Button Synchronous call', module);
+}
+
 function blackButonCreate(commands) {
     var module = '#' + commands[2] + ',BT,C,'+
         commands[0] + ',' +
@@ -305,6 +313,11 @@ var commands = {
         parameters: ['requestId', 'moduleId'],
         description: '\tCreate a new Black Button close request.',
         handler: blackButonClose
+    },
+    'btSync': {
+        parameters: ['action', 'extra', 'moduleId'],
+        description: '\tSend a new synchronous operation to the server.',
+        handler: blackButonSync
     },
     'startStack': {
         parameters: [],
