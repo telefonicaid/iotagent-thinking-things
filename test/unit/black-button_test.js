@@ -174,7 +174,7 @@ describe('Black button testing', function() {
         });
     });
 
-    describe.only('When a synchronous call operation arrives from the device:', function() {
+    describe('When a synchronous call operation arrives from the device:', function() {
         var options = {
                 url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
                 method: 'POST',
