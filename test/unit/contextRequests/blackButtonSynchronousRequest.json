@@ -1,0 +1,32 @@
+{
+  "contextElements": [
+    {
+      "type": "ThinkingThing",
+      "isPattern": "false",
+      "id": "STACK1:ThinkingThing",
+      "attributes": [
+        {
+          "name": "internalId",
+          "value": "STACK1",
+          "type": "string"
+        },
+        {
+          "name": "last_operation",
+          "value": "S",
+          "type": "string"
+        },
+        {
+          "name": "op_action",
+          "value": "6",
+          "type": "string"
+        },
+        {
+          "name": "op_extra",
+          "value": "FFE876AE",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "updateAction": "APPEND"
+}

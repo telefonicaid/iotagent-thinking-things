@@ -287,6 +287,38 @@ describe('Thinking things payload parser', function() {
         });
     });
 
+    describe('When a BT module arrives with a synchronous operation: #STACK1#0,BT,S,6,FFE876AE,0$', function() {
+        var payload = '#STACK1#0,BT,S,6,FFE876AE,0$';
+
+        it('should fill the Module ID', function(done) {
+            thinkingParser.parse(payload, checkId('STACK1', '0', done));
+        });
+        it('should parse all the location fields into the attributes object', function(done) {
+            thinkingParser.parse(payload, function(error, result) {
+                should.not.exist(error);
+                should.exist(result);
+                should.exist(result.modules[0].attributes);
+                should.exist(result.modules[0].attributes[0]);
+                result.modules[0].id.should.equal('0');
+                result.modules[0].module.should.equal('BT');
+                result.modules[0].attributes[0].name.should.equal('internalId');
+                result.modules[0].attributes[0].type.should.equal('string');
+                result.modules[0].attributes[0].value.should.equal('STACK1');
+                result.modules[0].attributes[1].name.should.equal('last_operation');
+                result.modules[0].attributes[1].type.should.equal('string');
+                result.modules[0].attributes[1].value.should.equal('S');
+                result.modules[0].attributes[2].name.should.equal('op_action');
+                result.modules[0].attributes[2].type.should.equal('string');
+                result.modules[0].attributes[2].value.should.equal('6');
+                result.modules[0].attributes[3].name.should.equal('op_extra');
+                result.modules[0].attributes[3].type.should.equal('string');
+                result.modules[0].attributes[3].value.should.equal('FFE876AE');
+
+                done();
+            });
+        });
+    });
+
     describe('When a Black Button module arrives with a creation operation: #STACK01#0,BT,C,1,1234,0$', function() {
         var payload = '#STACK01#0,BT,C,1,1234,0$';
 

@@ -171,4 +171,34 @@ describe('Black button testing', function() {
             });
         });
     });
+
+    describe('When a synchronous call operation arrives from the device:', function() {
+        var options = {
+                url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+                method: 'POST',
+                form: {
+                    cadena: '#STACK1#0,BT,S,6,FFE876AE,0$'
+                }
+            },
+            originalGenerateInternalId;
+
+        beforeEach(function(done) {
+            config.ngsi.plainFormat = true;
+
+            originalGenerateInternalId = idGenerator.generateInternalId;
+            idGenerator.generateInternalId = mockedGenerateInternalId;
+
+            utils.prepareMocks(
+                './test/unit/contextRequests/blackButtonSynchronousRequest.json',
+                './test/unit/contextResponses/blackButtonSynchronousRequestSuccess.json')(done);
+        });
+
+        afterEach(function() {
+            config.ngsi.plainFormat = false;
+            idGenerator.generateInternalId = originalGenerateInternalId;
+        });
+
+        it('should update the status in the Context Broker', utils.checkContextBroker(options));
+        it('should return the appropriate success message');
+    });
 });
