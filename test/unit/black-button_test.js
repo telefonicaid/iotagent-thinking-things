@@ -26,6 +26,7 @@
 var config = require('./config-test'),
     request = require('request'),
     ttAgent = require('../../lib/iotagent-thinking-things'),
+    iotagentNodeLib = require('iotagent-node-lib'),
     should = require('should'),
     nock = require('nock'),
     async = require('async'),
@@ -243,13 +244,22 @@ describe('Black button testing', function() {
             registerDevice(done);
         });
 
-        afterEach(function() {
+        afterEach(function(done) {
             config.ngsi.plainFormat = false;
 
             idGenerator.generateInternalId = originalGenerateInternalId;
+
+            utils.contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', '/gardens')
+                .post('/NGSI9/registerContext')
+                .reply(200,
+                utils.readExampleFile('./test/unit/contextAvailabilityResponses/registerDeviceSuccess.json')));
+
+            iotagentNodeLib.unregister('STACK1', done);
         });
 
-        xit('should update the status in the Context Broker', utils.checkContextBroker(options));
+        it('should update the status in the Context Broker', utils.checkContextBroker(options));
         it('should return the appropriate success message', function(done) {
             request(options, function(error, result, body) {
                 should.not.exist(error);
