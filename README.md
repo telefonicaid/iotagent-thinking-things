@@ -242,6 +242,9 @@ In **asynchronous mode**, three operations are used:
 
 Only one operation by device can be carried away at each moment in time. Creating a new request will effectively cancel the previous ones.
 
+In the **synchronous mode** there is just one operation, **S**, from the device to the IOTAgent. As in any other BT operation, information about the action can be passed as the last attribute of the request. In this case, all the operation is completed the moment
+the HTTP call of the device returns a response. This response will contain all the information about the request execution and its result.
+
 ## Client
 In order to test the IoT Agent, a ThinkingThings client is provided that can emulate some calls from TT devices. The client can be started from the root folder of the project with the following command:
 ```
