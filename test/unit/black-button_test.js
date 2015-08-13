@@ -191,7 +191,7 @@ describe('Black button testing', function() {
                 json: utils.readExampleFile('./test/unit/contextRequests/blackButtonSynchLazyRequest.json')
             };
 
-            request(lazyAttributeUpdate, function (error, response, body) {
+            request(lazyAttributeUpdate, function(error, response, body) {
                 should.not.exist(error);
                 response.statusCode.should.equal(200);
             });
