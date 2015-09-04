@@ -88,13 +88,13 @@ describe('Black button testing', function() {
         it('should return an explanation of the kind of error to the device');
     });
 
-    function generateAsynchOrionErrorTestCase(errorFile) {
+    function generateAsynchOrionErrorTestCase(action, payload, cbRequest, errorFile) {
         return function() {
             var options = {
                     url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
                     method: 'POST',
                     form: {
-                        cadena: '#STACK1#0,BT,C,1,1234,0$'
+                        cadena: payload
                     }
                 },
                 originalGenerateInternalId;
@@ -106,7 +106,7 @@ describe('Black button testing', function() {
                 idGenerator.generateInternalId = mockedGenerateInternalId;
 
                 utils.prepareMocks(
-                    './test/unit/contextRequests/blackButtonCreationRequest.json',
+                    './test/unit/contextRequests/' + cbRequest,
                     './test/unit/contextResponses/' + errorFile)(done);
             });
 
@@ -119,7 +119,7 @@ describe('Black button testing', function() {
                 request(options, function(error, result, body) {
                     should.not.exist(error);
                     result.statusCode.should.equal(200);
-                    body.should.equal('#STACK1#0,BT,C,0,0:500,rgb-66CC00;t-2,0$');
+                    body.should.equal('#STACK1#0,BT,' + action + ',0,0:500,rgb-66CC00;t-2,0$');
                     done();
                 });
             });
@@ -127,7 +127,14 @@ describe('Black button testing', function() {
     }
 
     describe('When the asynchronous creation in the CB returns an application error: ',
-        generateAsynchOrionErrorTestCase('blackButtonCreationRequestStatusCode500.json'));
+        generateAsynchOrionErrorTestCase('C', '#STACK1#0,BT,C,1,1234,0$',
+            'blackButtonCreationRequest.json',
+            'blackButtonCreationRequestStatusCode500.json'));
+
+    describe('When the polling operation in the CB returns an application error: ',
+        generateAsynchOrionErrorTestCase('X', '#STACK1#0,BT,X,86,0$',
+            'blackButtonCloseRequest.json',
+            'blackButtonCloseRequestStatusCode500.json'));
 
     describe('When a polling operation arrives from the device: ', function() {
         var options = {
