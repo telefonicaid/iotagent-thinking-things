@@ -270,6 +270,37 @@ describe('Black button testing', function() {
         });
     });
 
+    function sendUpdateLazyAttributes() {
+        var lazyAttributeUpdate = {
+            url: 'http://localhost:' + config.ngsi.server.port + '/v1/updateContext',
+            method: 'POST',
+            json: utils.readExampleFile('./test/unit/contextRequests/blackButtonSynchLazyRequest.json')
+        };
+
+        request(lazyAttributeUpdate, function(error, response, body) {
+            should.not.exist(error);
+            response.statusCode.should.equal(200);
+        });
+    }
+
+    function registerDevice(callback) {
+        var registerOptions = {
+            url: 'http://localhost:' + config.ngsi.server.port + '/iot/devices',
+            method: 'POST',
+            json: utils.readExampleFile('./test/unit/provision/synchronousButtonProvision.json'),
+            headers: {
+                'fiware-service': 'smartGondor',
+                'fiware-servicepath': '/gardens'
+            }
+        };
+
+        request(registerOptions, function(error, response, body) {
+            should.not.exist(error);
+            response.statusCode.should.equal(200);
+            callback();
+        });
+    }
+
     describe('When a synchronous call operation arrives from the device:', function() {
         var options = {
                 url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
@@ -279,37 +310,6 @@ describe('Black button testing', function() {
                 }
             },
             originalGenerateInternalId;
-
-        function sendUpdateLazyAttributes() {
-            var lazyAttributeUpdate = {
-                url: 'http://localhost:' + config.ngsi.server.port + '/v1/updateContext',
-                method: 'POST',
-                json: utils.readExampleFile('./test/unit/contextRequests/blackButtonSynchLazyRequest.json')
-            };
-
-            request(lazyAttributeUpdate, function(error, response, body) {
-                should.not.exist(error);
-                response.statusCode.should.equal(200);
-            });
-        }
-
-        function registerDevice(callback) {
-            var registerOptions = {
-                url: 'http://localhost:' + config.ngsi.server.port + '/iot/devices',
-                method: 'POST',
-                json: utils.readExampleFile('./test/unit/provision/synchronousButtonProvision.json'),
-                headers: {
-                    'fiware-service': 'smartGondor',
-                    'fiware-servicepath': '/gardens'
-                }
-            };
-
-            request(registerOptions, function(error, response, body) {
-                should.not.exist(error);
-                response.statusCode.should.equal(200);
-                callback();
-            });
-        }
 
         beforeEach(function(done) {
             var request = './test/unit/contextRequests/blackButtonSynchronousRequest.json',
@@ -365,4 +365,133 @@ describe('Black button testing', function() {
             });
         });
     });
+
+    describe('When the Context Broker returns an application error for a synchronous operation', function() {
+        var options = {
+                url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+                method: 'POST',
+                form: {
+                    cadena: '#STACK1#0,BT,S,6,FFE876AE,0$'
+                }
+            },
+            originalGenerateInternalId;
+
+        beforeEach(function(done) {
+            var request = './test/unit/contextRequests/blackButtonSynchronousRequest.json',
+                response = './test/unit/contextResponses/blackButtonSynchronousStatusCode500.json';
+
+            config.ngsi.plainFormat = true;
+
+            originalGenerateInternalId = idGenerator.generateInternalId;
+            idGenerator.generateInternalId = mockedGenerateInternalId;
+
+            utils.contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', '/gardens')
+                .post('/v1/updateContext', utils.readExampleFile(request))
+                .reply(function(uri, requestBody, cb) {
+                    setTimeout(sendUpdateLazyAttributes, 500);
+
+                    cb(null, [200, utils.readExampleFile(response)]);
+                }));
+
+            utils.contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', '/gardens')
+                .post('/NGSI9/registerContext')
+                .reply(200,
+                utils.readExampleFile('./test/unit/contextAvailabilityResponses/registerDeviceSuccess.json')));
+
+            registerDevice(done);
+        });
+
+        afterEach(function(done) {
+            config.ngsi.plainFormat = false;
+
+            idGenerator.generateInternalId = originalGenerateInternalId;
+
+            utils.contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', '/gardens')
+                .post('/NGSI9/registerContext')
+                .reply(200,
+                utils.readExampleFile('./test/unit/contextAvailabilityResponses/registerDeviceSuccess.json')));
+
+            iotagentNodeLib.unregister('STACK1', done);
+        });
+
+        it('should return an explanation the appropriate error code', function(done) {
+            request(options, function(error, result, body) {
+                should.not.exist(error);
+                result.statusCode.should.equal(200);
+                body.should.equal('#STACK1#0,BT,S,0,0:500,rgb-66CC00;t-2,0$');
+                done();
+            });
+        });
+    });
+
+    describe('When the connection with the CB throws a transport error for a synchronous operation', function() {
+        var options = {
+                url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+                method: 'POST',
+                form: {
+                    cadena: '#STACK1#0,BT,S,6,FFE876AE,0$'
+                }
+            },
+            originalGenerateInternalId;
+
+        beforeEach(function(done) {
+            var request = './test/unit/contextRequests/blackButtonSynchronousRequest.json',
+                response = './test/unit/contextResponses/blackButtonSynchronousStatusCode500.json';
+
+            config.ngsi.plainFormat = true;
+
+            originalGenerateInternalId = idGenerator.generateInternalId;
+            idGenerator.generateInternalId = mockedGenerateInternalId;
+
+            utils.contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', '/gardens')
+                .post('/v1/updateContext', utils.readExampleFile(request))
+                .reply(function(uri, requestBody, cb) {
+                    setTimeout(sendUpdateLazyAttributes, 500);
+
+                    cb(null, [502, utils.readExampleFile(response)]);
+                }));
+
+            utils.contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', '/gardens')
+                .post('/NGSI9/registerContext')
+                .reply(200,
+                utils.readExampleFile('./test/unit/contextAvailabilityResponses/registerDeviceSuccess.json')));
+
+            registerDevice(done);
+        });
+
+        afterEach(function(done) {
+            config.ngsi.plainFormat = false;
+
+            idGenerator.generateInternalId = originalGenerateInternalId;
+
+            utils.contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', '/gardens')
+                .post('/NGSI9/registerContext')
+                .reply(200,
+                utils.readExampleFile('./test/unit/contextAvailabilityResponses/registerDeviceSuccess.json')));
+
+            iotagentNodeLib.unregister('STACK1', done);
+        });
+
+        it('should return an explanation the appropriate error code', function(done) {
+            request(options, function(error, result, body) {
+                should.not.exist(error);
+                result.statusCode.should.equal(200);
+                body.should.equal('#STACK1#0,BT,S,0,0:502,,0$');
+                done();
+            });
+        });
+    });
+
 });
