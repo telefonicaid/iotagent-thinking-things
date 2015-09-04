@@ -84,11 +84,7 @@ describe('Black button testing', function() {
         });
     });
 
-    describe('When the creation in the CB returns a network error: ', function() {
-        it('should return an explanation of the kind of error to the device');
-    });
-
-    function generateAsynchOrionErrorTestCase(action, payload, cbRequest, errorFile) {
+    function generateAsynchOrionErrorTestCase(action, payload, cbRequest, errorFile, code) {
         return function() {
             var options = {
                     url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
@@ -107,7 +103,9 @@ describe('Black button testing', function() {
 
                 utils.prepareMocks(
                     './test/unit/contextRequests/' + cbRequest,
-                    './test/unit/contextResponses/' + errorFile)(done);
+                    './test/unit/contextResponses/' + errorFile,
+                    null,
+                    code)(done);
             });
 
             afterEach(function() {
@@ -126,13 +124,63 @@ describe('Black button testing', function() {
         };
     }
 
+    function generateAsynchOrionTransportErrorTestCase(action, payload, cbRequest, errorFile, code) {
+        return function() {
+            var options = {
+                    url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+                    method: 'POST',
+                    form: {
+                        cadena: payload
+                    }
+                },
+                originalGenerateInternalId;
+
+            beforeEach(function(done) {
+                config.ngsi.plainFormat = true;
+
+                originalGenerateInternalId = idGenerator.generateInternalId;
+                idGenerator.generateInternalId = mockedGenerateInternalId;
+
+                utils.prepareMocks(
+                    './test/unit/contextRequests/' + cbRequest,
+                    './test/unit/contextResponses/' + errorFile,
+                    null,
+                    502)(done);
+            });
+
+            afterEach(function() {
+                config.ngsi.plainFormat = false;
+                idGenerator.generateInternalId = originalGenerateInternalId;
+            });
+
+            it('should return an explanation of the kind of error to the device', function(done) {
+                request(options, function(error, result, body) {
+                    should.not.exist(error);
+                    result.statusCode.should.equal(200);
+                    body.should.equal('#STACK1#0,BT,' + action + ',0,0:502,,0$');
+                    done();
+                });
+            });
+        };
+    }
+
     describe('When the asynchronous creation in the CB returns an application error: ',
         generateAsynchOrionErrorTestCase('C', '#STACK1#0,BT,C,1,1234,0$',
             'blackButtonCreationRequest.json',
             'blackButtonCreationRequestStatusCode500.json'));
 
-    describe('When the polling operation in the CB returns an application error: ',
+    describe('When the creation in the CB returns a network error: ',
+        generateAsynchOrionTransportErrorTestCase('C', '#STACK1#0,BT,C,1,1234,0$',
+            'blackButtonCreationRequest.json',
+            'blackButtonCreationRequestStatusCode500.json'));
+
+    describe('When the close operation in the CB returns an application error: ',
         generateAsynchOrionErrorTestCase('X', '#STACK1#0,BT,X,86,0$',
+            'blackButtonCloseRequest.json',
+            'blackButtonCloseRequestStatusCode500.json'));
+
+    describe('When the close operation in the CB returns a network error: ',
+        generateAsynchOrionTransportErrorTestCase('X', '#STACK1#0,BT,X,86,0$',
             'blackButtonCloseRequest.json',
             'blackButtonCloseRequestStatusCode500.json'));
 
