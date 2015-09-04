@@ -84,9 +84,50 @@ describe('Black button testing', function() {
         });
     });
 
-    describe('When the creation in the CB returns an error: ', function() {
+    describe('When the creation in the CB returns a network error: ', function() {
         it('should return an explanation of the kind of error to the device');
     });
+
+    function generateAsynchOrionErrorTestCase(errorFile) {
+        return function() {
+            var options = {
+                    url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+                    method: 'POST',
+                    form: {
+                        cadena: '#STACK1#0,BT,C,1,1234,0$'
+                    }
+                },
+                originalGenerateInternalId;
+
+            beforeEach(function(done) {
+                config.ngsi.plainFormat = true;
+
+                originalGenerateInternalId = idGenerator.generateInternalId;
+                idGenerator.generateInternalId = mockedGenerateInternalId;
+
+                utils.prepareMocks(
+                    './test/unit/contextRequests/blackButtonCreationRequest.json',
+                    './test/unit/contextResponses/' + errorFile)(done);
+            });
+
+            afterEach(function() {
+                config.ngsi.plainFormat = false;
+                idGenerator.generateInternalId = originalGenerateInternalId;
+            });
+
+            it('should return an explanation of the kind of error to the device', function(done) {
+                request(options, function(error, result, body) {
+                    should.not.exist(error);
+                    result.statusCode.should.equal(200);
+                    body.should.equal('#STACK1#0,BT,C,0,0:500,rgb-66CC00;t-2,0$');
+                    done();
+                });
+            });
+        };
+    }
+
+    describe('When the asynchronous creation in the CB returns an application error: ',
+        generateAsynchOrionErrorTestCase('blackButtonCreationRequestStatusCode500.json'));
 
     describe('When a polling operation arrives from the device: ', function() {
         var options = {
