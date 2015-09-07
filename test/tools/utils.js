@@ -69,7 +69,7 @@ function checkContextBroker(options) {
 function prepareMocks(request, response, path, code) {
     return function(done) {
         var realPath,
-            realCode = 200 || code;
+            realCode = code || 200;
 
         if (path) {
             realPath = path;
@@ -84,7 +84,7 @@ function prepareMocks(request, response, path, code) {
             .matchHeader('fiware-servicepath', '/gardens')
             .post(realPath,
             utils.readExampleFile(request))
-            .reply(code, utils.readExampleFile(response)));
+            .reply(realCode, utils.readExampleFile(response)));
 
         done();
     };

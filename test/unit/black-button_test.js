@@ -84,7 +84,7 @@ describe('Black button testing', function() {
         });
     });
 
-    function generateAsynchOrionErrorTestCase(action, payload, cbRequest, errorFile, code) {
+    function generateAsynchOrionErrorCase(action, payload, cbRequest, errorFile, queryRequest, queryError) {
         return function() {
             var options = {
                     url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
@@ -96,16 +96,27 @@ describe('Black button testing', function() {
                 originalGenerateInternalId;
 
             beforeEach(function(done) {
+                var mocks = [];
+
                 config.ngsi.plainFormat = true;
 
                 originalGenerateInternalId = idGenerator.generateInternalId;
                 idGenerator.generateInternalId = mockedGenerateInternalId;
 
-                utils.prepareMocks(
+                if (queryRequest && queryError) {
+                    mocks.push(utils.prepareMocks(
+                        './test/unit/contextRequests/' + queryRequest,
+                        './test/unit/contextResponses/' + queryError,
+                        '/v1/queryContext'));
+                }
+
+                mocks.push(utils.prepareMocks(
                     './test/unit/contextRequests/' + cbRequest,
                     './test/unit/contextResponses/' + errorFile,
-                    null,
-                    code)(done);
+                    '/v1/updateContext'
+                    ));
+
+                async.series(mocks, done);
             });
 
             afterEach(function() {
@@ -124,7 +135,7 @@ describe('Black button testing', function() {
         };
     }
 
-    function generateAsynchOrionTransportErrorTestCase(action, payload, cbRequest, errorFile, code) {
+    function generateAsynchOrionTransportErrorCase(action, payload, cbRequest, errorFile, queryRequest, queryError) {
         return function() {
             var options = {
                     url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
@@ -136,16 +147,36 @@ describe('Black button testing', function() {
                 originalGenerateInternalId;
 
             beforeEach(function(done) {
+                var mocks = [];
+
                 config.ngsi.plainFormat = true;
 
                 originalGenerateInternalId = idGenerator.generateInternalId;
                 idGenerator.generateInternalId = mockedGenerateInternalId;
 
-                utils.prepareMocks(
-                    './test/unit/contextRequests/' + cbRequest,
-                    './test/unit/contextResponses/' + errorFile,
-                    null,
-                    502)(done);
+                if (queryRequest && queryError) {
+                    mocks.push(utils.prepareMocks(
+                        './test/unit/contextRequests/' + queryRequest,
+                        './test/unit/contextResponses/' + queryError,
+                        '/v1/queryContext',
+                        502));
+
+                    mocks.push(utils.prepareMocks(
+                        './test/unit/contextRequests/' + cbRequest,
+                        './test/unit/contextResponses/' + errorFile,
+                        '/v1/updateContext'
+                    ));
+                } else {
+                    mocks.push(utils.prepareMocks(
+                        './test/unit/contextRequests/' + cbRequest,
+                        './test/unit/contextResponses/' + errorFile,
+                        '/v1/updateContext',
+                        502
+                    ));
+                }
+
+
+                async.series(mocks, done);
             });
 
             afterEach(function() {
@@ -165,24 +196,40 @@ describe('Black button testing', function() {
     }
 
     describe('When the asynchronous creation in the CB returns an application error: ',
-        generateAsynchOrionErrorTestCase('C', '#STACK1#0,BT,C,1,1234,0$',
+        generateAsynchOrionErrorCase('C', '#STACK1#0,BT,C,1,1234,0$',
             'blackButtonCreationRequest.json',
             'blackButtonCreationRequestStatusCode500.json'));
 
-    describe('When the creation in the CB returns a network error: ',
-        generateAsynchOrionTransportErrorTestCase('C', '#STACK1#0,BT,C,1,1234,0$',
+    describe('When the creation in the CB returns a transport error: ',
+        generateAsynchOrionTransportErrorCase('C', '#STACK1#0,BT,C,1,1234,0$',
             'blackButtonCreationRequest.json',
-            'blackButtonCreationRequestStatusCode500.json'));
+            'blackButtonCreationRequestSuccess.json'));
 
     describe('When the close operation in the CB returns an application error: ',
-        generateAsynchOrionErrorTestCase('X', '#STACK1#0,BT,X,86,0$',
+        generateAsynchOrionErrorCase('X', '#STACK1#0,BT,X,86,0$',
             'blackButtonCloseRequest.json',
             'blackButtonCloseRequestStatusCode500.json'));
 
-    describe('When the close operation in the CB returns a network error: ',
-        generateAsynchOrionTransportErrorTestCase('X', '#STACK1#0,BT,X,86,0$',
+    describe('When the close operation in the CB returns a transport error: ',
+        generateAsynchOrionTransportErrorCase('X', '#STACK1#0,BT,X,86,0$',
             'blackButtonCloseRequest.json',
-            'blackButtonCloseRequestStatusCode500.json'));
+            'blackButtonCloseRequestSuccess.json'));
+
+    describe('When the asynchronous polling in the CB returns an application error: ',
+        generateAsynchOrionErrorCase('P', '#STACK1#0,BT,P,AAAEE1111,0$',
+            'blackButtonPollingRequestUpdate.json',
+            'blackButtonPollingRequestUpdateSuccess.json',
+            'blackButtonPollingRequestQuery.json',
+            'blackButtonPollingRequestQueryStatusCode500.json',
+            '/v1/queryContext'));
+
+    describe('When the asynchronous polling in the CB returns a transport error: ',
+        generateAsynchOrionTransportErrorCase('P', '#STACK1#0,BT,P,AAAEE1111,0$',
+            'blackButtonPollingRequestUpdate.json',
+            'blackButtonPollingRequestUpdateSuccess.json',
+            'blackButtonPollingRequestQuery.json',
+            'blackButtonPollingRequestQuerySuccess.json',
+            '/v1/queryContext'));
 
     describe('When a polling operation arrives from the device: ', function() {
         var options = {
@@ -226,11 +273,6 @@ describe('Black button testing', function() {
                 done();
             });
         });
-    });
-
-    describe('When a polling operation arrives from the device and the request was failed: ', function() {
-        it('should return the appropriate error code');
-        it('should return the extra information if available');
     });
 
     describe('When a request close operation arrives from the device: #STACK1#1,BT,X,86,0$', function() {
