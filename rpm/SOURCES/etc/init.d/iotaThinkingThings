@@ -1,0 +1,101 @@
+#!/bin/bash
+#
+# iotaThinkingThings         Start/Stop the Thinking Things IoT Agent
+#
+# chkconfig: 2345 99 60
+# description: Thinking Things IoT Agent for Telefonica's IoT Platform
+### BEGIN INIT INFO
+# Provides: iotaThinkingThings
+# Required-Start: $local_fs $syslog
+# Required-Stop: $local_fs $syslog
+# Default-Start:  345
+# Default-Stop: 90
+# Short-Description: run iotaThinkingThings
+# Description: Thinking Things IoT Agent is a bridge between Telefonica's Thinking Things
+# protocol and the NGSI protocol used internally by Telefonica's IoT Platform.
+### END INIT INFO
+
+# Copyright 2015 Telefonica Investigacion y Desarrollo, S.A.U
+#
+# This file is part of the iotagent-thinking-things.
+#
+# the iotagent-thinking-things is free software: you can redistribute it and/or
+# modify it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# the iotagent-thinking-things is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero
+# General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with the iotagent-thinking-things. If not, see http://www.gnu.org/licenses/.
+#
+# For those usages not covered by this license please contact with
+# iot_support at tid dot es
+
+. /etc/rc.d/init.d/functions
+
+PARAM=$1
+NAME=iotatt
+EXECUTABLE=bin/${NAME}
+IOTA_PATH=/opt/iotatt
+PIDFILE=$IOTA_PATH/$NAME.pid
+LOG_PATH=/var/log/iotatt/iotatt.log
+
+iotatt_start()
+{
+    printf "%-50s" "Starting ${NAME}..."
+    cd $IOTA_PATH
+    if [[ -x ${EXECUTABLE} ]]; then
+        cd $IOTA_PATH
+        su $IOTA_USER -c "cd $IOTA_PATH; nohup ${EXECUTABLE} &>> $LOG_PATH & echo \$! > $PIDFILE"
+        echo "Success"
+    else
+        printf "%s\n" "Fail - missing ${EXECUTABLE} executable"
+        exit 1
+    fi
+}
+
+iotatt_stop()
+{
+    printf "%-50s" "Stopping $NAME..."
+    if [ -f "${PIDFILE}" ]; then
+        kill -9 $(cat ${PIDFILE})
+        rm -f ${PIDFILE}
+        printf "%s\n" "$(success)"
+    else
+        printf "%s\n" "$(failure)"
+    fi
+}
+
+iotatt_status()
+{
+    status -p ${PIDFILE} ${EXECUTABLE}
+}
+
+case ${PARAM} in
+
+    'start')
+        echo "Starting..."
+        status -p ${PIDFILE} ${EXECUTABLE} && exit 0
+        iotatt_start
+        ;;
+
+    'stop')
+        echo "Stopping..."
+        status -p ${PIDFILE} ${EXECUTABLE} || exit 0
+        iotatt_stop
+        ;;
+
+    'restart')
+        iotatt_stop
+        iotatt_start
+        ;;
+
+    'status')
+        iotatt_status
+        ;;
+
+esac
