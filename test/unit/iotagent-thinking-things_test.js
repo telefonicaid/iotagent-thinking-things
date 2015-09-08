@@ -23,51 +23,12 @@
 
 'use strict';
 
-var request = require('request'),
-    config = require('./config-test'),
+var config = require('./config-test'),
     ttAgent = require('../../lib/iotagent-thinking-things'),
     async = require('async'),
     apply = async.apply,
     utils = require('../tools/utils'),
-    should = require('should'),
-    nock = require('nock'),
-    contextBrokerMock;
-
-function checkResponse(options, answer) {
-    return function(done) {
-        request(options, function(error, response, body) {
-            should.not.exist(error);
-            response.statusCode.should.equal(200);
-            body.should.equal(answer);
-            done();
-        });
-    };
-}
-
-function checkContextBroker(options) {
-    return function(done) {
-        request(options, function(error, response, body) {
-            should.not.exist(error);
-            contextBrokerMock.done();
-            done();
-        });
-    };
-}
-
-function prepareMocks(request, response) {
-    return function(done) {
-        nock.cleanAll();
-
-        contextBrokerMock = nock('http://' + config.ngsi.contextBroker.host + ':1026')
-            .matchHeader('fiware-service', 'smartGondor')
-            .matchHeader('fiware-servicepath', '/gardens')
-            .post('/v1/updateContext',
-                utils.readExampleFile(request))
-            .reply(200, utils.readExampleFile(response));
-
-        done();
-    };
-}
+    timekeeper = require('timekeeper');
 
 describe('Southbound measure reporting', function() {
     beforeEach(function(done) {
@@ -86,36 +47,36 @@ describe('Southbound measure reporting', function() {
             }
         };
 
-        beforeEach(prepareMocks(
+        beforeEach(utils.prepareMocks(
             './test/unit/contextRequests/updateContextHumidity.json',
             './test/unit/contextResponses/updateContextHumiditySuccess.json'));
 
         it('should update the device entity in the Context Broker with the humidity attribute',
-            checkContextBroker(options));
+            utils.checkContextBroker(options));
 
         it('should return a 200OK with the appropriate response: ',
-            checkResponse(options, '#STACK1#953E78F,H1,-1$condition,'));
+            utils.checkResponse(options, '#STACK1#953E78F,H1,-1$condition,'));
     });
 
     describe('When a temperature measure arrives to the IoT Agent: #STACK1#673495,T1,17,2500$theCondition,',
         function() {
-        var options = {
-            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
-            method: 'POST',
-            form: {
-                cadena: '#STACK1#673495,T1,17,2500$theCondition,'
-            }
-        };
+            var options = {
+                url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+                method: 'POST',
+                form: {
+                    cadena: '#STACK1#673495,T1,17,2500$theCondition,'
+                }
+            };
 
-        beforeEach(prepareMocks(
-            './test/unit/contextRequests/updateContextTemperature.json',
-            './test/unit/contextResponses/updateContextTemperatureSuccess.json'));
+            beforeEach(utils.prepareMocks(
+                './test/unit/contextRequests/updateContextTemperature.json',
+                './test/unit/contextResponses/updateContextTemperatureSuccess.json'));
 
-        it('should update the device entity in the Context Broker with the humidity attribute',
-            checkContextBroker(options));
+            it('should update the device entity in the Context Broker with the humidity attribute',
+                utils.checkContextBroker(options));
 
-        it('should return a 200OK with the appropriate response: ',
-            checkResponse(options, '#STACK1#673495,T1,-1$theCondition,'));
+            it('should return a 200OK with the appropriate response: ',
+                utils.checkResponse(options, '#STACK1#673495,T1,-1$theCondition,'));
     });
     describe('When a GPS measure arrives to the IoT Agent: #STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,',
         function() {
@@ -127,15 +88,15 @@ describe('Southbound measure reporting', function() {
             }
         };
 
-        beforeEach(prepareMocks(
+        beforeEach(utils.prepareMocks(
             './test/unit/contextRequests/updateContextGPS.json',
             './test/unit/contextResponses/updateContextGPSSuccess.json'));
 
         it('should update the device entity in the Context Broker with the humidity attribute',
-            checkContextBroker(options));
+            utils.checkContextBroker(options));
 
         it('should return a 200OK with the appropriate response: ',
-            checkResponse(options, '#STACK1#5143,GPS,-1$cond1,'));
+            utils.checkResponse(options, '#STACK1#5143,GPS,-1$cond1,'));
     });
     describe('When a request arrives to the IoT Agent having two modules', function() {
         var options = {
@@ -146,14 +107,14 @@ describe('Southbound measure reporting', function() {
             }
         };
 
-        beforeEach(prepareMocks(
+        beforeEach(utils.prepareMocks(
             './test/unit/contextRequests/updateContextMultipleModules.json',
             './test/unit/contextResponses/updateContextMultipleModulesSuccess.json'));
 
         it('should update the device entity in the Context Broker with both attributes',
-            checkContextBroker(options));
+            utils.checkContextBroker(options));
         it('should return a 200OK with the appropriate response',
-            checkResponse(options, '#STACK1#5143,GPS,-1$cond1,#673495,T1,-1$theCondition,'));
+            utils.checkResponse(options, '#STACK1#5143,GPS,-1$cond1,#673495,T1,-1$theCondition,'));
     });
     describe('When a request arrives to the IoT Agent having the Core Module', function() {
         var options = {
@@ -164,15 +125,46 @@ describe('Southbound measure reporting', function() {
             }
         };
 
-        beforeEach(prepareMocks(
+        beforeEach(utils.prepareMocks(
             './test/unit/contextRequests/updateContextCore.json',
             './test/unit/contextResponses/updateContextCoreSuccess.json'));
 
         it('should update the device entity in the Context Broker with both attributes',
-            checkContextBroker(options));
+            utils.checkContextBroker(options));
         it('should return a 200OK with the configured sleep time in the core module',
-            checkResponse(options, '#STACK1#5143,GPS,-1$cond1,#673495,K1,300$theCondition,'));
+            utils.checkResponse(options, '#STACK1#5143,GPS,-1$cond1,#673495,K1,300$theCondition,'));
     });
+
+    describe('When a request arrives to the IoT Agent having Generic Configuration modules', function() {
+        var options = {
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+            method: 'POST',
+            form: {
+                cadena: '#STACK1#0,GC,conf,33,600$,#1,GC,conf2,123,600$,#673495,K1,2500$theCondition,'
+            }
+        };
+
+        beforeEach(function() {
+            utils.contextBrokerMock = [];
+
+            async.series([
+                utils.prepareMocks(
+                    './test/unit/contextRequests/queryContextGenericConfiguration.json',
+                    './test/unit/contextResponses/queryContextGenericConfigurationSuccess.json',
+                    '/v1/queryContext'),
+                utils.prepareMocks(
+                    './test/unit/contextRequests/updateContextGenericConfiguration.json',
+                    './test/unit/contextResponses/updateContextGenericConfigurationSuccess.json',
+                    '/v1/updateContext')
+            ]);
+        });
+
+        it('should update the device entity in the Context Broker with both attributes',
+            utils.checkContextBroker(options));
+        it('should return a 200OK with the current value of the configuration parameter read from the CB',
+            utils.checkResponse(options, '#STACK1#0,GC,conf,44,-1$,#1,GC,conf2,456,-1$,#673495,K1,300$theCondition,'));
+    });
+
     describe('When a real example of the device request arrives', function() {
         var options = {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
@@ -188,15 +180,15 @@ describe('Southbound measure reporting', function() {
             }
         };
 
-        beforeEach(prepareMocks(
+        beforeEach(utils.prepareMocks(
             './test/unit/contextRequests/updateContextRealExample.json',
             './test/unit/contextResponses/updateContextRealExampleSuccess.json'));
 
         it('should update the device entity in the Context Broker with the humidity attribute',
-            checkContextBroker(options));
+            utils.checkContextBroker(options));
 
         it('should return a 200OK with the appropriate response: ',
-            checkResponse(options, '#ITgAY#0,P1,-1$,#0,K1,300$,#3,B,1,1,0,-1$,#4,T1,-1$,#4,H1,-1$,#4,LU,-1$,'));
+            utils.checkResponse(options, '#ITgAY#0,P1,-1$,#0,K1,300$,#3,B,1,1,0,-1$,#4,T1,-1$,#4,H1,-1$,#4,LU,-1$,'));
     });
     describe('When the plainFormat configuration flag is set', function() {
         var options = {
@@ -215,7 +207,7 @@ describe('Southbound measure reporting', function() {
 
         beforeEach(function(done) {
             config.ngsi.plainFormat = true;
-            prepareMocks(
+            utils.prepareMocks(
                 './test/unit/contextRequests/updateContextPlainExample.json',
                 './test/unit/contextResponses/updateContextPlainExampleSuccess.json')(done);
         });
@@ -225,11 +217,80 @@ describe('Southbound measure reporting', function() {
         });
 
         it('should update the device entity in the Context Broker with the humidity attribute',
-            checkContextBroker(options));
+            utils.checkContextBroker(options));
 
         it('should return a 200OK with the appropriate response: ',
-            checkResponse(options, '#ITgAY#0,P1,-1$,#0,K1,300$,#3,B,1,1,0,-1$,#4,T1,-1$,#4,H1,-1$,#4,LU,-1$,'));
+            utils.checkResponse(options, '#ITgAY#0,P1,-1$,#0,K1,300$,#3,B,1,1,0,-1$,#4,T1,-1$,#4,H1,-1$,#4,LU,-1$,'));
     });
+
+    describe('When the format is plain and the timestamp flag is on', function() {
+        var options = {
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+            method: 'POST',
+            form: {
+                'cadena': '#ITgAY,' +
+                '#0,P1,214,07,b00,444,-47,' +
+                '#0,K1,300$,' +
+                '#3,B,4.70,1,1,1,1,0,-1$' +
+                '#4,T1,31.48,0$' +
+                '#4,H1,31.48,1890512.00,0$' +
+                '#4,LU,142.86,0$'
+            }
+        };
+
+        beforeEach(function(done) {
+            var time = new Date(1438760101468);
+
+            config.ngsi.plainFormat = true;
+            config.ngsi.timestamp = true;
+
+            timekeeper.freeze(time);
+
+            utils.prepareMocks(
+                './test/unit/contextRequests/updateContextPlainTimestampExample.json',
+                './test/unit/contextResponses/updateContextPlainTimestampExampleSuccess.json')(done);
+        });
+
+        afterEach(function() {
+            config.ngsi.plainFormat = false;
+            config.ngsi.timestamp = false;
+        });
+
+        it('should update the device entity in the Context Broker with the humidity attribute',
+            utils.checkContextBroker(options));
+    });
+
+    describe('When the format is compound and the timestamp flag is on', function() {
+        var options = {
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+            method: 'POST',
+            form: {
+                'cadena': '#STACK1#673495,T1,17,2500$theCondition,'
+            }
+        };
+
+        beforeEach(function(done) {
+            var time = new Date(1438760101468);
+
+            config.ngsi.plainFormat = false;
+            config.ngsi.timestamp = true;
+
+            timekeeper.freeze(time);
+
+            utils.prepareMocks(
+                './test/unit/contextRequests/updateContextTemperatureTimestamp.json',
+                './test/unit/contextResponses/updateContextTemperatureTimestampSuccess.json')(done);
+        });
+
+        afterEach(function() {
+            config.ngsi.plainFormat = false;
+            config.ngsi.timestamp = false;
+        });
+
+        it('should update the device entity in the Context Broker with the humidity attribute',
+            utils.checkContextBroker(options));
+    });
+
     describe('When there is an idMapping file available in the configuration', function() {
         var options = {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
@@ -253,7 +314,7 @@ describe('Southbound measure reporting', function() {
                 ttAgent.stop,
                 apply(ttAgent.start, config)
             ], function() {
-                prepareMocks(
+                utils.prepareMocks(
                     './test/unit/contextRequests/updateContextPlainMappedExample.json',
                     './test/unit/contextResponses/updateContextPlainMappedExampleSuccess.json')(done);
             });
@@ -264,6 +325,6 @@ describe('Southbound measure reporting', function() {
             config.thinkingThings.mappingFile = null;
         });
 
-        it('should map the internal id to the external one in the Context Broker', checkContextBroker(options));
+        it('should map the internal id to the external one in the Context Broker', utils.checkContextBroker(options));
     });
 });

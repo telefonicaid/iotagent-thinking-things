@@ -30,8 +30,9 @@ var clUtils = require('../lib/commandLineUtils'),
     config = {
         host: 'localhost',
         port: 8000,
-        path: '/thinkingthings',
-        stackId: 'default'
+        path: '/thinkingthings/Receive',
+        stackId: 'default',
+        sleepTime: true
     },
     sleepConfig = {
         value: '2000',
@@ -40,17 +41,17 @@ var clUtils = require('../lib/commandLineUtils'),
     separator = '\n\n\t',
     stack = [],
     stackMode = false,
-    coreModule = '#0,K1,30$,';
+    coreModule = '#0,K1,30$';
 
 function sendRequest(payload) {
     var options = {
-        url: 'http://' + config.host + ':' + config.port + config.path + '/Receive',
-        method: 'POST',
-        body: 'cadena=' + payload,
-        headers: {
-            'Content-type': 'application/x-www-form-urlencoded'
-        }
-    }
+            url: 'http://' + config.host + ':' + config.port + config.path,
+            method: 'POST',
+            body: 'cadena=' + payload,
+            headers: {
+                'Content-type': 'application/x-www-form-urlencoded'
+            }
+        };
 
     request(options, function (error, response, body) {
         if (error) {
@@ -59,28 +60,55 @@ function sendRequest(payload) {
             console.log('Answer: %s', body);
         } else {
             console.error('Unknown status code: %d', response.statusCode);
+            console.error('Error body:\n %s', JSON.stringify(body, null, 4));
         }
 
         clUtils.prompt();
     });
 }
 
-function humidity(commands) {
-    var module = '#' + commands[2] + ',H1,' +
-        commands[0] + ',' +
-        commands[1] + ',' +
-        sleepConfig.value + '$' +
-        sleepConfig.condition + ',';
+function genericRequest(name, module) {
+    if (config.sleepTime) {
+        module = module +
+            sleepConfig.value + '$' +
+            sleepConfig.condition + ',';
+    }
 
     if (stackMode) {
         stack.push(module);
     } else {
-        var payload = '#' + config.stackId + "," + coreModule +  module;
+        var payload = '#' + config.stackId + "," + module + coreModule;
 
-        console.log("Sending the following humidity request [%s]", payload);
-
+        console.log('Sending the following ' + name + ' request [%s]', payload);
         sendRequest(payload);
     }
+}
+
+function humidity(commands) {
+    var module = '#' + commands[2] + ',H1,' +
+        commands[0] + ',' +
+        commands[1] + ',';
+
+    genericRequest('humidity', module);
+}
+
+function luminance(commands) {
+    var module = '#' + commands[1] + ',LU,' +
+        commands[0] + ',';
+
+    genericRequest('luminance', module);
+}
+
+function battery(commands) {
+    var module = '#' + commands[6] + ',B,' +
+        commands[0] + ',' +
+        commands[1] + ',' +
+        commands[2] + ',' +
+        commands[3] + ',' +
+        commands[4] + ',' +
+        commands[5] + ',';
+
+    genericRequest('battery', module);
 }
 
 function gpsLocation(commands) {
@@ -89,34 +117,72 @@ function gpsLocation(commands) {
         commands[1] + ',' +
         commands[2] + ',' +
         commands[3] + ',' +
-        commands[4] + ',' +
-        sleepConfig.value + '$' +
-        sleepConfig.condition + ',';
+        commands[4] + ',';
 
-    if (stackMode) {
-        stack.push(module);
-    } else {
-        var payload = '#' + config.stackId + "," + coreModule + module;
+    genericRequest('gps', module);
+}
 
-        console.log("Sending the following gps request [%s]", payload);
-        sendRequest(payload);
-    }
+function gsmLocation(commands) {
+    var module = '#' + commands[4] + ',P1,'+
+        commands[0] + ',' +
+        commands[1] + ',' +
+        commands[2] + ',' +
+        commands[3] + ',';
+
+    genericRequest('gsm position', module);
 }
 
 function temperature(commands) {
     var module = '#' + commands[1] + ',T1,'+
+        commands[0] + ',';
+
+    genericRequest('temperature', module);
+}
+
+function genMeasure(commands) {
+    var module = '#' + commands[2] + ',GM,'+
         commands[0] + ',' +
-        sleepConfig.value + '$' +
-        sleepConfig.condition + ',';
+        commands[1] + ',';
 
-    if (stackMode) {
-        stack.push(module);
-    } else {
-        var payload = '#' + config.stackId + "," + coreModule + module;
+    genericRequest('generic module', module);
+}
 
-        console.log("Sending the following temperature request [%s]", payload);
-        sendRequest(payload);
-    }
+function genConfiguration(commands) {
+    var module = '#' + commands[2] + ',GC,'+
+        commands[0] + ',' +
+        commands[1] + ',';
+
+    genericRequest('generic configuration attribute', module);
+}
+
+function blackButonSync(commands) {
+    var module = '#' + commands[2] + ',BT,S,'+
+        commands[0] + ',' +
+        commands[1] + ',';
+
+    genericRequest('Black Button Synchronous call', module);
+}
+
+function blackButonCreate(commands) {
+    var module = '#' + commands[2] + ',BT,C,'+
+        commands[0] + ',' +
+        commands[1] + ',';
+
+    genericRequest('Black Button create', module);
+}
+
+function blackButonPolling(commands) {
+    var module = '#' + commands[1] + ',BT,P,'+
+        commands[0] + ',';
+
+    genericRequest('Black Button polling', module);
+}
+
+function blackButonClose(commands) {
+    var module = '#' + commands[1] + ',BT,X,'+
+        commands[0] + ',';
+
+    genericRequest('Black Button polling', module);
 }
 
 function setConfig(commands) {
@@ -124,6 +190,7 @@ function setConfig(commands) {
     config.port = commands[1];
     config.path = commands[2];
     config.stackId = commands[3];
+    config.sleepTime = JSON.parse(commands[4]);
     clUtils.prompt();
 }
 
@@ -131,6 +198,7 @@ function getConfig(commands) {
     console.log('Current config parameters:\n');
     console.log('* host: %s', config.host);
     console.log('* port: %s', config.port);
+    console.log('* path: %s', config.path);
     console.log('* stackId: %s\n', config.stackId);
     clUtils.prompt();
 }
@@ -160,7 +228,7 @@ function sendStack() {
         return previous + current;
     }
 
-    var payload = '#' + config.stackId + "," + coreModule + stack.reduce(concat);
+    var payload = '#' + config.stackId + "," + stack.reduce(concat)  + coreModule;
     stackMode = false;
 
     console.log('Sending the following stacked payload: ' + payload);
@@ -180,14 +248,40 @@ var commands = {
         description: '\tSend a new gps measure',
         handler: gpsLocation
     },
+    'gsm': {
+        parameters: ['mcc', 'mnc', 'cell-id', 'lac', 'dbm'],
+        description: '\tSend new GSM positioning data/measure',
+        handler: gsmLocation
+    },
     'temperature': {
         parameters: ['temperature', 'moduleId'],
         description: '\tSend a new temperature measure',
         handler: temperature
     },
+    'luminance': {
+        parameters: ['luminance', 'moduleId'],
+        description: '\tSend a new luminance measure',
+        handler: luminance
+    },
+    'battery': {
+        parameters: ['voltage', 'state', 'charger', 'charging', 'mode', 'disconnection', 'moduleId'],
+        description: '\tSend a new battery measure',
+        handler: battery
+    },
+    'genMeasure': {
+        parameters: ['attribute', 'value', 'moduleId'],
+        description: '\tSend a new generic measure',
+        handler: genMeasure
+    },
+    'genConfig': {
+        parameters: ['attribute', 'value', 'moduleId'],
+        description: '\tSend a new generic configuration attribute',
+        handler: genConfiguration
+    },
     'setConfig': {
-        parameters: ['host', 'port', 'path', 'stackId'],
-        description: '\tChange the configuration of the device.',
+        parameters: ['host', 'port', 'path', 'stackId', 'sleepTime'],
+        description: '\tChange the configuration of the device. The sleepTime parameter is a boolean flag that' +
+            'can be used to remove the -1$ parameters in all the modules, but the Core one.',
         handler: setConfig
     },
     'getConfig': {
@@ -204,6 +298,26 @@ var commands = {
         parameters: [],
         description: '\tGet the current default sleep parameters.',
         handler: getSleep
+    },
+    'btCreate': {
+        parameters: ['action', 'extra', 'moduleId'],
+        description: '\tCreate a new Black Button request.',
+        handler: blackButonCreate
+    },
+    'btPolling': {
+        parameters: ['requestId', 'moduleId'],
+        description: '\tCreate a new Black Button polling request.',
+        handler: blackButonPolling
+    },
+    'btClose': {
+        parameters: ['requestId', 'moduleId'],
+        description: '\tCreate a new Black Button close request.',
+        handler: blackButonClose
+    },
+    'btSync': {
+        parameters: ['action', 'extra', 'moduleId'],
+        description: '\tSend a new synchronous operation to the server.',
+        handler: blackButonSync
     },
     'startStack': {
         parameters: [],

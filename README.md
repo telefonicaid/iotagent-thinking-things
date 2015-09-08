@@ -2,7 +2,22 @@
 ## Overview
 This *Internet of Things Agent* is a bridge can be used to bridge between Telefonica's Thinking Things Closed protocol (TT from now on) and NGSI Context Brokers (like [Orion](https://github.com/telefonicaid/fiware-orion)). The Thinking Things protocol is a simplified protocol aimed to provide a simple platform to experiment with the Internet of Things.
 
-## Usage
+## Installation and usage
+### Using Docker
+If you are using Docker, you can download the latest Thinking Things module from Docker Hub, in order to try it. Do not use this installation mode for production purposes. 
+
+The Docker module has the prerequisite of having a Orion Context Broker that must be linked on start for the module to work. There is currently just one simple configuration offered for the IOTA, with in-memory transient storage (in the future, more configurations will be available).
+
+If there is a docker container running with the Context Broker and name `orion`, the following command will start a Thinking Things IoT Agent:
+```
+docker run -t -i --link orion:orion -p 4041:4041 -p 8000:8000 telefonicaiot/iotagent-thinking-things
+```
+This command will start the process in the foreground, exporting the 8000 and 4041 ports in the host. In order to execute it as a daemon, use:
+```
+docker run -d --link orion:orion -p 4041:4041 -p 8000:8000 telefonicaiot/iotagent-thinking-things
+```
+
+### Standard procedure
 In order to install the TT Agent, just clone the project and install the dependencies:
 ```
 git clone https://github.com/dmoranj/iotagent-thinking-things.git
@@ -23,6 +38,8 @@ The following parameters can be configured:
 
 ### NGSI
 * `logLevel`: determines the log level for the connection with the NGSI Broker.
+* `plain`: if this flag is true, all the information of every module will be published as a plain attribute in the entity. If the flag is false, an attribute will be created for each module with a compound type, containing an array of all its values (in attribute format).
+* `timestamp`: when this flag is true, every attribute will come with a metadata showing the timestamp of its reception in the platform.
 * `defaultType`: this is the entity type that will be assigned to the devices whenever there is no other way of determining the appropriate type.
 * `contextBroker.host`: host where the NGSI Context Broker is listening.
 * `contextBroker.port`: port where the NGSI Context Broker is listening.
@@ -85,6 +102,148 @@ The format for new device registrations is as follows:
     ]
 }
 ```
+## Thinking Things Protocol
+### Overview
+The thinking things protocol offer a lightweight HTTP-based protocol aimed to constrained devices who whishes to communicate
+with backends, sending simple sensor data and receiving simple configuration parameters and commands. This protocol was designed
+as a part of [Telefonica Thinking Things](http://www.thinkingthings.telefonica.com/) project.
+
+### Protocol basics
+All protocol interactions are started from the client device. The device sends an HTTP POST request to the server with Content-Type
+`application/x-www-form-urlencoded`, containing a single field named `cadena`, with a payload that looks like the following example:
+
+```
+#ITgAY,#0,P1,214,07,b00,444,-47,#0,K1,300$,#3,B,4.70,1,1,1,1,0,-1$#4,T1,31.48,0$#4,H1,31.48,1890512.00,0$#4,LU,142.86,0$
+```
+The first value, corresponding to the value between the first two '#' characters is the Stack ID, i.e.: the ID of the device
+itself.
+
+This payload can be divided in modules, each one of them responsible for a single measure. Modules are separated by the 
+'#' character, and all of them consists of a series of parameters sepparated by commas. The first parameter is always 
+interpreted as the ID of the module. The second parameter identifies the kind of module (that will decide the interpretation
+of the rest of the parameters), and the rest of the values will be interpreted based on the module type.
+
+Let's look at an example more closely, extracting it from the payload above: the module `#4,H1,31.48,1890512.00,0$`. This
+module has:
+- An id: 4
+- A module type: H1. This means the module is a Humidity sensor.
+- Two values. Knowing that the module is a Humidity sensor, we know that this values can be interpreted as the temperature
+and the humidity values (that can be used to calculate real humidity).
+- An optional sleep value all the TT modules should implement (not used in this case, thus the value 0$).
+
+The following subsection shows all the available modules.
+
+### Modules
+#### GM Generic Module
+This module can be used to send arbitrary attribute information to the server. Each GM can be used to send a single 
+attribute with the attribute name specified in the module parameters.
+
+| Position | Meaning                      | Example             |
+|:--------:|:---------------------------- |:------------------- |
+| 1        | Attribute name               | pressure            |
+| 2        | Attribute value              | 790                 |
+| 3        | Sleeping value (unused)      | 0$                  |
+
+#### GC Generic Configuration
+This module represents a generic configuration parameter, that will be stored by the server. Each time the device sends
+a GC module to the server, the server will reply with the last available value to the client.
+
+| Position | Meaning                      | Example             |
+|:--------:|:---------------------------- |:------------------- |
+| 1        | Parameter name               | timeout             |
+| 2        | Parameter value              | 2000                |
+| 3        | Sleeping value (unused)      | 0$                  |
+
+
+#### K1 Core Module
+This module is mandatory for all the payloads sent to the server. This module represents the Core communication module, 
+and can be used to configure the sleeping time of the device.
+
+#### H1
+Sends information about the temperature and humidity. The values given by the sensor are usually raw vales (in the 
+Thinking Things Closed devices at least), so some processing may be needed before using the values.
+
+Parameters:
+
+| Position | Meaning                      | Example             |
+|:--------:|:---------------------------- |:------------------- |
+| 1        | Temperature                  | 26.29               |
+| 2        | Humidity                     | 1890512.00          |
+| 3        | Sleeping value (unused)      | 0$                  |
+ 
+#### LU Luminance
+Sends information about luminance.
+
+| Position | Meaning                      | Example             |
+|:--------:|:---------------------------- |:------------------- |
+| 1        | Luminance                    | 142.86              |
+| 2        | Sleeping value (unused)      | 0$                  |
+
+#### GPS Coordinates
+Sends the GPS coordinates to the server.
+
+| Position | Meaning                      | Example             |
+|:--------:|:---------------------------- |:------------------- |
+| 1        | Latitude                     | 21.1                |
+| 2        | Longitude                    | -9.4                |
+| 3        | Speed                        | 12.3                |
+| 4        | Orientation                  | 0.64                |
+| 5        | Altitude                     | 127                 |
+| 6        | Sleeping value (unused)      | 0$                  |
+
+#### P1
+Sends information about the GSM connection to the server.
+
+| Position | Meaning                      | Example             |
+|:--------:|:---------------------------- |:------------------- |
+| 1        | mcc                          | 384                 |
+| 2        | mnc                          | 09                  |
+| 3        | lac                          | a01                 |
+| 4        | cellid                       | 434                 |
+| 5        | dbm                          | -57                 |
+| 6        | Sleeping value (unused)      | 0$                  |
+
+#### T1
+Sends temperature information to the server.
+
+| Position | Meaning                      | Example             |
+|:--------:|:---------------------------- |:------------------- |
+| 1        | Temperature                  | 22.86               |
+| 2        | Sleeping value (unused)      | 0$                  |
+
+#### B
+Sends battery information to the server.
+
+| Position | Meaning                      | Example             |
+|:--------:|:---------------------------- |:------------------- |
+| 1        | Voltage                      | 4.70                |
+| 2        | State                        | 1                   |
+| 3        | Charger                      | 1                   |
+| 4        | Charging                     | 1                   |
+| 5        | Mode                         | 1                   |
+| 6        | Desconnection                | 0                   |
+| 2        | Sleeping value (unused)      | 0$                  |
+
+#### BT
+The BT module is meant to be used in the Black Button (BT) interactions of the Thinking Things IOT Agent. It works slightly different as the typical TT Module, as it will be described along this section. The available attributes are the following:
+
+| Position | Meaning                      | Possible values     |
+|:--------:|:---------------------------- |:------------------- |
+| 1        | Operation                    | S, C, P, X          |
+| 2        | Action                       | 1                   |
+| 3        | Extra or request ID          | 16234               |
+
+The Black Button can work on two different modes, making use of different operations in each one. In **synchronous mode**, all the information sent by the button is immediatly sent to the Third Party systems through the Context Broker, and the IOTA waits for its return, to informa the device about the success or error of the request. This synchronous interaction is performed using the **S** operation, and it beguins and end with its execution. 
+
+In **asynchronous mode**, three operations are used:
+1. The interaction begins with the device sending a **C** operation to the IOTAgent, meaning that a new request to the third party systems is required. When the IOTAgent receives this kind of operation, it creates a new request ID, updates the entity in the Context Broker and returns it immediatly to the Button, with the response. 
+2. The device can then start to make polling requests using the **P** operation. This operation do not update any information in the Context Broker, but instead it retrieves the information about the device and query its status, returning it to the button.
+3. When the device is in a state that can be considered final, it can close the request by sending a **X** operation to the agent. 
+
+Only one operation by device can be carried away at each moment in time. Creating a new request will effectively cancel the previous ones.
+
+In the **synchronous mode** there is just one operation, **S**, from the device to the IOTAgent. As in any other BT operation, information about the action can be passed as the last attribute of the request. In this case, all the operation is completed the moment
+the HTTP call of the device returns a response. This response will contain all the information about the request execution and its result.
 
 ## Client
 In order to test the IoT Agent, a ThinkingThings client is provided that can emulate some calls from TT devices. The client can be started from the root folder of the project with the following command:
@@ -117,13 +276,33 @@ gps <latitude> <longitude> <speed> <orientation> <altitude> <moduleId>
 
 	Send a new gps measure
 
+gsm <mcc> <mnc> <cell-id> <lac> <dbm>  
+
+	Send new GSM positioning data/measure
+
 temperature <temperature> <moduleId>  
 
 	Send a new temperature measure
 
-setConfig <host> <port> <path> <stackId>  
+luminance <luminance> <moduleId>  
 
-	Change the configuration of the device.
+	Send a new luminance measure
+
+battery <voltage> <state> <charger> <charging> <mode> <disconnection> <moduleId>  
+
+	Send a new battery measure
+
+genMeasure <attribute> <value> <moduleId>  
+
+	Send a new generic measure
+
+genConfig <attribute> <value> <moduleId>  
+
+	Send a new generic configuration attribute
+
+setConfig <host> <port> <path> <stackId> <sleepTime>  
+
+	Change the configuration of the device. The sleepTime parameter is a boolean flag thatcan be used to remove the -1$ parameters in all the modules, but the Core one.
 
 getConfig  
 
@@ -137,6 +316,18 @@ getSleep
 
 	Get the current default sleep parameters.
 
+btCreate <action> <extra> <moduleId>  
+
+	Create a new Black Button request.
+
+btPolling <requestId> <moduleId>  
+
+	Create a new Black Button polling request.
+
+btClose <requestId> <moduleId>  
+
+	Create a new Black Button close request.
+
 startStack  
 
 	Start stacking the payloads to send a multimodule payload (stackMode = off).
@@ -144,6 +335,8 @@ startStack
 sendStack  
 
 	Send all the stacked module info (stackMode = on).
+
+
 ```
 
 ## Development documentation

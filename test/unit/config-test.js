@@ -1,14 +1,14 @@
 var config = {};
 
 config.thinkingThings = {
-    logLevel: 'ERROR',
+    logLevel: 'FATAL',
     port: 8000,
     root: '/thinkingthings',
     sleepTime: 600
 };
 
 config.ngsi = {
-    logLevel: 'ERROR',
+    logLevel: 'FATAL',
     defaultType: 'ThinkingThing',
     contextBroker: {
         host: '192.168.56.101',
@@ -18,8 +18,7 @@ config.ngsi = {
         port: 4041
     },
     deviceRegistry: {
-        type: 'mongodb',
-        host: 'localhost'
+        type: 'memory'
     },
     types: {
         'ThinkingThing': {

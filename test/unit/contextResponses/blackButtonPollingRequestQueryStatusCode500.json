@@ -1,0 +1,27 @@
+{
+  "contextResponses": [
+    {
+      "contextElement": {
+        "type": "ThinkingThing",
+        "isPattern": "false",
+        "id": "STACK1:ThinkingThing",
+        "attributes": [
+          {
+            "name": "op_status",
+            "value": "C.S",
+            "type": "string"
+          },
+          {
+            "name": "op_result",
+            "value": "999999",
+            "type": "string"
+          }
+        ]
+      },
+      "statusCode": {
+        "code": "500",
+        "reasonPhrase": "rgb-66CC00;t-2"
+      }
+    }
+  ]
+}

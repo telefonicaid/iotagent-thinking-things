@@ -1,0 +1,22 @@
+{
+  "contextElements": [
+    {
+      "type": "ThinkingThing",
+      "isPattern": "false",
+      "id": "STACK1:ThinkingThing",
+      "attributes": [
+        {
+          "name": "op_status",
+          "value": "CLOSED",
+          "type": "string"
+        },
+        {
+          "name": "last_operation",
+          "value": "X",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "updateAction": "APPEND"
+}

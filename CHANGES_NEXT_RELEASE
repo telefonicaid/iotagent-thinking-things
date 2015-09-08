@@ -1,4 +1,10 @@
-- FIX Update IOTA to the last version of the library.
-- ADD bin section to the package.json to publish commands.
-- ADD Configuration selection in executable.
-- ADD Special configuration for tests.
+- ADD Generic configuration module (#22).
+- ADD Generic module in the parser (#21).
+- ADD Documentation for the protocol (#30).
+- ADD Timestamp in attributes (#26).
+- ADD Dockerfile to instantiate the IOTAgent (#32).
+- ADD Implementation for the Black Button protocol (#23).
+- ADD Client commands for the Black Button (#39).
+- ADD Luminance and battery modules for the command line client (#29).
+- ADD Integration of the synchronous module of the Black Button (#37).
+- ADD Manage different error cases in communications (#43).

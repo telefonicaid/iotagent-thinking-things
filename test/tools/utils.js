@@ -23,7 +23,13 @@
 
 'use strict';
 
-var fs = require('fs');
+var request = require('request'),
+    config = require('../unit/config-test'),
+    utils = require('../tools/utils'),
+    should = require('should'),
+    nock = require('nock'),
+    contextBrokerMock = [],
+    fs = require('fs');
 
 function readExampleFile(name, raw) {
     var text = fs.readFileSync(name, 'UTF8');
@@ -35,4 +41,57 @@ function readExampleFile(name, raw) {
     }
 }
 
+function checkResponse(options, answer) {
+    return function(done) {
+        request(options, function(error, response, body) {
+            should.not.exist(error);
+            response.statusCode.should.equal(200);
+            body.should.equal(answer);
+            done();
+        });
+    };
+}
+
+function checkContextBroker(options) {
+    return function(done) {
+        request(options, function(error, response, body) {
+            should.not.exist(error);
+
+            for (var i = 0; i < contextBrokerMock.length; i++) {
+                contextBrokerMock[i].done();
+            }
+
+            done();
+        });
+    };
+}
+
+function prepareMocks(request, response, path, code) {
+    return function(done) {
+        var realPath,
+            realCode = code || 200;
+
+        if (path) {
+            realPath = path;
+        } else {
+            nock.cleanAll();
+            contextBrokerMock = [];
+            realPath = '/v1/updateContext';
+        }
+
+        contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
+            .matchHeader('fiware-service', 'smartGondor')
+            .matchHeader('fiware-servicepath', '/gardens')
+            .post(realPath,
+            utils.readExampleFile(request))
+            .reply(realCode, utils.readExampleFile(response)));
+
+        done();
+    };
+}
+
+exports.checkResponse = checkResponse;
+exports.checkContextBroker = checkContextBroker;
+exports.prepareMocks = prepareMocks;
 exports.readExampleFile = readExampleFile;
+exports.contextBrokerMock = contextBrokerMock;
