@@ -39,7 +39,7 @@
 
 PARAM=$1
 NAME=iotatt
-EXECUTABLE=bin/${NAME}
+EXECUTABLE=bin/thinkingThingsAgent.js
 IOTA_PATH=/opt/iotatt
 PIDFILE=$IOTA_PATH/$NAME.pid
 LOG_PATH=/var/log/iotatt/iotatt.log
