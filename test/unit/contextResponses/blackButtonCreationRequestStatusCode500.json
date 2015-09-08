@@ -1,0 +1,16 @@
+{
+  "contextResponses": [
+    {
+      "contextElement": {
+        "attributes": [],
+        "id": "STACK1:ThinkingThing",
+        "isPattern": "false",
+        "type": "ThinkingThing"
+      },
+      "statusCode": {
+        "code": "500",
+        "reasonPhrase": "rgb-66CC00;t-2"
+      }
+    }
+  ]
+}

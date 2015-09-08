@@ -7,3 +7,4 @@
 - ADD Client commands for the Black Button (#39).
 - ADD Luminance and battery modules for the command line client (#29).
 - ADD Integration of the synchronous module of the Black Button (#37).
+- ADD Manage different error cases in communications (#43).

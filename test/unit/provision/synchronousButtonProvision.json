@@ -1,29 +1,34 @@
 {
-  "name": "STACK1",
-  "entity_type": "ThinkingThing",
-  "timezone": "America/Santiago",
-  "attributes": [
+  "devices": [
     {
-      "name": "internalId",
-      "type": "string"
-    },
-    {
-      "name": "last_operation",
-      "type": "string"
-    },
-    {
-      "name": "op_action",
-      "type": "string"
-    },
-    {
-      "name": "op_extra",
-      "type": "string"
-    }
-  ],
-  "lazy": [
-    {
-      "name": "op_result",
-      "type": "string"
+      "device_id": "STACK1",
+      "procosol": "THINKINGTHINGS_PROTOCOL",
+      "entity_type": "ThinkingThing",
+      "timezone": "America/Santiago",
+      "attributes": [
+        {
+          "name": "internalId",
+          "type": "string"
+        },
+        {
+          "name": "last_operation",
+          "type": "string"
+        },
+        {
+          "name": "op_action",
+          "type": "string"
+        },
+        {
+          "name": "op_extra",
+          "type": "string"
+        }
+      ],
+      "lazy": [
+        {
+          "name": "op_result",
+          "type": "string"
+        }
+      ]
     }
   ]
 }

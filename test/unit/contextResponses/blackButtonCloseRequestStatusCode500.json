@@ -1,0 +1,27 @@
+{
+  "contextResponses": [
+    {
+      "contextElement": {
+        "attributes": [
+          {
+            "name": "op_status",
+            "value": "CLOSED",
+            "type": "string"
+          },
+          {
+            "name": "last_operation",
+            "value": "",
+            "type": "string"
+          }
+        ],
+        "id": "STACK1:ThinkingThing",
+        "isPattern": "false",
+        "type": "ThinkingThing"
+      },
+      "statusCode": {
+        "code": "500",
+        "reasonPhrase": "rgb-66CC00;t-2"
+      }
+    }
+  ]
+}
