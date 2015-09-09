@@ -3,6 +3,19 @@
 This *Internet of Things Agent* is a bridge can be used to bridge between Telefonica's Thinking Things Closed protocol (TT from now on) and NGSI Context Brokers (like [Orion](https://github.com/telefonicaid/fiware-orion)). The Thinking Things protocol is a simplified protocol aimed to provide a simple platform to experiment with the Internet of Things.
 
 ## Installation and usage
+### Using RPM
+The project contains a script for generating an RPM that can be installed in Red Hat 6.5 compatible Linux distributions. The
+RPM depends on Node.js 0.10 version, so EPEL repositories are advisable. 
+
+In order to create the RPM, execute the following scritp, inside the `/rpm` folder:
+```
+create-rpm.sh -v <versionNumber> -r <releaseNumber>
+```
+
+Once the RPM is generated, it can be installed using the followogin command:
+```
+yum localinstall --nogpg <nameOfTheRPM>.rpm
+```
 ### Using Docker
 If you are using Docker, you can download the latest Thinking Things module from Docker Hub, in order to try it. Do not use this installation mode for production purposes. 
 
@@ -17,7 +30,7 @@ This command will start the process in the foreground, exporting the 8000 and 40
 docker run -d --link orion:orion -p 4041:4041 -p 8000:8000 telefonicaiot/iotagent-thinking-things
 ```
 
-### Standard procedure
+### Using GIT
 In order to install the TT Agent, just clone the project and install the dependencies:
 ```
 git clone https://github.com/dmoranj/iotagent-thinking-things.git
