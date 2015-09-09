@@ -338,7 +338,7 @@ describe('Black button testing', function() {
 
         request(registerOptions, function(error, response, body) {
             should.not.exist(error);
-            response.statusCode.should.equal(200);
+            response.statusCode.should.equal(201);
             callback();
         });
     }
