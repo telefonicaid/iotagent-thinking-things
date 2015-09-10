@@ -11,7 +11,7 @@
             "type": "compound",
             "value": [
               {
-                "name": "_TTcurrent_conf",
+                "name": "conf",
                 "value": "44",
                 "type": "string"
               }
@@ -34,7 +34,7 @@
             "type": "compound",
             "value": [
               {
-                "name": "_TTcurrent_conf2",
+                "name": "conf2",
                 "value": "456",
                 "type": "string"
               }
