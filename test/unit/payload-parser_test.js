@@ -264,6 +264,28 @@ describe('Thinking things payload parser', function() {
         });
     });
 
+    describe('When a Actuator module arrives: #STACK01#6,AV,,600$,', function() {
+        it('should fill the Device ID', function(done) {
+            thinkingParser.parse('#STACK01#6,AV,,600$,',
+                checkId('STACK01', '6', done));
+        });
+        it('should parse all the location fields into the attributes object', function(done) {
+            thinkingParser.parse('#STACK01#6,AV,,600$,', function(error, result) {
+                should.not.exist(error);
+                should.exist(result);
+                should.exist(result.modules[0].attributes);
+                should.exist(result.modules[0].attributes[0]);
+                result.modules[0].attributes[0].name.should.equal('_TTcurrent_melody');
+                result.modules[0].attributes[0].value.should.equal('');
+                result.modules[0].attributes[0].type.should.equal('string');
+                done();
+            });
+        });
+        it('should extract the sleeping time and condition', function(done) {
+            thinkingParser.parse('#STACK01#6,AV,,600$,', checkSleep('600', '', done));
+        });
+    });
+
     describe('When a Generic module arrives: #STACK01#19,GM,attrName,32,600$,', function() {
         var payload = '#STACK01#19,GM,attrName,32,600$,';
 
