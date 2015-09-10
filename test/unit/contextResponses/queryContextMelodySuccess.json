@@ -1,0 +1,40 @@
+{
+  "contextResponses": [
+    {
+      "contextElement": {
+        "type": "ThinkingThing",
+        "isPattern": "false",
+        "id": "STACK1:ThinkingThing",
+        "attributes": [
+          {
+            "name": "1",
+            "type": "compound",
+            "value": [
+              {
+                "name": "_TTcurrent_melody",
+                "value": "2:5:1000:1Cb.C",
+                "type": "string"
+              }
+            ],
+            "metadatas": [
+              {
+                "name": "sleepcondition",
+                "type": "string",
+                "value": "cond1"
+              },
+              {
+                "name": "sleeptime",
+                "type": "string",
+                "value": "12"
+              }
+            ]
+          }
+        ]
+      },
+      "statusCode": {
+        "code": "200",
+        "reasonPhrase": "OK"
+      }
+    }
+  ]
+}

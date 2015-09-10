@@ -1,0 +1,12 @@
+{
+  "entities": [
+    {
+      "type": "ThinkingThing",
+      "isPattern": "false",
+      "id": "STACK1:ThinkingThing"
+    }
+  ],
+  "attributes" : [
+    "melody"
+  ]
+}

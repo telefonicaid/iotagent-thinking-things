@@ -1,0 +1,11 @@
+{
+  "contextElements": [
+    {
+      "type": "ThinkingThing",
+      "isPattern": "false",
+      "id": "STACK1:ThinkingThing",
+      "attributes": []
+    }
+  ],
+  "updateAction": "APPEND"
+}
