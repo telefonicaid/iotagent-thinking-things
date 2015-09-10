@@ -195,6 +195,36 @@ describe('Southbound measure reporting', function() {
             utils.checkResponse(options, '#STACK1#1,AV,2:5:1000:1Cb.C,-1$,#673495,K1,300$theCondition,'));
     });
 
+    describe('When a request arrives to the IoT Agent having led modules', function() {
+        var options = {
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+            method: 'POST',
+            form: {
+                cadena: '#STACK1#6,L1,R,G,B,0,600$,#673495,K1,2500$theCondition,'
+            }
+        };
+
+        beforeEach(function() {
+            utils.contextBrokerMock = [];
+
+            async.series([
+                utils.prepareMocks(
+                    './test/unit/contextRequests/queryContextLED.json',
+                    './test/unit/contextResponses/queryContextLEDSuccess.json',
+                    '/v1/queryContext'),
+                utils.prepareMocks(
+                    './test/unit/contextRequests/updateContextLED.json',
+                    './test/unit/contextResponses/updateContextLEDSuccess.json',
+                    '/v1/updateContext')
+            ]);
+        });
+
+        it('should update the device entity in the Context Broker with both attributes',
+            utils.checkContextBroker(options));
+        it('should return a 200OK with the current value of the configuration parameter read from the CB',
+            utils.checkResponse(options, '#STACK1#6,L1,255,129,38,0,-1$,#673495,K1,300$theCondition,'));
+    });
+
     describe('When a real example of the device request arrives', function() {
         var options = {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',

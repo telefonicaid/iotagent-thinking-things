@@ -286,13 +286,13 @@ describe('Thinking things payload parser', function() {
         });
     });
 
-    describe('When a Actuator module arrives: #STACK01#6,L1,R,G,B,600$,', function() {
+    describe('When a LED module arrives: #STACK01#6,L1,R,G,B,0,600$,', function() {
         it('should fill the Device ID', function(done) {
-            thinkingParser.parse('#STACK01#6,L1,R,G,B,600$,',
+            thinkingParser.parse('#STACK01#6,L1,R,G,B,0,600$,',
                 checkId('STACK01', '6', done));
         });
         it('should parse all the location fields into the attributes object', function(done) {
-            thinkingParser.parse('#STACK01#6,L1,R,G,B,600$,', function(error, result) {
+            thinkingParser.parse('#STACK01#6,L1,R,G,B,0,600$,', function(error, result) {
                 should.not.exist(error);
                 should.exist(result);
                 should.exist(result.modules[0].attributes);
@@ -304,7 +304,7 @@ describe('Thinking things payload parser', function() {
             });
         });
         it('should extract the sleeping time and condition', function(done) {
-            thinkingParser.parse('#STACK01#6,L1,R,G,B,600$,', checkSleep('600', '', done));
+            thinkingParser.parse('#STACK01#6,L1,R,G,B,0,600$,', checkSleep('600', '', done));
         });
     });
 
