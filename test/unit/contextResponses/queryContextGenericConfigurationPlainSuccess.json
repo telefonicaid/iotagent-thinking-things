@@ -1,0 +1,37 @@
+{
+  "contextResponses": [
+    {
+      "contextElement": {
+        "type": "ThinkingThing",
+        "isPattern": "false",
+        "id": "STACK1:ThinkingThing",
+        "attributes": [
+          {
+            "name": "conf",
+            "value": "44",
+            "type": "string"
+          },
+          {
+            "name": "conf2",
+            "value": "456",
+            "type": "string"
+          },
+          {
+            "name": "sleepcondition",
+            "type": "string",
+            "value": "cond1"
+          },
+          {
+            "name": "sleeptime",
+            "type": "string",
+            "value": "12"
+          }
+        ]
+      },
+      "statusCode": {
+        "code": "200",
+        "reasonPhrase": "OK"
+      }
+    }
+  ]
+}

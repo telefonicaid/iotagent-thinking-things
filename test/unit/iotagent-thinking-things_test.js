@@ -25,6 +25,7 @@
 
 var config = require('./config-test'),
     ttAgent = require('../../lib/iotagent-thinking-things'),
+    responseGenerator = require('../../lib/middlewares/responseGenerator'),
     async = require('async'),
     apply = async.apply,
     utils = require('../tools/utils'),
@@ -137,15 +138,19 @@ describe('Southbound measure reporting', function() {
 
     describe('When a request arrives to the IoT Agent having Generic Configuration modules', function() {
         var options = {
-            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
-            method: 'POST',
-            form: {
-                cadena: '#STACK1#0,GC,conf,33,600$,#1,GC,conf2,123,600$,#673495,K1,2500$theCondition,'
-            }
-        };
+                url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+                method: 'POST',
+                form: {
+                    cadena: '#STACK1#0,GC,conf,33,300$,#1,GC,conf2,123,300$,#673495,K1,2500$theCondition,'
+                }
+            },
+            originalPlainFormat;
 
         beforeEach(function() {
             utils.contextBrokerMock = [];
+
+            originalPlainFormat = config.ngsi.plainFormat;
+            config.ngsi.plainFormat = false;
 
             async.series([
                 utils.prepareMocks(
@@ -155,8 +160,57 @@ describe('Southbound measure reporting', function() {
                 utils.prepareMocks(
                     './test/unit/contextRequests/updateContextGenericConfiguration.json',
                     './test/unit/contextResponses/updateContextGenericConfigurationSuccess.json',
-                    '/v1/updateContext')
+                    '/v1/updateContext'),
+                ttAgent.stop,
+                apply(responseGenerator.reloadConfig, config),
+                apply(ttAgent.start, config),
             ]);
+        });
+
+        afterEach(function(done) {
+            config.ngsi.plainFormat = originalPlainFormat;
+            responseGenerator.reloadConfig(config, done);
+        });
+
+        it('should update the device entity in the Context Broker with both attributes',
+            utils.checkContextBroker(options));
+        it('should return a 200OK with the current value of the configuration parameter read from the CB',
+            utils.checkResponse(options, '#STACK1#0,GC,conf,44,-1$,#1,GC,conf2,456,-1$,#673495,K1,300$theCondition,'));
+    });
+
+    describe.only('When a request arrives to the IoT Agent plain format configuration modules', function() {
+        var options = {
+                url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+                method: 'POST',
+                form: {
+                    cadena: '#STACK1#0,GC,conf,33,600$,#1,GC,conf2,123,600$,#673495,K1,2500$theCondition,'
+                }
+            },
+            originalPlainFormat;
+
+        beforeEach(function(done) {
+            utils.contextBrokerMock = [];
+
+            originalPlainFormat = config.ngsi.plainFormat;
+            config.ngsi.plainFormat = false;
+
+            async.series([
+                utils.prepareMocks(
+                    './test/unit/contextRequests/queryContextGenericConfigurationPlain.json',
+                    './test/unit/contextResponses/queryContextGenericConfigurationPlainSuccess.json',
+                    '/v1/queryContext'),
+                utils.prepareMocks(
+                    './test/unit/contextRequests/updateContextGenericConfigurationPlain.json',
+                    './test/unit/contextResponses/updateContextGenericConfigurationSuccess.json',
+                    '/v1/updateContext'),
+                ttAgent.stop,
+                apply(responseGenerator.reloadConfig, config),
+                apply(ttAgent.start, config),
+            ], done);
+        });
+
+        afterEach(function() {
+            config.ngsi.plainFormat = originalPlainFormat;
         });
 
         it('should update the device entity in the Context Broker with both attributes',
