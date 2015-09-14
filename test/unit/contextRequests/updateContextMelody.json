@@ -7,5 +7,5 @@
       "attributes": []
     }
   ],
-  "updateAction": "APPEND"
+  "updateAction": "UPDATE"
 }
