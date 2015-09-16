@@ -254,7 +254,7 @@ describe('Southbound measure reporting', function() {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
             method: 'POST',
             form: {
-                cadena: '#STACK1#6,L1,R,G,B,0,600$,#673495,K1,2500$theCondition,'
+                cadena: '#STACK1#6,L1,R,G,B,600$,#673495,K1,2500$theCondition,'
             }
         };
 
@@ -276,7 +276,7 @@ describe('Southbound measure reporting', function() {
         it('should update the device entity in the Context Broker with both attributes',
             utils.checkContextBroker(options));
         it('should return a 200OK with the current value of the configuration parameter read from the CB',
-            utils.checkResponse(options, '#STACK1#6,L1,255,129,38,0,-1$,#673495,K1,300$theCondition,'));
+            utils.checkResponse(options, '#STACK1#6,L1,255,129,38,-1$,#673495,K1,300$theCondition,'));
     });
 
     describe('When a real example of the device request arrives', function() {
