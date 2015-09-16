@@ -163,7 +163,7 @@ describe('Southbound measure reporting', function() {
                     '/v1/updateContext'),
                 ttAgent.stop,
                 apply(responseGenerator.reloadConfig, config),
-                apply(ttAgent.start, config),
+                apply(ttAgent.start, config)
             ]);
         });
 
@@ -205,7 +205,7 @@ describe('Southbound measure reporting', function() {
                     '/v1/updateContext'),
                 ttAgent.stop,
                 apply(responseGenerator.reloadConfig, config),
-                apply(ttAgent.start, config),
+                apply(ttAgent.start, config)
             ], done);
         });
 
