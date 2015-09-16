@@ -37,7 +37,7 @@ function mockedGenerateInternalId() {
     return 'AAAEE1111';
 }
 
-describe('Black button testing', function() {
+describe.skip('Black button testing', function() {
     beforeEach(function(done) {
         ttAgent.start(config, done);
     });

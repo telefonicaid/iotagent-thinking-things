@@ -178,7 +178,7 @@ describe('Southbound measure reporting', function() {
             utils.checkResponse(options, '#STACK1#0,GC,conf,44,-1$,#1,GC,conf2,456,-1$,#673495,K1,300$theCondition,'));
     });
 
-    describe.only('When a request arrives to the IoT Agent plain format configuration modules', function() {
+    describe('When a request arrives to the IoT Agent with plain format configuration modules', function() {
         var options = {
                 url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
                 method: 'POST',
@@ -192,7 +192,7 @@ describe('Southbound measure reporting', function() {
             utils.contextBrokerMock = [];
 
             originalPlainFormat = config.ngsi.plainFormat;
-            config.ngsi.plainFormat = false;
+            config.ngsi.plainFormat = true;
 
             async.series([
                 utils.prepareMocks(

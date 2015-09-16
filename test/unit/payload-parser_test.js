@@ -382,12 +382,12 @@ describe('Thinking things payload parser', function() {
                 result.modules[0].attributes[0].value.should.equal('STACK01');
                 result.modules[0].attributes[1].name.should.equal('req_internal_id');
                 result.modules[0].attributes[1].type.should.equal('string');
-                result.modules[0].attributes[2].name.should.equal('op_status');
+                result.modules[0].attributes[2].name.should.equal('last_operation');
                 result.modules[0].attributes[2].type.should.equal('string');
-                result.modules[0].attributes[2].value.should.equal('PENDING');
-                result.modules[0].attributes[3].name.should.equal('last_operation');
+                result.modules[0].attributes[2].value.should.equal('C');
+                result.modules[0].attributes[3].name.should.equal('op_status');
                 result.modules[0].attributes[3].type.should.equal('string');
-                result.modules[0].attributes[3].value.should.equal('C');
+                result.modules[0].attributes[3].value.should.equal('PENDING');
                 result.modules[0].attributes[4].name.should.equal('op_action');
                 result.modules[0].attributes[4].type.should.equal('string');
                 result.modules[0].attributes[4].value.should.equal('1');
