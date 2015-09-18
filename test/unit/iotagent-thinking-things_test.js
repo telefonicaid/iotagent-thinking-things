@@ -304,6 +304,7 @@ describe('Southbound measure reporting', function() {
         it('should return a 200OK with the appropriate response: ',
             utils.checkResponse(options, '#ITgAY#0,P1,-1$,#0,K1,300$,#3,B,1,1,0,-1$,#4,T1,-1$,#4,H1,-1$,#4,LU,-1$,'));
     });
+
     describe('When the plainFormat configuration flag is set', function() {
         var options = {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',

@@ -37,7 +37,7 @@ function mockedGenerateInternalId() {
     return 'AAAEE1111';
 }
 
-describe.skip('Black button testing', function() {
+describe('Black button testing', function() {
     beforeEach(function(done) {
         ttAgent.start(config, done);
     });
@@ -365,6 +365,14 @@ describe.skip('Black button testing', function() {
             utils.contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
+                .post('/v1/updateContext')
+                .reply(200,
+                    utils.readExampleFile('./test/unit/contextResponses/blackButtonSynchronousRequestSuccess.json')
+                ));
+
+            utils.contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', '/gardens')
                 .post('/v1/updateContext', utils.readExampleFile(request))
                 .reply(function(uri, requestBody, cb) {
                     setTimeout(sendUpdateLazyAttributes, 500);
@@ -430,6 +438,14 @@ describe.skip('Black button testing', function() {
             utils.contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
+                .post('/v1/updateContext')
+                .reply(200,
+                utils.readExampleFile('./test/unit/contextResponses/blackButtonSynchronousRequestSuccess.json')
+            ));
+
+            utils.contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', '/gardens')
                 .post('/v1/updateContext', utils.readExampleFile(request))
                 .reply(function(uri, requestBody, cb) {
                     setTimeout(sendUpdateLazyAttributes, 500);
@@ -490,6 +506,14 @@ describe.skip('Black button testing', function() {
 
             originalGenerateInternalId = idGenerator.generateInternalId;
             idGenerator.generateInternalId = mockedGenerateInternalId;
+
+            utils.contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
+                .matchHeader('fiware-service', 'smartGondor')
+                .matchHeader('fiware-servicepath', '/gardens')
+                .post('/v1/updateContext')
+                .reply(200,
+                utils.readExampleFile('./test/unit/contextResponses/blackButtonSynchronousRequestSuccess.json')
+            ));
 
             utils.contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
                 .matchHeader('fiware-service', 'smartGondor')
