@@ -28,6 +28,18 @@
           "name": "op_result",
           "type": "string"
         }
+      ],
+      "static_attributes": [
+        {
+          "name": "interaction_type",
+          "type": "string",
+          "value": "synchronous"
+        },
+        {
+          "name": "service_id",
+          "type": "string",
+          "value": "smartcity"
+        }
       ]
     }
   ]
