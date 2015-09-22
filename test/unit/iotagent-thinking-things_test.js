@@ -275,7 +275,7 @@ describe('Southbound measure reporting', function() {
 
         it('should update the device entity in the Context Broker with both attributes',
             utils.checkContextBroker(options));
-        it('should return a 200OK with the current value of the configuration parameter read from the CB',
+        it('should return a 200 OK with the current value of the configuration parameter read from the CB',
             utils.checkResponse(options, '#STACK1#6,L1,255,129,38,-1$,#673495,K1,300$theCondition,'));
     });
 
