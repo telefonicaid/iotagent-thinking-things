@@ -231,7 +231,8 @@ describe('Black button testing', function() {
             'blackButtonPollingRequestQuerySuccess.json',
             '/v1/queryContext'));
 
-    describe('When a polling operation arrives from the device: ', function() {
+    describe
+    ('When a polling operation arrives from the device: ', function() {
         var options = {
                 url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
                 method: 'POST',
