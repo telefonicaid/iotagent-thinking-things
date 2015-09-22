@@ -6,7 +6,7 @@
       "id": "STACK1:ThinkingThing",
       "attributes": [
         {
-          "name": "internalId",
+          "name": "internal_id",
           "value": "STACK1",
           "type": "string"
         },
