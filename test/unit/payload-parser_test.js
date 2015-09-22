@@ -345,7 +345,7 @@ describe('Thinking things payload parser', function() {
                 should.exist(result.modules[0].attributes[0]);
                 result.modules[0].id.should.equal('0');
                 result.modules[0].module.should.equal('BT');
-                result.modules[0].attributes[0].name.should.equal('internalId');
+                result.modules[0].attributes[0].name.should.equal('internal_id');
                 result.modules[0].attributes[0].type.should.equal('string');
                 result.modules[0].attributes[0].value.should.equal('STACK1');
                 result.modules[0].attributes[1].name.should.equal('last_operation');
@@ -377,7 +377,7 @@ describe('Thinking things payload parser', function() {
                 should.exist(result.modules[0].attributes[0]);
                 result.modules[0].id.should.equal('0');
                 result.modules[0].module.should.equal('BT');
-                result.modules[0].attributes[0].name.should.equal('internalId');
+                result.modules[0].attributes[0].name.should.equal('internal_id');
                 result.modules[0].attributes[0].type.should.equal('string');
                 result.modules[0].attributes[0].value.should.equal('STACK01');
                 result.modules[0].attributes[1].name.should.equal('req_internal_id');
