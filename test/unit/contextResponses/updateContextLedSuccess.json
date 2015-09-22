@@ -1,0 +1,22 @@
+{
+  "contextResponses": [
+    {
+      "contextElement": {
+        "attributes": [
+          {
+            "name": "6",
+            "type": "compound",
+            "value": ""
+          }
+        ],
+        "id": "STACK1:ThinkingThing",
+        "isPattern": "false",
+        "type": "ThinkingThing"
+      },
+      "statusCode": {
+        "code": "200",
+        "reasonPhrase": "OK"
+      }
+    }
+  ]
+}

@@ -1,1 +1,3 @@
 - ADD Create RPM and service for the Agent (#42).
+- ADD Audio actuator module.
+- ADD LED actuator module.

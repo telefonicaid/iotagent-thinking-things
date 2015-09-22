@@ -338,7 +338,7 @@ describe('Black button testing', function() {
 
         request(registerOptions, function(error, response, body) {
             should.not.exist(error);
-            response.statusCode.should.equal(200);
+            response.statusCode.should.equal(201);
             callback();
         });
     }
@@ -361,6 +361,11 @@ describe('Black button testing', function() {
 
             originalGenerateInternalId = idGenerator.generateInternalId;
             idGenerator.generateInternalId = mockedGenerateInternalId;
+
+            utils.contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
+                .post('/v1/updateContext')
+                .reply(200,
+                utils.readExampleFile('./test/unit/contextResponses/blackButtonCreationRequestSuccess.json')));
 
             utils.contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
                 .matchHeader('fiware-service', 'smartGondor')
@@ -428,6 +433,11 @@ describe('Black button testing', function() {
             idGenerator.generateInternalId = mockedGenerateInternalId;
 
             utils.contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
+                .post('/v1/updateContext')
+                .reply(200,
+                utils.readExampleFile('./test/unit/contextResponses/blackButtonCreationRequestSuccess.json')));
+
+            utils.contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
                 .matchHeader('fiware-service', 'smartGondor')
                 .matchHeader('fiware-servicepath', '/gardens')
                 .post('/v1/updateContext', utils.readExampleFile(request))
@@ -490,6 +500,11 @@ describe('Black button testing', function() {
 
             originalGenerateInternalId = idGenerator.generateInternalId;
             idGenerator.generateInternalId = mockedGenerateInternalId;
+
+            utils.contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
+                .post('/v1/updateContext')
+                .reply(200,
+                utils.readExampleFile('./test/unit/contextResponses/blackButtonCreationRequestSuccess.json')));
 
             utils.contextBrokerMock.push(nock('http://' + config.ngsi.contextBroker.host + ':1026')
                 .matchHeader('fiware-service', 'smartGondor')

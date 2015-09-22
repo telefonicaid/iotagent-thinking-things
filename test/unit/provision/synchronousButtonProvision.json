@@ -2,7 +2,7 @@
   "devices": [
     {
       "device_id": "STACK1",
-      "procosol": "THINKINGTHINGS_PROTOCOL",
+      "protocol": "TT_BLACKBUTTON",
       "entity_type": "ThinkingThing",
       "timezone": "America/Santiago",
       "attributes": [

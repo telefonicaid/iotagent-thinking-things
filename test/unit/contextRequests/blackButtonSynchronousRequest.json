@@ -24,9 +24,19 @@
           "name": "op_extra",
           "value": "FFE876AE",
           "type": "string"
+        },
+        {
+          "name": "aux_op_action",
+          "value": "6",
+          "type": "string"
+        },
+        {
+          "name": "aux_op_extra",
+          "value": "FFE876AE",
+          "type": "string"
         }
       ]
     }
   ],
-  "updateAction": "APPEND"
+  "updateAction": "UPDATE"
 }
