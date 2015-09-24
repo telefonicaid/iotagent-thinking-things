@@ -387,7 +387,7 @@ describe('Thinking things payload parser', function() {
                 result.modules[0].attributes[2].value.should.equal('C');
                 result.modules[0].attributes[3].name.should.equal('op_status');
                 result.modules[0].attributes[3].type.should.equal('string');
-                result.modules[0].attributes[3].value.should.equal('PENDING');
+                result.modules[0].attributes[3].value.should.equal('P');
                 result.modules[0].attributes[4].name.should.equal('op_action');
                 result.modules[0].attributes[4].type.should.equal('string');
                 result.modules[0].attributes[4].value.should.equal('1');
@@ -438,7 +438,7 @@ describe('Thinking things payload parser', function() {
                 result.modules[0].module.should.equal('BT');
                 result.modules[0].attributes[0].name.should.equal('op_status');
                 result.modules[0].attributes[0].type.should.equal('string');
-                result.modules[0].attributes[0].value.should.equal('CLOSED');
+                result.modules[0].attributes[0].value.should.equal('X');
 
                 done();
             });
