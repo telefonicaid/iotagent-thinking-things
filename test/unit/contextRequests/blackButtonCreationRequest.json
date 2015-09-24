@@ -22,7 +22,7 @@
         },
         {
           "name": "op_status",
-          "value": "PENDING",
+          "value": "P",
           "type": "string"
         },
         {
@@ -37,7 +37,7 @@
         },
         {
           "name": "aux_op_status",
-          "value": "PENDING",
+          "value": "P",
           "type": "string"
         },
         {
