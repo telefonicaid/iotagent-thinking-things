@@ -7,7 +7,12 @@
       "attributes": [
         {
           "name": "op_status",
-          "value": "CLOSED",
+          "value": "X",
+          "type": "string"
+        },
+        {
+          "name": "aux_op_status",
+          "value": "X",
           "type": "string"
         },
         {
@@ -18,5 +23,5 @@
       ]
     }
   ],
-  "updateAction": "APPEND"
+  "updateAction": "UPDATE"
 }

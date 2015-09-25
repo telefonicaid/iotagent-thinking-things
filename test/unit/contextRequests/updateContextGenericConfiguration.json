@@ -24,7 +24,7 @@
             {
               "name": "sleeptime",
               "type": "string",
-              "value": "600"
+              "value": "300"
             }
           ]
         },
@@ -47,12 +47,12 @@
             {
               "name": "sleeptime",
               "type": "string",
-              "value": "600"
+              "value": "300"
             }
           ]
         }
       ]
     }
   ],
-  "updateAction": "APPEND"
+  "updateAction": "UPDATE"
 }

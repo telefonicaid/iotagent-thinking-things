@@ -6,7 +6,7 @@
       "id": "STACK1:ThinkingThing",
       "attributes": [
         {
-          "name": "internalId",
+          "name": "internal_id",
           "value": "STACK1",
           "type": "string"
         },
@@ -16,13 +16,13 @@
           "type": "string"
         },
         {
-          "name": "op_status",
-          "value": "PENDING",
+          "name": "last_operation",
+          "value": "C",
           "type": "string"
         },
         {
-          "name": "last_operation",
-          "value": "C",
+          "name": "op_status",
+          "value": "P",
           "type": "string"
         },
         {
@@ -34,9 +34,24 @@
           "name": "op_extra",
           "value": "1234",
           "type": "string"
+        },
+        {
+          "name": "aux_op_status",
+          "value": "P",
+          "type": "string"
+        },
+        {
+          "name": "aux_op_action",
+          "value": "1",
+          "type": "string"
+        },
+        {
+          "name": "aux_op_extra",
+          "value": "1234",
+          "type": "string"
         }
       ]
     }
   ],
-  "updateAction": "APPEND"
+  "updateAction": "UPDATE"
 }

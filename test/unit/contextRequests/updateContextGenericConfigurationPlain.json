@@ -1,0 +1,32 @@
+{
+  "contextElements": [
+    {
+      "type": "ThinkingThing",
+      "isPattern": "false",
+      "id": "STACK1:ThinkingThing",
+      "attributes": [
+        {
+          "name": "_TTcurrent_conf",
+          "value": "33",
+          "type": "string"
+        },
+        {
+          "name": "_TTcurrent_conf2",
+          "value": "123",
+          "type": "string"
+        },
+        {
+          "name": "sleepcondition",
+          "type": "string",
+          "value": "theCondition"
+        },
+        {
+          "name": "sleeptime",
+          "type": "string",
+          "value": "2500"
+        }
+      ]
+    }
+  ],
+  "updateAction": "UPDATE"
+}

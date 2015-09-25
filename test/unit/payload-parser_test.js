@@ -264,6 +264,50 @@ describe('Thinking things payload parser', function() {
         });
     });
 
+    describe('When a Actuator module arrives: #STACK01#6,AV,,600$,', function() {
+        it('should fill the Device ID', function(done) {
+            thinkingParser.parse('#STACK01#6,AV,,600$,',
+                checkId('STACK01', '6', done));
+        });
+        it('should parse all the location fields into the attributes object', function(done) {
+            thinkingParser.parse('#STACK01#6,AV,,600$,', function(error, result) {
+                should.not.exist(error);
+                should.exist(result);
+                should.exist(result.modules[0].attributes);
+                should.exist(result.modules[0].attributes[0]);
+                result.modules[0].attributes[0].name.should.equal('_TTcurrent_melody');
+                result.modules[0].attributes[0].value.should.equal('');
+                result.modules[0].attributes[0].type.should.equal('string');
+                done();
+            });
+        });
+        it('should extract the sleeping time and condition', function(done) {
+            thinkingParser.parse('#STACK01#6,AV,,600$,', checkSleep('600', '', done));
+        });
+    });
+
+    describe('When a LED module arrives: #STACK01#6,L1,R,G,B,600$,', function() {
+        it('should fill the Device ID', function(done) {
+            thinkingParser.parse('#STACK01#6,L1,R,G,B,600$,',
+                checkId('STACK01', '6', done));
+        });
+        it('should parse all the location fields into the attributes object', function(done) {
+            thinkingParser.parse('#STACK01#6,L1,R,G,B,600$,', function(error, result) {
+                should.not.exist(error);
+                should.exist(result);
+                should.exist(result.modules[0].attributes);
+                should.exist(result.modules[0].attributes[0]);
+                result.modules[0].attributes[0].name.should.equal('_TTcurrent_color');
+                result.modules[0].attributes[0].value.should.equal('');
+                result.modules[0].attributes[0].type.should.equal('string');
+                done();
+            });
+        });
+        it('should extract the sleeping time and condition', function(done) {
+            thinkingParser.parse('#STACK01#6,L1,R,G,B,600$,', checkSleep('600', '', done));
+        });
+    });
+
     describe('When a Generic module arrives: #STACK01#19,GM,attrName,32,600$,', function() {
         var payload = '#STACK01#19,GM,attrName,32,600$,';
 
@@ -301,7 +345,7 @@ describe('Thinking things payload parser', function() {
                 should.exist(result.modules[0].attributes[0]);
                 result.modules[0].id.should.equal('0');
                 result.modules[0].module.should.equal('BT');
-                result.modules[0].attributes[0].name.should.equal('internalId');
+                result.modules[0].attributes[0].name.should.equal('internal_id');
                 result.modules[0].attributes[0].type.should.equal('string');
                 result.modules[0].attributes[0].value.should.equal('STACK1');
                 result.modules[0].attributes[1].name.should.equal('last_operation');
@@ -333,17 +377,17 @@ describe('Thinking things payload parser', function() {
                 should.exist(result.modules[0].attributes[0]);
                 result.modules[0].id.should.equal('0');
                 result.modules[0].module.should.equal('BT');
-                result.modules[0].attributes[0].name.should.equal('internalId');
+                result.modules[0].attributes[0].name.should.equal('internal_id');
                 result.modules[0].attributes[0].type.should.equal('string');
                 result.modules[0].attributes[0].value.should.equal('STACK01');
                 result.modules[0].attributes[1].name.should.equal('req_internal_id');
                 result.modules[0].attributes[1].type.should.equal('string');
-                result.modules[0].attributes[2].name.should.equal('op_status');
+                result.modules[0].attributes[2].name.should.equal('last_operation');
                 result.modules[0].attributes[2].type.should.equal('string');
-                result.modules[0].attributes[2].value.should.equal('PENDING');
-                result.modules[0].attributes[3].name.should.equal('last_operation');
+                result.modules[0].attributes[2].value.should.equal('C');
+                result.modules[0].attributes[3].name.should.equal('op_status');
                 result.modules[0].attributes[3].type.should.equal('string');
-                result.modules[0].attributes[3].value.should.equal('C');
+                result.modules[0].attributes[3].value.should.equal('P');
                 result.modules[0].attributes[4].name.should.equal('op_action');
                 result.modules[0].attributes[4].type.should.equal('string');
                 result.modules[0].attributes[4].value.should.equal('1');
@@ -394,7 +438,7 @@ describe('Thinking things payload parser', function() {
                 result.modules[0].module.should.equal('BT');
                 result.modules[0].attributes[0].name.should.equal('op_status');
                 result.modules[0].attributes[0].type.should.equal('string');
-                result.modules[0].attributes[0].value.should.equal('CLOSED');
+                result.modules[0].attributes[0].value.should.equal('X');
 
                 done();
             });

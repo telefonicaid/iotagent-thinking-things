@@ -25,6 +25,7 @@
 
 var config = require('./config-test'),
     ttAgent = require('../../lib/iotagent-thinking-things'),
+    responseGenerator = require('../../lib/middlewares/responseGenerator'),
     async = require('async'),
     apply = async.apply,
     utils = require('../tools/utils'),
@@ -54,7 +55,7 @@ describe('Southbound measure reporting', function() {
         it('should update the device entity in the Context Broker with the humidity attribute',
             utils.checkContextBroker(options));
 
-        it('should return a 200OK with the appropriate response: ',
+        it('should return a 200 OK with the appropriate response: ',
             utils.checkResponse(options, '#STACK1#953E78F,H1,-1$condition,'));
     });
 
@@ -75,7 +76,7 @@ describe('Southbound measure reporting', function() {
             it('should update the device entity in the Context Broker with the humidity attribute',
                 utils.checkContextBroker(options));
 
-            it('should return a 200OK with the appropriate response: ',
+            it('should return a 200 OK with the appropriate response: ',
                 utils.checkResponse(options, '#STACK1#673495,T1,-1$theCondition,'));
     });
     describe('When a GPS measure arrives to the IoT Agent: #STACK1#5143,GPS,21.1,-9.4,12.3,0.64,127,12$cond1,',
@@ -95,7 +96,7 @@ describe('Southbound measure reporting', function() {
         it('should update the device entity in the Context Broker with the humidity attribute',
             utils.checkContextBroker(options));
 
-        it('should return a 200OK with the appropriate response: ',
+        it('should return a 200 OK with the appropriate response: ',
             utils.checkResponse(options, '#STACK1#5143,GPS,-1$cond1,'));
     });
     describe('When a request arrives to the IoT Agent having two modules', function() {
@@ -113,7 +114,7 @@ describe('Southbound measure reporting', function() {
 
         it('should update the device entity in the Context Broker with both attributes',
             utils.checkContextBroker(options));
-        it('should return a 200OK with the appropriate response',
+        it('should return a 200 OK with the appropriate response',
             utils.checkResponse(options, '#STACK1#5143,GPS,-1$cond1,#673495,T1,-1$theCondition,'));
     });
     describe('When a request arrives to the IoT Agent having the Core Module', function() {
@@ -131,21 +132,25 @@ describe('Southbound measure reporting', function() {
 
         it('should update the device entity in the Context Broker with both attributes',
             utils.checkContextBroker(options));
-        it('should return a 200OK with the configured sleep time in the core module',
+        it('should return a 200 OK with the configured sleep time in the core module',
             utils.checkResponse(options, '#STACK1#5143,GPS,-1$cond1,#673495,K1,300$theCondition,'));
     });
 
     describe('When a request arrives to the IoT Agent having Generic Configuration modules', function() {
         var options = {
-            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
-            method: 'POST',
-            form: {
-                cadena: '#STACK1#0,GC,conf,33,600$,#1,GC,conf2,123,600$,#673495,K1,2500$theCondition,'
-            }
-        };
+                url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+                method: 'POST',
+                form: {
+                    cadena: '#STACK1#0,GC,conf,33,300$,#1,GC,conf2,123,300$,#673495,K1,2500$theCondition,'
+                }
+            },
+            originalPlainFormat;
 
         beforeEach(function() {
             utils.contextBrokerMock = [];
+
+            originalPlainFormat = config.ngsi.plainFormat;
+            config.ngsi.plainFormat = false;
 
             async.series([
                 utils.prepareMocks(
@@ -155,14 +160,123 @@ describe('Southbound measure reporting', function() {
                 utils.prepareMocks(
                     './test/unit/contextRequests/updateContextGenericConfiguration.json',
                     './test/unit/contextResponses/updateContextGenericConfigurationSuccess.json',
-                    '/v1/updateContext')
+                    '/v1/updateContext'),
+                ttAgent.stop,
+                apply(responseGenerator.reloadConfig, config),
+                apply(ttAgent.start, config)
             ]);
+        });
+
+        afterEach(function(done) {
+            config.ngsi.plainFormat = originalPlainFormat;
+            responseGenerator.reloadConfig(config, done);
         });
 
         it('should update the device entity in the Context Broker with both attributes',
             utils.checkContextBroker(options));
         it('should return a 200OK with the current value of the configuration parameter read from the CB',
             utils.checkResponse(options, '#STACK1#0,GC,conf,44,-1$,#1,GC,conf2,456,-1$,#673495,K1,300$theCondition,'));
+    });
+
+    describe('When a request arrives to the IoT Agent with plain format configuration modules', function() {
+        var options = {
+                url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+                method: 'POST',
+                form: {
+                    cadena: '#STACK1#0,GC,conf,33,600$,#1,GC,conf2,123,600$,#673495,K1,2500$theCondition,'
+                }
+            },
+            originalPlainFormat;
+
+        beforeEach(function(done) {
+            utils.contextBrokerMock = [];
+
+            originalPlainFormat = config.ngsi.plainFormat;
+            config.ngsi.plainFormat = true;
+
+            async.series([
+                utils.prepareMocks(
+                    './test/unit/contextRequests/queryContextGenericConfigurationPlain.json',
+                    './test/unit/contextResponses/queryContextGenericConfigurationPlainSuccess.json',
+                    '/v1/queryContext'),
+                utils.prepareMocks(
+                    './test/unit/contextRequests/updateContextGenericConfigurationPlain.json',
+                    './test/unit/contextResponses/updateContextGenericConfigurationSuccess.json',
+                    '/v1/updateContext'),
+                ttAgent.stop,
+                apply(responseGenerator.reloadConfig, config),
+                apply(ttAgent.start, config)
+            ], done);
+        });
+
+        afterEach(function() {
+            config.ngsi.plainFormat = originalPlainFormat;
+        });
+
+        it('should update the device entity in the Context Broker with both attributes',
+            utils.checkContextBroker(options));
+        it('should return a 200 OK with the current value of the configuration parameter read from the CB',
+            utils.checkResponse(options, '#STACK1#0,GC,conf,44,-1$,#1,GC,conf2,456,-1$,#673495,K1,300$theCondition,'));
+    });
+
+    describe('When a request arrives to the IoT Agent having actuator modules', function() {
+        var options = {
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+            method: 'POST',
+            form: {
+                cadena: '#STACK1#1,AV,,600$,#673495,K1,2500$theCondition,'
+            }
+        };
+
+        beforeEach(function() {
+            utils.contextBrokerMock = [];
+
+            async.series([
+                utils.prepareMocks(
+                    './test/unit/contextRequests/queryContextMelody.json',
+                    './test/unit/contextResponses/queryContextMelodySuccess.json',
+                    '/v1/queryContext'),
+                utils.prepareMocks(
+                    './test/unit/contextRequests/updateContextMelody.json',
+                    './test/unit/contextResponses/updateContextMelodySuccess.json',
+                    '/v1/updateContext')
+            ]);
+        });
+
+        it('should update the device entity in the Context Broker with both attributes',
+            utils.checkContextBroker(options));
+        it('should return a 200 OK with the current value of the configuration parameter read from the CB',
+            utils.checkResponse(options, '#STACK1#1,AV,2:5:1000:1Cb.C,-1$,#673495,K1,300$theCondition,'));
+    });
+
+    describe('When a request arrives to the IoT Agent having led modules', function() {
+        var options = {
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+            method: 'POST',
+            form: {
+                cadena: '#STACK1#6,L1,R,G,B,600$,#673495,K1,2500$theCondition,'
+            }
+        };
+
+        beforeEach(function() {
+            utils.contextBrokerMock = [];
+
+            async.series([
+                utils.prepareMocks(
+                    './test/unit/contextRequests/queryContextLED.json',
+                    './test/unit/contextResponses/queryContextLEDSuccess.json',
+                    '/v1/queryContext'),
+                utils.prepareMocks(
+                    './test/unit/contextRequests/updateContextLED.json',
+                    './test/unit/contextResponses/updateContextLEDSuccess.json',
+                    '/v1/updateContext')
+            ]);
+        });
+
+        it('should update the device entity in the Context Broker with both attributes',
+            utils.checkContextBroker(options));
+        it('should return a 200 OK with the current value of the configuration parameter read from the CB',
+            utils.checkResponse(options, '#STACK1#6,L1,255,129,38,-1$,#673495,K1,300$theCondition,'));
     });
 
     describe('When a real example of the device request arrives', function() {
@@ -187,9 +301,10 @@ describe('Southbound measure reporting', function() {
         it('should update the device entity in the Context Broker with the humidity attribute',
             utils.checkContextBroker(options));
 
-        it('should return a 200OK with the appropriate response: ',
+        it('should return a 200 OK with the appropriate response: ',
             utils.checkResponse(options, '#ITgAY#0,P1,-1$,#0,K1,300$,#3,B,1,1,0,-1$,#4,T1,-1$,#4,H1,-1$,#4,LU,-1$,'));
     });
+
     describe('When the plainFormat configuration flag is set', function() {
         var options = {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
@@ -219,7 +334,7 @@ describe('Southbound measure reporting', function() {
         it('should update the device entity in the Context Broker with the humidity attribute',
             utils.checkContextBroker(options));
 
-        it('should return a 200OK with the appropriate response: ',
+        it('should return a 200 OK with the appropriate response: ',
             utils.checkResponse(options, '#ITgAY#0,P1,-1$,#0,K1,300$,#3,B,1,1,0,-1$,#4,T1,-1$,#4,H1,-1$,#4,LU,-1$,'));
     });
 

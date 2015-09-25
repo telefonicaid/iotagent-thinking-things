@@ -186,6 +186,5 @@
       ]
     }
   ],
-  "updateAction": "APPEND"
+  "updateAction": "UPDATE"
 }
-        

@@ -6,12 +6,12 @@
       "id": "STACK1:ThinkingThing",
       "attributes": [
         {
-          "name": "op_result",
+          "name": "lazy_op_result",
           "value": "ThisIsTheResult",
           "type": "string"
         }
       ]
     }
   ],
-  "updateAction": "APPEND"
+  "updateAction": "UPDATE"
 }

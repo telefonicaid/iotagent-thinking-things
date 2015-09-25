@@ -4,14 +4,14 @@ config.thinkingThings = {
     logLevel: 'FATAL',
     port: 8000,
     root: '/thinkingthings',
-    sleepTime: 600
+    sleepTime: 300
 };
 
 config.ngsi = {
     logLevel: 'FATAL',
     defaultType: 'ThinkingThing',
     contextBroker: {
-        host: '192.168.56.101',
+        host: '127.0.0.1',
         port: '1026'
     },
     server: {
@@ -37,7 +37,7 @@ config.ngsi = {
     },
     service: 'smartGondor',
     subservice: '/gardens',
-    providerUrl: 'http://192.168.56.1:4041',
+    providerUrl: 'http://127.0.0.1:4041',
     deviceRegistrationDuration: 'P1M'
 };
 
