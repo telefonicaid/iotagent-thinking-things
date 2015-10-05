@@ -9,6 +9,11 @@
           "name": "last_operation",
           "value": "P",
           "type": "string"
+        },
+        {
+          "name": "aux_last_operation",
+          "value": "P",
+          "type": "string"
         }
       ]
     }
