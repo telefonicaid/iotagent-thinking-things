@@ -29,7 +29,6 @@ var config = require('./config-test'),
     iotagentNodeLib = require('iotagent-node-lib'),
     should = require('should'),
     nock = require('nock'),
-    async = require('async'),
     idGenerator = require('../../lib/services/idGenerator'),
     utils = require('../tools/utils'),
     originalGenerateInternalId,
@@ -132,7 +131,7 @@ describe('Black button Synchronous testing', function() {
                 .reply(200,
                 utils.readExampleFile('./test/unit/contextAvailabilityResponses/registerDeviceSuccess.json')));
 
-            iotagentNodeLib.unregister('STACK1', function () {
+            iotagentNodeLib.unregister('STACK1', function() {
                 nock.cleanAll();
                 done();
             });
@@ -146,8 +145,7 @@ describe('Black button Synchronous testing', function() {
                 form: {
                     cadena: '#STACK1#0,BT,S,6,FFE876AE,0$'
                 }
-            },
-            originalGenerateInternalId;
+            };
 
         beforeEach(prepareMocksForSynch(
             './test/unit/contextRequests/blackButtonSynchronousRequest.json',
@@ -175,8 +173,7 @@ describe('Black button Synchronous testing', function() {
                 form: {
                     cadena: '#STACK1#0,BT,S,6,FFE876AE,0$'
                 }
-            },
-            originalGenerateInternalId;
+            };
 
         beforeEach(prepareMocksForSynch(
             './test/unit/contextRequests/blackButtonSynchronousRequest.json',
@@ -230,8 +227,7 @@ describe('Black button Synchronous testing', function() {
                 form: {
                     cadena: '#STACK1#0,BT,S,6,FFE876AE,0$'
                 }
-            },
-            originalGenerateInternalId;
+            };
 
         beforeEach(prepareMocksForSynch(
             './test/unit/contextRequests/blackButtonSynchronousRequest.json',

@@ -26,14 +26,10 @@
 var config = require('./config-test'),
     request = require('request'),
     ttAgent = require('../../lib/iotagent-thinking-things'),
-    iotagentNodeLib = require('iotagent-node-lib'),
     should = require('should'),
-    nock = require('nock'),
     async = require('async'),
     idGenerator = require('../../lib/services/idGenerator'),
-    utils = require('../tools/utils'),
-    originalGenerateInternalId,
-    oldPlainFormat;
+    utils = require('../tools/utils');
 
 function mockedGenerateInternalId() {
     return 'AAAEE1111';
