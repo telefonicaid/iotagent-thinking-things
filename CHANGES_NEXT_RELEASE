@@ -1,0 +1,2 @@
+- ADD Logops instead of Fiware-node-logger (#44).
+- ADD Decode result of the Black Button in the IOTA (#64).
