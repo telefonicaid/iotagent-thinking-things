@@ -1,0 +1,17 @@
+{
+  "contextElements": [
+    {
+      "type": "ThinkingThing",
+      "isPattern": "false",
+      "id": "STACK1:ThinkingThing",
+      "attributes": [
+        {
+          "name": "lazy_op_result",
+          "value": "This%3DIs%22TheResult%22",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "updateAction": "UPDATE"
+}
