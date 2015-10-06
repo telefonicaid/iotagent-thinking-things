@@ -31,7 +31,8 @@ var config = require('./config-test'),
     nock = require('nock'),
     async = require('async'),
     idGenerator = require('../../lib/services/idGenerator'),
-    utils = require('../tools/utils');
+    utils = require('../tools/utils'),
+    originalGenerateInternalId;
 
 function mockedGenerateInternalId() {
     return 'AAAEE1111';
@@ -490,20 +491,8 @@ describe('Black button testing', function() {
         });
     });
 
-    describe('When the Context Broker returns an application error for a synchronous operation', function() {
-        var options = {
-                url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
-                method: 'POST',
-                form: {
-                    cadena: '#STACK1#0,BT,S,6,FFE876AE,0$'
-                }
-            },
-            originalGenerateInternalId;
-
-        beforeEach(function(done) {
-            var request = './test/unit/contextRequests/blackButtonSynchronousRequest.json',
-                response = './test/unit/contextResponses/blackButtonSynchronousStatusCode500.json';
-
+    function prepareMocksForSynch(request, response) {
+        return function(done) {
             config.ngsi.plainFormat = true;
 
             originalGenerateInternalId = idGenerator.generateInternalId;
@@ -536,7 +525,21 @@ describe('Black button testing', function() {
                 utils.readExampleFile('./test/unit/contextAvailabilityResponses/registerDeviceSuccess.json')));
 
             registerDevice(done);
-        });
+        };
+    }
+
+    describe('When the Context Broker returns an application error for a synchronous operation', function() {
+        var options = {
+                url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+                method: 'POST',
+                form: {
+                    cadena: '#STACK1#0,BT,S,6,FFE876AE,0$'
+                }
+            };
+
+        beforeEach(prepareMocksForSynch(
+            './test/unit/contextRequests/blackButtonSynchronousRequest.json',
+            './test/unit/contextResponses/blackButtonSynchronousStatusCode500.json'));
 
         afterEach(function(done) {
             config.ngsi.plainFormat = false;
