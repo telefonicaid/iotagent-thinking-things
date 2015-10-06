@@ -166,6 +166,27 @@ describe('Black button Synchronous testing', function() {
         });
     });
 
+    describe('When a synchronous call operation arrives from the device with empty extra', function() {
+        var options = {
+            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+            method: 'POST',
+            form: {
+                cadena: '#STACK1#0,BT,S,6,,0$'
+            }
+        };
+
+        beforeEach(prepareMocksForSynch(
+            './test/unit/contextRequests/blackButtonSynchronousRequestWithoutExtra.json',
+            './test/unit/contextResponses/blackButtonSynchronousRequestSuccess.json',
+            200,
+            './test/unit/contextRequests/blackButtonSynchLazyRequest.json'));
+
+        afterEach(cleanUpMocksAfterSynch());
+
+        it('should update the status in the Context Broker changing empty to a space',
+            utils.checkContextBroker(options));
+    });
+
     describe('When a synchronous call operation arrives from the device and the result is codified', function() {
         var options = {
                 url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
