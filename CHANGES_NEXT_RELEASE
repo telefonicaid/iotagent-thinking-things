@@ -1,2 +1,4 @@
 - ADD Logops instead of Fiware-node-logger (#44).
 - ADD Decode result of the Black Button in the IOTA (#64).
+- FIX RPM upgrade overrides config file (#69).
+- ADD Computation of the Humidity percentage (#72).
