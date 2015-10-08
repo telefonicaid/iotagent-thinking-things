@@ -2,6 +2,7 @@
 ## Overview
 
 [![Join the chat at https://gitter.im/telefonicaid/iotagent-thinking-things](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/telefonicaid/iotagent-thinking-things?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This *Internet of Things Agent* is a bridge can be used to bridge between Telefonica's Thinking Things Closed protocol (TT from now on) and NGSI Context Brokers (like [Orion](https://github.com/telefonicaid/fiware-orion)). The Thinking Things protocol is a simplified protocol aimed to provide a simple platform to experiment with the Internet of Things.
 
 ## Installation and usage
