@@ -52,12 +52,12 @@ function checkSleep(value, condition, callback) {
 }
 
 describe('Thinking things payload parser', function() {
-    describe('When a Humidity payload arrives: "#STACK01#953E78F,H1,28,0.330,20$condition,"', function() {
+    describe('When a Humidity payload arrives: "#STACK01#953E78F,H1,27.37,963425.00,20$condition,"', function() {
         it('should fill the Device ID', function(done) {
-            thinkingParser.parse('#STACK01#953E78F,H1,28,0.330,20$condition,', checkId('STACK01', '953E78F', done));
+            thinkingParser.parse('#STACK01#953E78F,H1,27.37,963425.00,20$condition,', checkId('STACK01', '953E78F', done));
         });
         it('should parse the temperature and resistance into the attributes object', function(done) {
-            thinkingParser.parse('#STACK01#953E78F,H1,28,0.330,20$condition,', function(error, result) {
+            thinkingParser.parse('#STACK01#953E78F,H1,27.37,963425.00,20$condition,', function(error, result) {
                 should.not.exist(error);
                 should.exist(result);
                 should.exist(result.id);
@@ -66,16 +66,16 @@ describe('Thinking things payload parser', function() {
                 should.exist(result.modules[0].attributes[0]);
                 should.exist(result.modules[0].attributes[1]);
                 result.modules[0].attributes[0].name.should.equal('humidity');
-                result.modules[0].attributes[0].value.should.equal('0.330');
+                result.modules[0].attributes[0].value.should.equal('30');
                 result.modules[0].attributes[0].type.should.equal('float');
                 result.modules[0].attributes[1].name.should.equal('temperature');
-                result.modules[0].attributes[1].value.should.equal('28');
+                result.modules[0].attributes[1].value.should.equal('27.37');
                 result.modules[0].attributes[1].type.should.equal('float');
                 done();
             });
         });
         it('should extract the sleeping time and condition', function(done) {
-            thinkingParser.parse('#STACK01#953E78F,H1,28,0.330,20$condition,', checkSleep('20', 'condition', done));
+            thinkingParser.parse('#STACK01#953E78F,H1,27.37,963425.00,20$condition,', checkSleep('20', 'condition', done));
         });
     });
     describe('When a humidity payload with not enough params arrive', function() {
