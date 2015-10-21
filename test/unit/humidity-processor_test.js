@@ -41,7 +41,7 @@ describe('Humidity Processor tests', function() {
                 should.exist(targetValue);
                 targetValue.should.equal(humidity);
             });
-        })
+        });
     }
 
     for (var i = 0; i < cases.length; i++) {
