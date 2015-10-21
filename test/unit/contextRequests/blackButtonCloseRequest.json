@@ -11,11 +11,6 @@
           "type": "string"
         },
         {
-          "name": "aux_op_status",
-          "value": "X",
-          "type": "string"
-        },
-        {
           "name": "last_operation",
           "value": "X",
           "type": "string"

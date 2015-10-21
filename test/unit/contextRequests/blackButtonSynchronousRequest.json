@@ -26,26 +26,6 @@
           "type": "string"
         },
         {
-          "name": "aux_op_action",
-          "value": "6",
-          "type": "string"
-        },
-        {
-          "name": "aux_op_extra",
-          "value": "FFE876AE",
-          "type": "string"
-        },
-        {
-          "name": "aux_interaction_type",
-          "type": "string",
-          "value": "synchronous"
-        },
-        {
-          "name": "aux_service_id",
-          "type": "string",
-          "value": "smartcity"
-        },
-        {
           "name": "interaction_type",
           "type": "string",
           "value": "synchronous"
