@@ -3,3 +3,4 @@
 - FIX RPM upgrade overrides config file (#69).
 - ADD Computation of the Humidity percentage (#72).
 - ADD C and M as accepted payload attributes in request.
+- FIX Success return code should allways be 1.

@@ -160,7 +160,7 @@ describe('Black button Synchronous testing', function() {
             request(options, function(error, result, body) {
                 should.not.exist(error);
                 result.statusCode.should.equal(200);
-                body.should.equal('#STACK1#0,BT,S,6,ThisIsTheResult,0$');
+                body.should.equal('#STACK1#0,BT,S,1,ThisIsTheResult,0$');
                 done();
             });
         });
@@ -208,7 +208,7 @@ describe('Black button Synchronous testing', function() {
             request(options, function(error, result, body) {
                 should.not.exist(error);
                 result.statusCode.should.equal(200);
-                body.should.equal('#STACK1#0,BT,S,6,This=Is"TheResult",0$');
+                body.should.equal('#STACK1#0,BT,S,1,This=Is"TheResult",0$');
                 done();
             });
         });
