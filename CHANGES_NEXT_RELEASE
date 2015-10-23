@@ -4,3 +4,4 @@
 - ADD Computation of the Humidity percentage (#72).
 - ADD C and M as accepted payload attributes in request.
 - FIX Success return code should allways be 1.
+- ADD Op_status to the syncrhonous request in BT.

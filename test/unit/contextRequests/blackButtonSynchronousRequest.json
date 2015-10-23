@@ -16,6 +16,11 @@
           "type": "string"
         },
         {
+          "name": "op_status",
+          "value": "P",
+          "type": "string"
+        },
+        {
           "name": "op_action",
           "value": "6",
           "type": "string"
