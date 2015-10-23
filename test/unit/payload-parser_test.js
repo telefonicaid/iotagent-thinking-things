@@ -353,12 +353,15 @@ describe('Thinking things payload parser', function() {
                 result.modules[0].attributes[1].name.should.equal('last_operation');
                 result.modules[0].attributes[1].type.should.equal('string');
                 result.modules[0].attributes[1].value.should.equal('S');
-                result.modules[0].attributes[2].name.should.equal('op_action');
+                result.modules[0].attributes[2].name.should.equal('op_status');
                 result.modules[0].attributes[2].type.should.equal('string');
-                result.modules[0].attributes[2].value.should.equal('6');
-                result.modules[0].attributes[3].name.should.equal('op_extra');
+                result.modules[0].attributes[2].value.should.equal('P');
+                result.modules[0].attributes[3].name.should.equal('op_action');
                 result.modules[0].attributes[3].type.should.equal('string');
-                result.modules[0].attributes[3].value.should.equal('FFE876AE');
+                result.modules[0].attributes[3].value.should.equal('6');
+                result.modules[0].attributes[4].name.should.equal('op_extra');
+                result.modules[0].attributes[4].type.should.equal('string');
+                result.modules[0].attributes[4].value.should.equal('FFE876AE');
 
                 done();
             });
