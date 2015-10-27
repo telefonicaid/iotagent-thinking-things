@@ -10,6 +10,11 @@
           "type": "compound",
           "value": [
             {
+              "name": "TimeInstant",
+              "type": "ISO8601",
+              "value": "2015-08-05T07:35:01.468Z"
+            },
+            {
               "name": "temperature",
               "type": "float",
               "value": "17",

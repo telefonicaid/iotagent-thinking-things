@@ -147,7 +147,7 @@ describe('Southbound measure reporting', function() {
             },
             originalPlainFormat;
 
-        beforeEach(function() {
+        beforeEach(function(done) {
             utils.contextBrokerMock = [];
 
             originalPlainFormat = config.ngsi.plainFormat;
@@ -165,7 +165,7 @@ describe('Southbound measure reporting', function() {
                 ttAgent.stop,
                 apply(responseGenerator.reloadConfig, config),
                 apply(ttAgent.start, config)
-            ]);
+            ], done);
         });
 
         afterEach(function(done) {
