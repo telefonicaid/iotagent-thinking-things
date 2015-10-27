@@ -6,6 +6,11 @@
       "id": "ITgAY:ThinkingThing",
       "attributes": [
         {
+          "name": "TimeInstant",
+          "type": "ISO8601",
+          "value": "2015-08-05T07:35:01.468Z"
+        },
+        {
           "name": "mcc",
           "value": "214",
           "type": "integer",
