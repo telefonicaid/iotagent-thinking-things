@@ -14,7 +14,7 @@
           {
             "name": "op_result",
             "value": {
-              "code": 200,
+              "code": "200",
               "extra": "999999"
             },
             "type": "string"

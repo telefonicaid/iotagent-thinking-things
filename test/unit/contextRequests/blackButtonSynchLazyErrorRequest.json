@@ -1,0 +1,20 @@
+{
+  "contextElements": [
+    {
+      "type": "ThinkingThing",
+      "isPattern": "false",
+      "id": "STACK1:ThinkingThing",
+      "attributes": [
+        {
+          "name": "op_result",
+          "value": {
+            "code": "500",
+            "extra": "TheBigError"
+          },
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "updateAction": "UPDATE"
+}
