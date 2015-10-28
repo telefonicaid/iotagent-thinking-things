@@ -7,10 +7,7 @@
       "attributes": [
         {
           "name": "op_result",
-          "value": {
-            "code": "500",
-            "extra": "TheBigError"
-          },
+          "value": "{ \"code\": \"500\", \"extra\": \"TheBigError\" }",
           "type": "string"
         }
       ]
