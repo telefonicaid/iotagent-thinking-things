@@ -6,8 +6,11 @@
       "id": "STACK1:ThinkingThing",
       "attributes": [
         {
-          "name": "lazy_op_result",
-          "value": "ThisIsTheResult",
+          "name": "op_result",
+          "value": {
+            "code": "200",
+            "extra": "ThisIsTheResult"
+          },
           "type": "string"
         }
       ]
