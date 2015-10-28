@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "logops": "*",
-    "iotagent-node-lib": "0.8.3",
+    "iotagent-node-lib": "https://github.com/telefonicaid/iotagent-node-lib/tarball/develop",
     "underscore": "*",
     "express": "*",
     "body-parser": "*",
