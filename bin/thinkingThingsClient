@@ -41,13 +41,14 @@ var clUtils = require('../lib/commandLineUtils'),
     separator = '\n\n\t',
     stack = [],
     stackMode = false,
-    coreModule = '#0,K1,30$';
+    coreModule = '#0,K1,30$',
+    payloadContainer = 'cadena';
 
 function sendRequest(payload) {
     var options = {
             url: 'http://' + config.host + ':' + config.port + config.path,
             method: 'POST',
-            body: 'cadena=' + payload,
+            body: payloadContainer + '=' + payload,
             headers: {
                 'Content-type': 'application/x-www-form-urlencoded'
             }
@@ -216,6 +217,14 @@ function getSleep(commands) {
     clUtils.prompt();
 }
 
+function changePayloadContainer(commands) {
+    console.log('Changing payload container to: %s\n', commands[0]);
+    payloadContainer = commands[0];
+
+
+    clUtils.prompt();
+}
+
 function startStack() {
     stackMode = true;
     stack = [];
@@ -328,6 +337,11 @@ var commands = {
         parameters: [],
         description: '\tSend all the stacked module info (stackMode = on).',
         handler: sendStack
+    },
+    'changePayloadContainer': {
+        parameters: ['newAttribute'],
+        description: '\tChange the standard "cadena" payload attribute to a different one.',
+        handler: changePayloadContainer
     }
 };
 
