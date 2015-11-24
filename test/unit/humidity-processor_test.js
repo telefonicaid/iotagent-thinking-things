@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /*
  * Copyright 2014 Telefonica Investigación y Desarrollo, S.A.U
  *
@@ -22,33 +20,31 @@
  * For those usages not covered by the GNU Affero General Public License
  * please contact with::[iot_support@tid.es]
  */
+
 'use strict';
 
-var iotAgent = require('../lib/iotagent-thinking-things'),
-    info = require('../package.json'),
-    context = {
-        op: 'ThinkingT.Executable'
-    },
-    logger = require('logops');
+var humidityProcessor = require('../../lib/services/humidityProcessor'),
+    should = require('should');
 
-function start() {
-    var config;
+describe('Humidity Processor tests', function() {
+    var cases = [
+        [27.37, 963425.00, 30],
+        [32.39, 2123390.00, 25]
+    ];
 
-    if (process.argv.length === 3) {
-        config = require('../' + process.argv[2]);
-    } else {
-        config = require('../config');
+    function testHumidity(temperature, rawValue, humidity) {
+        describe('When a measure with temperature [' + temperature +
+            '] and raw value [' + rawValue + '] arrives', function() {
+            it('should give a humidity percentage of the [' + humidity + ']', function() {
+                var targetValue = humidityProcessor.calculate(temperature, rawValue);
+
+                should.exist(targetValue);
+                targetValue.should.equal(humidity);
+            });
+        });
     }
 
-    config.ngsi.iotaVersion = info.version;
-
-    iotAgent.start(config, function (error) {
-        if (error) {
-            logger.error(context, 'Error starting Thinking Things Agent: [%s] Exiting process', error);
-        } else {
-            logger.info(context, 'Thinking Things Agent IoT Agent started');
-        }
-    });
-}
-
-start();
+    for (var i = 0; i < cases.length; i++) {
+        testHumidity(cases[i][0], cases[i][1], cases[i][2]);
+    }
+});

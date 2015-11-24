@@ -29,7 +29,8 @@ var config = require('./config-test'),
     async = require('async'),
     apply = async.apply,
     utils = require('../tools/utils'),
-    timekeeper = require('timekeeper');
+    timekeeper = require('timekeeper'),
+    payloadAttrs;
 
 describe('Southbound measure reporting', function() {
     beforeEach(function(done) {
@@ -38,13 +39,13 @@ describe('Southbound measure reporting', function() {
     afterEach(function(done) {
         ttAgent.stop(done);
     });
-    describe('When a humidity measure arrives to the IoT Agent: #STACK1#953E78F,H1,28,0.330,20$condition,',
+    describe('When a humidity measure arrives to the IoT Agent: #STACK1#953E78F,H1,27.37,963425.00,20$condition,',
         function() {
         var options = {
             url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
             method: 'POST',
             form: {
-                cadena: '#STACK1#953E78F,H1,28,0.330,20$condition,'
+                cadena: '#STACK1#953E78F,H1,27.37,963425.00,20$condition,'
             }
         };
 
@@ -73,7 +74,7 @@ describe('Southbound measure reporting', function() {
                 './test/unit/contextRequests/updateContextTemperature.json',
                 './test/unit/contextResponses/updateContextTemperatureSuccess.json'));
 
-            it('should update the device entity in the Context Broker with the humidity attribute',
+            it('should update the device entity in the Context Broker with the temperature attribute',
                 utils.checkContextBroker(options));
 
             it('should return a 200 OK with the appropriate response: ',
@@ -146,7 +147,7 @@ describe('Southbound measure reporting', function() {
             },
             originalPlainFormat;
 
-        beforeEach(function() {
+        beforeEach(function(done) {
             utils.contextBrokerMock = [];
 
             originalPlainFormat = config.ngsi.plainFormat;
@@ -164,7 +165,7 @@ describe('Southbound measure reporting', function() {
                 ttAgent.stop,
                 apply(responseGenerator.reloadConfig, config),
                 apply(ttAgent.start, config)
-            ]);
+            ], done);
         });
 
         afterEach(function(done) {
@@ -279,31 +280,43 @@ describe('Southbound measure reporting', function() {
             utils.checkResponse(options, '#STACK1#6,L1,255,129,38,-1$,#673495,K1,300$theCondition,'));
     });
 
-    describe('When a real example of the device request arrives', function() {
-        var options = {
-            url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
-            method: 'POST',
-            form: {
-                'cadena': '#ITgAY,' +
-                    '#0,P1,214,07,b00,444,-47,' +
-                    '#0,K1,300$,' +
-                    '#3,B,4.70,1,1,1,1,0,-1$' +
-                    '#4,T1,31.48,0$' +
-                    '#4,H1,31.48,1890512.00,0$' +
-                    '#4,LU,142.86,0$'
-            }
-        };
+    function realExamples(payloadAttr) {
+        describe('When a real example of the device request arrives with "' + payloadAttr + '" payload attribute',
+            function() {
+                var options = {
+                    url: 'http://localhost:' + config.thinkingThings.port + config.thinkingThings.root + '/Receive',
+                    method: 'POST',
+                    form: {}
+                 };
 
-        beforeEach(utils.prepareMocks(
-            './test/unit/contextRequests/updateContextRealExample.json',
-            './test/unit/contextResponses/updateContextRealExampleSuccess.json'));
+                beforeEach(function(done) {
+                    options.form[payloadAttr] = '#ITgAY,' +
+                        '#0,P1,214,07,b00,444,-47,' +
+                        '#0,K1,300$,' +
+                        '#3,B,4.70,1,1,1,1,0,-1$' +
+                        '#4,T1,31.48,0$' +
+                        '#4,H1,31.48,1890512.00,0$' +
+                        '#4,LU,142.86,0$';
 
-        it('should update the device entity in the Context Broker with the humidity attribute',
-            utils.checkContextBroker(options));
+                    utils.prepareMocks(
+                        './test/unit/contextRequests/updateContextRealExample.json',
+                        './test/unit/contextResponses/updateContextRealExampleSuccess.json')(done);
+                });
 
-        it('should return a 200 OK with the appropriate response: ',
-            utils.checkResponse(options, '#ITgAY#0,P1,-1$,#0,K1,300$,#3,B,1,1,0,-1$,#4,T1,-1$,#4,H1,-1$,#4,LU,-1$,'));
-    });
+                it('should update the device entity in the Context Broker with the real device data',
+                    utils.checkContextBroker(options));
+
+                it('should return a 200 OK with the appropriate response: ',
+                    utils.checkResponse(options,
+                        '#ITgAY#0,P1,-1$,#0,K1,300$,#3,B,1,1,0,-1$,#4,T1,-1$,#4,H1,-1$,#4,LU,-1$,'));
+            });
+    }
+
+    payloadAttrs = ['cadena', 'c', 'm'];
+
+    for (var i in payloadAttrs) {
+        realExamples(payloadAttrs[i]);
+    }
 
     describe('When the plainFormat configuration flag is set', function() {
         var options = {
@@ -331,7 +344,7 @@ describe('Southbound measure reporting', function() {
             config.ngsi.plainFormat = false;
         });
 
-        it('should update the device entity in the Context Broker with the humidity attribute',
+        it('should update the device entity in the Context Broker with the received attributes',
             utils.checkContextBroker(options));
 
         it('should return a 200 OK with the appropriate response: ',
@@ -371,7 +384,7 @@ describe('Southbound measure reporting', function() {
             config.ngsi.timestamp = false;
         });
 
-        it('should update the device entity in the Context Broker with the humidity attribute',
+        it('should update the device entity in the Context Broker with the timestamp attribute',
             utils.checkContextBroker(options));
     });
 
@@ -402,7 +415,7 @@ describe('Southbound measure reporting', function() {
             config.ngsi.timestamp = false;
         });
 
-        it('should update the device entity in the Context Broker with the humidity attribute',
+        it('should update the device entity in the Context Broker with the timestamp attribute',
             utils.checkContextBroker(options));
     });
 

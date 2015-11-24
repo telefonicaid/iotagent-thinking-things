@@ -72,6 +72,8 @@ if [ "$RET_VAL" != "0" ]; then
          echo "[ERROR] Unable create %{_project_user} user" \
          exit $RET_VAL
       fi
+else
+      mv %{_install_dir}/config.js /tmp
 fi
 
 # -------------------------------------------------------------------------------------------- #
@@ -79,7 +81,6 @@ fi
 # -------------------------------------------------------------------------------------------- #
 %post
 echo "[INFO] Configuring application"
-
     echo "[INFO] Creating the home Thinking Things IoT Agent directory"
     mkdir -p _install_dir
     echo "[INFO] Creating log & run directory"
@@ -100,6 +101,13 @@ echo "[INFO] Configuring application"
     echo "[INFO] Configuring application service"
     cd /etc/init.d
     chkconfig --add %{_service_name}
+
+    ls /tmp/config.js
+    RET_VAL=$?
+
+    if [ "$RET_VAL" == "0" ]; then
+        mv /tmp/config.js %{_install_dir}/config.js
+    fi
 
 echo "Done"
 

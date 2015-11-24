@@ -11,12 +11,12 @@
           "value": [
             {
               "name": "humidity",
-              "value": "0.330",
+              "value": "30",
               "type": "float"
             },
             {
               "name": "temperature",
-              "value": "28",
+              "value": "27.37",
               "type": "float"
             }
           ],

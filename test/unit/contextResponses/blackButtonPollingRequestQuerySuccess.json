@@ -13,7 +13,7 @@
           },
           {
             "name": "op_result",
-            "value": "999999",
+            "value": "{ %22code%22: %22200%22, %22extra%22: %22999999%22 }",
             "type": "string"
           }
         ]

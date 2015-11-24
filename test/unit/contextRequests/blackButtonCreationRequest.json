@@ -34,21 +34,6 @@
           "name": "op_extra",
           "value": "1234",
           "type": "string"
-        },
-        {
-          "name": "aux_op_status",
-          "value": "P",
-          "type": "string"
-        },
-        {
-          "name": "aux_op_action",
-          "value": "1",
-          "type": "string"
-        },
-        {
-          "name": "aux_op_extra",
-          "value": "1234",
-          "type": "string"
         }
       ]
     }
