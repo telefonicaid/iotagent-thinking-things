@@ -25,6 +25,7 @@
 'use strict';
 
 var iotAgent = require('../lib/iotagent-thinking-things'),
+    info = require('../package.json'),
     context = {
         op: 'ThinkingT.Executable'
     },
@@ -38,6 +39,8 @@ function start() {
     } else {
         config = require('../config');
     }
+
+    config.ngsi.iotaVersion = info.version;
 
     iotAgent.start(config, function (error) {
         if (error) {
