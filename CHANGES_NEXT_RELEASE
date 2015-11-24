@@ -1,8 +1,0 @@
-- ADD Logops instead of Fiware-node-logger (#44).
-- ADD Decode result of the Black Button in the IOTA (#64).
-- FIX RPM upgrade overrides config file (#69).
-- ADD Computation of the Humidity percentage (#72).
-- ADD C and M as accepted payload attributes in request.
-- FIX Success return code should allways be 1.
-- ADD Op_status to the syncrhonous request in BT.
-- ADD Client option to change the 'cadena' attribute.
