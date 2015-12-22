@@ -3,7 +3,7 @@
     {
       "type": "ThinkingThing",
       "isPattern": "false",
-      "id": "STACK1:ThinkingThing",
+      "id": "ThinkingThing:STACK1",
       "attributes": [
         {
           "name": "internal_id",

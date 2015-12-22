@@ -9,7 +9,7 @@
             "value": ""
           }
         ],
-        "id": "STACK1:ThinkingThing",
+        "id": "ThinkingThing:STACK1",
         "isPattern": "false",
         "type": "ThinkingThing"
       },
