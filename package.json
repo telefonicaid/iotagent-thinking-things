@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "logops": "*",
-    "iotagent-node-lib": "0.8.4",
+    "iotagent-node-lib": "git://github.com/telefonicaid/iotagent-node-lib.git#develop",
     "underscore": "*",
     "express": "*",
     "body-parser": "*",
