@@ -4,7 +4,7 @@
       "contextElement": {
         "type": "ThinkingThing",
         "isPattern": "false",
-        "id": "STACK1:ThinkingThing",
+        "id": "ThinkingThing:STACK1",
         "attributes": [
           {
             "name": "op_status",

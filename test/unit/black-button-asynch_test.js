@@ -187,7 +187,7 @@ describe('Black button Asynchronous testing', function() {
                     should.not.exist(error);
                     result.statusCode.should.equal(200);
                     body.should.equal('#STACK1#0,BT,' + action + ',0,0:502,Error accesing entity data for device: ' +
-                        'STACK1:ThinkingThing of type: ThinkingThing,0$');
+                        'ThinkingThing:STACK1 of type: ThinkingThing,0$');
                     done();
                 });
             });
