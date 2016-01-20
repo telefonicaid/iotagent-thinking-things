@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "logops": "*",
-    "iotagent-node-lib": "0.9.0",
+    "iotagent-node-lib": "0.9.3",
     "underscore": "*",
     "express": "*",
     "body-parser": "*",
