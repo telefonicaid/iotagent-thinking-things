@@ -29,6 +29,7 @@
     "logops": "*",
     "iotagent-node-lib": "0.9.3",
     "underscore": "*",
+    "command-node": "0.1.1",
     "express": "*",
     "body-parser": "*",
     "logops": "*",
