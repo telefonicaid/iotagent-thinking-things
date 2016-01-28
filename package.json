@@ -1,7 +1,7 @@
 {
   "name": "iotagent-thinking-things",
   "description": "IoT Agent for Telefonica Thinking Things Closed protocol",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "homepage": "https://github.com/dmoranj/iotagent-thinking-things",
   "author": {
     "name": "Daniel Moran",
@@ -26,15 +26,15 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "logops": "*",
-    "iotagent-node-lib": "0.9.0",
-    "underscore": "*",
-    "express": "*",
-    "body-parser": "*",
-    "logops": "*",
-    "request": "*",
-    "async": "*",
-    "node-uuid": "*"
+    "logops": "0.5.0",
+    "iotagent-node-lib": "0.9.5",
+    "underscore": "1.8.3",
+    "command-node": "0.1.1",
+    "express": "4.11.2",
+    "body-parser": "1.11.0",
+    "request": "2.39.0",
+    "async": "0.9.0",
+    "node-uuid": "1.4.1"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.6.4",
@@ -55,9 +55,9 @@
     "grunt-mkdir": "~0.1.1",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-githooks": "~0.3.1",
-    "nock": "*",
-    "should": "*",
-    "timekeeper": "*"
+    "nock": "5.2.1",
+    "should": "8.1.1",
+    "timekeeper": "0.0.5"
   },
   "keywords": [
     "fiware",
