@@ -1,2 +1,3 @@
-- Fix and update versions (#100).
-- Add generic IOTAgent functions to the client (#99).
+- FIX and update versions (#100).
+- ADD generic IOTAgent functions to the client (#99).
+- FIX Remove Timestamp configuration (#106).
