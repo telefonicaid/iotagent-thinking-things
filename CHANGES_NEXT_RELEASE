@@ -1,3 +1,4 @@
 - FIX and update versions (#100).
 - ADD generic IOTAgent functions to the client (#99).
 - FIX Remove Timestamp configuration (#106).
+- UPGRADE request dependency from 2.39.0 to 2.68.0 due to vulnerability
