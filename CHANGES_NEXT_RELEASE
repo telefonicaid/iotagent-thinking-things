@@ -1,4 +1,4 @@
-- Upgrade logops dep from 0.5.0 to 2.1.2 due to colors dependency corruption
+- Upgrade logops dep from 0.5.0 to 2.1.2 due to colors dependency corruption (BLIND UPGRADE - NOT TESTED)
 - FIX and update versions (#100).
 - ADD generic IOTAgent functions to the client (#99).
 - FIX Remove Timestamp configuration (#106).
