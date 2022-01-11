@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "logops": "0.5.0",
+    "colors": "1.1.2",
     "iotagent-node-lib": "0.9.6",
     "underscore": "1.8.3",
     "command-node": "0.1.1",
