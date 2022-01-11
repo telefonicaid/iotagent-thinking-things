@@ -1,3 +1,4 @@
+- Fix colors version 1.1.2 to avoid colors latest corrupted version with install logops < 2.1.2
 - FIX and update versions (#100).
 - ADD generic IOTAgent functions to the client (#99).
 - FIX Remove Timestamp configuration (#106).
